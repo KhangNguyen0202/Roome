@@ -12,6 +12,26 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/bd-wizard.css">
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <style>
+            .form-select-custom {
+                height: calc(2.25rem + 17px);
+                padding: 0.375rem 0.75rem;
+                font-size: 1rem;
+                line-height: 1.5;
+                color: #495057;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid #ced4da;
+                border-radius: 0.25rem;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                width: 100%;
+            }
+            .form-select-custom:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        </style>
     </head>
     <body>
         <main class="my-5">
@@ -35,8 +55,8 @@
                                     <input type="text" name="txtHostelName" id="txtHostelName" class="form-control" placeholder="Hostel Name">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="txtAddress" class="sr-only">Address</label>
-                                    <select class="form-control" name="txtProvince" required>
+                                    <label for="txtProvince" class="sr-only">Address</label>
+                                    <select class="form-select form-select-custom" name="txtProvince" id="txtProvince" required>
                                         <%
                                             ProvinceDAO dao = new ProvinceDAO();
                                             ResultSet rs = dao.getAllProvince();
@@ -48,15 +68,10 @@
                                         %>
                                     </select>
                                 </div>
-                                <script>
-                                    document.getElementById('txtProvince').addEventListener('change', function () {
-                                        document.getElementById('txtHostelName').value = this.options[this.selectedIndex].text;
-                                    });
-                                </script> 
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="phoneNumber" class="sr-only">Phone Number</label>
+                                    <label for="txtPhoneNumber" class="sr-only">Phone Number</label>
                                     <input type="text" name="phoneNumber" id="txtPhoneNumber" class="form-control" placeholder="Phone Number">
                                 </div>
                                 <div class="form-group col-md-6">
@@ -153,18 +168,18 @@
         <script src="assets/js/jquery.steps.min.js"></script>
         <script src="assets/js/bd-wizard.js"></script>
         <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const roomTypesContainer = document.getElementById('roomTypesContainer');
-                                    const roomImagesContainer = document.getElementById('roomImagesContainer');
-                                    const addRoomTypeBtn = document.getElementById('addRoomTypeBtn');
-                                    const totalRoomsInput = document.getElementById('txtTotalRooms');
+            document.addEventListener('DOMContentLoaded', function () {
+                const roomTypesContainer = document.getElementById('roomTypesContainer');
+                const roomImagesContainer = document.getElementById('roomImagesContainer');
+                const addRoomTypeBtn = document.getElementById('addRoomTypeBtn');
+                const totalRoomsInput = document.getElementById('txtTotalRooms');
 
-                                    addRoomTypeBtn.addEventListener('click', function () {
-                                        const roomTypeIndex = roomTypesContainer.children.length;
+                addRoomTypeBtn.addEventListener('click', function () {
+                    const roomTypeIndex = roomTypesContainer.children.length;
 
-                                        const roomTypeDiv = document.createElement('div');
-                                        roomTypeDiv.classList.add('room-type', 'mb-3');
-                                        roomTypeDiv.innerHTML = `
+                    const roomTypeDiv = document.createElement('div');
+                    roomTypeDiv.classList.add('room-type', 'mb-3');
+                    roomTypeDiv.innerHTML = `
                         <h6>Room Type ${roomTypeIndex + 1}</h6>
                         <button type="button" class="btn btn-danger btn-sm remove-room-type">Remove</button>
                         <div class="row">
@@ -179,50 +194,50 @@
                         </div>
                     `;
 
-                                        roomTypesContainer.appendChild(roomTypeDiv);
+                    roomTypesContainer.appendChild(roomTypeDiv);
 
-                                        const removeRoomTypeBtn = roomTypeDiv.querySelector('.remove-room-type');
-                                        removeRoomTypeBtn.addEventListener('click', function () {
-                                            roomTypesContainer.removeChild(roomTypeDiv);
-                                            updateRoomTypeIndexes();
-                                        });
-                                    });
+                    const removeRoomTypeBtn = roomTypeDiv.querySelector('.remove-room-type');
+                    removeRoomTypeBtn.addEventListener('click', function () {
+                        roomTypesContainer.removeChild(roomTypeDiv);
+                        updateRoomTypeIndexes();
+                    });
+                });
 
-                                    function updateRoomTypeIndexes() {
-                                        Array.from(roomTypesContainer.children).forEach((roomTypeDiv, index) => {
-                                            roomTypeDiv.querySelector('h6').textContent = `Room Type ${index + 1}`;
-                                            roomTypeDiv.querySelector('input[name^="roomTypeName"]').setAttribute('name', `roomTypeName${index}`);
-                                            roomTypeDiv.querySelector('input[name^="roomTypeCount"]').setAttribute('name', `roomTypeCount${index}`);
-                                        });
-                                    }
+                function updateRoomTypeIndexes() {
+                    Array.from(roomTypesContainer.children).forEach((roomTypeDiv, index) => {
+                        roomTypeDiv.querySelector('h6').textContent = `Room Type ${index + 1}`;
+                        roomTypeDiv.querySelector('input[name^="roomTypeName"]').setAttribute('name', `roomTypeName${index}`);
+                        roomTypeDiv.querySelector('input[name^="roomTypeCount"]').setAttribute('name', `roomTypeCount${index}`);
+                    });
+                }
 
-                                    const hostelDetailsForm = document.querySelector('#wizard section:nth-of-type(1)');
-                                    hostelDetailsForm.addEventListener('submit', function (event) {
-                                        event.preventDefault();
-                                        const enteredHostelName = document.getElementById('txtHostelName').value;
-                                        const enteredAddress = document.getElementById('cboCat').selectedOptions[0].textContent;
-                                        const enteredPhoneNumber = document.getElementById('txtPhoneNumber').value;
-                                        const enteredDescription = document.getElementById('txtDescription').value;
+                const hostelDetailsForm = document.querySelector('#wizard section:nth-of-type(1)');
+                hostelDetailsForm.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    const enteredHostelName = document.getElementById('txtHostelName').value;
+                    const enteredAddress = document.getElementById('txtProvince').selectedOptions[0].textContent;
+                    const enteredPhoneNumber = document.getElementById('txtPhoneNumber').value;
+                    const enteredDescription = document.getElementById('txtDescription').value;
 
-                                        document.getElementById('entered').textContent = enteredHostelName;
-                                        document.getElementById('enteredAddress').textContent = enteredAddress;
-                                        document.getElementById('enteredPhoneNumber').textContent = enteredPhoneNumber;
-                                        document.getElementById('enteredDescription').textContent = enteredDescription;
-                                    });
+                    document.getElementById('entered').textContent = enteredHostelName;
+                    document.getElementById('enteredAddress').textContent = enteredAddress;
+                    document.getElementById('enteredPhoneNumber').textContent = enteredPhoneNumber;
+                    document.getElementById('enteredDescription').textContent = enteredDescription;
+                });
 
-                                    totalRoomsInput.addEventListener('change', function () {
-                                        document.getElementById('enteredTotalRooms').textContent = totalRoomsInput.value;
-                                    });
-                                });
+                totalRoomsInput.addEventListener('change', function () {
+                    document.getElementById('enteredTotalRooms').textContent = totalRoomsInput.value;
+                });
+            });
 
-                                function submitForm() {
-                                    swal({
-                                        title: "Form Submitted",
-                                        text: "Your form has been submitted successfully!",
-                                        icon: "success",
-                                        button: "OK",
-                                    });
-                                }
+            function submitForm() {
+                swal({
+                    title: "Form Submitted",
+                    text: "Your form has been submitted successfully!",
+                    icon: "success",
+                    button: "OK",
+                });
+            }
         </script>
     </body>
 </html>
