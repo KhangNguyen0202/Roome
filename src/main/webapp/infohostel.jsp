@@ -16,6 +16,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
         }
         .header {
             background-color: #003580;
@@ -27,7 +29,7 @@
         }
         .header-left {
             display: flex;
-            align-items: left;
+            align-items: center;
         }
         .header img {
             height: 50px;
@@ -42,6 +44,7 @@
             color: white;
             margin: 0 26px;
             text-decoration: none;
+            font-weight: bold;
         }
         .header-right {
             display: flex;
@@ -55,92 +58,96 @@
             padding: 10px 20px;
             margin-left: 10px;
             cursor: pointer;
+            font-weight: bold;
         }
-        .search-section {
-            background-color: #003580;
-            color: white;
-            padding: 50px 20px;
-            text-align: center;
-        }
-        .search-section h1 {
-            margin: 0;
-            font-size: 36px;
-        }   
-        .search-bar {
+        .hero {
             position: relative;
+            background-image: url('hostel-main-image.jpg'); /* Replace with your main hostel image */
+            background-size: cover;
+            background-position: center;
+            height: 400px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .search-bar .search-input,
-        .search-bar .search-date,
-        .search-bar .search-select {            
-            background-color: white;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 16px;
-            border: 3px solid blue;
-        }
-        .search-bar .search-button {
-            background-color: #0071c2;
             color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            padding: 14.7px 32px;
-            border: none;               
-        }
-        .dropdown {
-            position: relative;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            width: 100%;
-            border: 1px solid #ddd;
-            z-index: 1;
-            top: 100%; /* Align directly below the search input */
-            left: 0;
-        }
-        .dropdown-content div {
-            color: black;
-            padding: 12px 16px;
-            cursor: pointer;
-        }
-        .dropdown-content div:hover {
-            background-color: #f1f1f1;
-        }
-        .offers-section {
-            padding: 50px 20px;
             text-align: center;
         }
-        .offers-section h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
+        .hero h1 {
+            font-size: 48px;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        .offer {
-            margin: 20px;
-            display: inline-block;
-            width: 300px;
+        .hero p {
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .hostel-section {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: auto;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: -100px; /* Overlap hero section */
         }
-        .offer img {
-            width: 100%;
+        .hostel-gallery {
+            display: flex;
+            gap: 10px;
+            overflow-x: scroll;
+            padding-bottom: 20px;
         }
-        .offer-text {
+        .hostel-gallery img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .hostel-info {
             padding: 20px;
         }
-        .h1 {
-            text-align: left;
-            padding-left: 14.2rem;
+        .hostel-info h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #003580;
         }
-        .text-left {
-            text-align: left;
-            padding-left: 14.2rem;
+        .hostel-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .amenity {
+            background-color: #e9ecef;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .amenity img {
+            height: 20px;
+            margin-right: 10px;
+        }
+        .reviews {
+            margin-top: 40px;
+        }
+        .review {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .review h3 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #003580;
+        }
+        .review p {
+            margin: 10px 0;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -162,66 +169,55 @@
             <button>Sign Up</button>
         </div>
     </header>
-    <section class="search-section">
-        <h1 class="text-left">Find your room</h1>
-        <p class="text-left">Search low prices on hotels, homes and much more...</p>
-        <div class="search-bar">
-            <div class="dropdown">
-                <input type="text" class="search-input" placeholder="Where are you going?" onkeyup="filterFunction()">
-                <div id="dropdown" class="dropdown-content">
-                    <div>Can Tho, Vietnam</div>
-                    <div>Da Lat, Vietnam</div>
-                    <div>Vung Tau, Vietnam</div>
-                    <div>Phu Quoc, Vietnam</div>
-                    <div>Ho Chi Minh City, Vietnam</div>
-                </div>
-            </div>
-            <input type="text" class="search-date" placeholder="Check-in/out date">
-            <select class="search-select">
-                <option>2 adults · 0 children · 1 room</option>
-            </select>
-            <button class="search-button">Search</button>
+    <section class="hero">
+        <div>
+            <h1>Hostel Name</h1>
+            <p>123 Hostel Street, City, Country</p>
         </div>
     </section>
-    <section class="offers-section">
-        
+    <section class="hostel-section">
+        <div class="hostel-gallery">
+            <img src="hostel1.jpg" alt="Hostel Image 1">
+            <img src="hostel2.jpg" alt="Hostel Image 2">
+            <img src="hostel3.jpg" alt="Hostel Image 3">
+            <!-- Add more images as needed -->
+        </div>
+        <div class="hostel-info">
+            <h2>About the Hostel</h2>
+            <p>Price per night: $25</p>
+            <div class="amenities">
+                <div class="amenity">
+                    <img src="wifi-icon.png" alt="Free Wi-Fi"> Free Wi-Fi
+                </div>
+                <div class="amenity">
+                    <img src="breakfast-icon.png" alt="Breakfast included"> Breakfast included
+                </div>
+                <div class="amenity">
+                    <img src="kitchen-icon.png" alt="Shared kitchen"> Shared kitchen
+                </div>
+                <div class="amenity">
+                    <img src="reception-icon.png" alt="24-hour reception"> 24-hour reception
+                </div>
+            </div>
+            <p>Description: This is a wonderful hostel located in the heart of the city. It offers comfortable accommodation at an affordable price.</p>
+        </div>
+        <div class="reviews">
+            <h2>Reviews</h2>
+            <div class="review">
+                <h3>John Doe</h3>
+                <p>★★★★☆</p>
+                <p>Great place to stay! Very clean and friendly staff.</p>
+            </div>
+            <div class="review">
+                <h3>Jane Smith</h3>
+                <p>★★★★★</p>
+                <p>Absolutely loved this hostel. The location is perfect and the amenities are top-notch.</p>
+            </div>
+            <!-- Add more reviews as needed -->
+        </div>
     </section>
-    <script>
-        function filterFunction() {
-            var input, filter, div, i;
-            input = document.querySelector('.search-input');
-            filter = input.value.toUpperCase();
-            div = document.querySelectorAll('#dropdown div');
-            document.getElementById("dropdown").style.display = "block";
-            for (i = 0; i < div.length; i++) {
-                txtValue = div[i].textContent || div[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    div[i].style.display = "";
-                } else {
-                    div[i].style.display = "none";
-                }
-            }
-        }
-        document.querySelector('.search-input').addEventListener('focus', function() {
-            document.getElementById("dropdown").style.display = "block";
-        });
-        document.addEventListener('click', function(e) {
-            if (!e.target.matches('.search-input')) {
-                document.getElementById("dropdown").style.display = "none";
-            }
-        });
-        document.querySelectorAll('#dropdown div').forEach(function(item) {
-            item.addEventListener('click', function() {
-                document.querySelector('.search-input').value = this.innerText;
-                document.getElementById("dropdown").style.display = "none";
-            });
-        });
-    </script>
 </body>
 </html>
-
-
-
 
 
 
