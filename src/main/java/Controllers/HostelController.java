@@ -5,12 +5,19 @@
 
 package Controllers;
 
+import DAOs.HostelDAO;
+import DAOs.ProvinceDAO;
+import Models.Hostel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
+import java.sql.Timestamp;
 
 /**
  *
@@ -66,9 +73,68 @@ public class HostelController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+      HttpSession session = request.getSession();
+//        Integer landlordId = (Integer) session.getAttribute("landlord_id");
+//
+//        if (landlordId == null) {
+//            response.getWriter().write("Please log in first.");
+//            return;
+//        }
+        int  landlordId = 1;
+
+        if (request.getParameter("btnFinishCreate") != null) {
+            String hostelName = request.getParameter("txtHostelName");
+            String provinceName = request.getParameter("txtProvince");
+            String addressDetail = request.getParameter("txtAddressDetail");
+            String phoneContact = request.getParameter("txtPhoneNumber");
+            String description = request.getParameter("txtDescription");
+            Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+             ProvinceDAO catDao = new ProvinceDAO();
+        int provinceId = catDao.getProvinceIDByName(provinceName);
+
+            // Handle file upload
+            String fileName = "";
+            String uploadPath = getServletContext().getRealPath("") + File.separator + "img";
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            for (Part part : request.getParts()) {
+                if (part.getName().equals("txtPic")) {
+                    String originalFileName = getFileName(part);
+                    String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
+                    fileName = uniqueFileName;
+                    part.write(uploadPath + File.separator + fileName);
+                }
+            }
+
+            String hostelImage = "img/" + fileName;
+
+            // Create Hostel object
+            Hostel hostel = new Hostel(landlordId, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description, createdAt);
+            HostelDAO hostelDAO = new HostelDAO();
+            int count = hostelDAO.addNew(hostel);
+
+            if (count > 0) {
+                response.sendRedirect("/success.jsp");
+            } else {
+                response.sendRedirect("/error.jsp");
+            }
+        }
     }
 
+    private String getFileName(Part part) {
+        String contentDisposition = part.getHeader("content-disposition");
+        String[] items = contentDisposition.split(";");
+        for (String item : items) {
+            if (item.trim().startsWith("filename")) {
+                return item.substring(item.indexOf("=") + 2, item.length() - 1);
+            }
+        }
+        return "";
+    }
+    
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description

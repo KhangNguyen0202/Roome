@@ -150,7 +150,7 @@
             <img src="logo.png" alt="LOGO">
         </div>
         <nav>
-            <a href="#">Stays</a>
+            <a href="createhostel.jsp">Stays</a>
             <a href="#">Flights</a>
             <a href="#">Flight + Hotel</a>
             <a href="#">Car rentals</a>

@@ -32,8 +32,12 @@
                 box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             }
         </style>
+        
     </head>
     <body>
+        <%
+            session.setAttribute("landlord_id", 1);
+            %>
         <main class="my-5">
             <div class="container">
                 <div id="wizard">
@@ -55,14 +59,15 @@
                                     <input type="text" name="txtHostelName" id="txtHostelName" class="form-control" placeholder="Hostel Name">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="txtProvince" class="sr-only">Address</label>
+                                    <label for="txtProvince" class="sr-only">Province</label>
                                     <select class="form-select form-select-custom" name="txtProvince" id="txtProvince" required>
+                                        <option value="" disabled selected>Address</option>
                                         <%
                                             ProvinceDAO dao = new ProvinceDAO();
                                             ResultSet rs = dao.getAllProvince();
                                             while (rs.next()) {
                                         %>
-                                        <option value="<%= rs.getString("Province_ID")%>"><%= rs.getString("Province_Name")%></option>
+                                        <option value="<%= rs.getString("Province_ID") %>"><%= rs.getString("Province_Name") %></option>
                                         <%
                                             }
                                         %>
@@ -71,10 +76,16 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
+                                    <label for="txtAddressDetail" class="sr-only">Address Detail</label>
+                                    <input type="text" name="txtAddressDetail" id="txtAddressDetail" class="form-control" placeholder="Address Detail">
+                                </div>
+                                <div class="form-group col-md-6">
                                     <label for="txtPhoneNumber" class="sr-only">Phone Number</label>
                                     <input type="text" name="phoneNumber" id="txtPhoneNumber" class="form-control" placeholder="Phone Number">
                                 </div>
-                                <div class="form-group col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
                                     <label for="txtDescription" class="sr-only">Description</label>
                                     <input type="text" name="txtDescription" id="txtDescription" class="form-control" placeholder="Description">
                                 </div>
@@ -87,6 +98,8 @@
                                 </div>
                                 <button type="submit" class="btn btn-success mt-3">Upload Images</button>
                             </form>
+                                    <button type="submit" name="btnFinishCreate" class="btn btn-success mt-3 mb-3">Add Product</button>
+                 
                         </div>
                     </section>
                     <h3>

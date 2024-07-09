@@ -15,23 +15,29 @@ public class Hostel {
     private int hostel_id;
     private int landlord_id;
     private String hostel_name;
-    private String address;
+    private int province_id;
+    private String address_detail;
+    private String hostel_image;
     private String phone_contact;
     private String description;
     private Timestamp created_at;
 
-    // Constructor
-    public Hostel(int hostel_id, int landlord_id, String hostel_name, String address, String phone_contact, String description, Timestamp created_at) {
+    public Hostel(int hostel_id, int landlord_id, String hostel_name, int province_id, String address_detail, String hostel_image, String phone_contact, String description, Timestamp created_at) {
         this.hostel_id = hostel_id;
         this.landlord_id = landlord_id;
         this.hostel_name = hostel_name;
-        this.address = address;
+        this.province_id = province_id;
+        this.address_detail = address_detail;
+        this.hostel_image = hostel_image;
         this.phone_contact = phone_contact;
         this.description = description;
         this.created_at = created_at;
     }
 
-    // Getters and Setters
+    public Hostel(Integer landlordId, String hostelName, int provinceId, String addressDetail, String hostelImage, String phoneContact, String description, Timestamp createdAt) {
+      
+    }
+
     public int getHostel_id() {
         return hostel_id;
     }
@@ -56,12 +62,28 @@ public class Hostel {
         this.hostel_name = hostel_name;
     }
 
-    public String getAddress() {
-        return address;
+    public int getProvince_id() {
+        return province_id;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setProvince_id(int province_id) {
+        this.province_id = province_id;
+    }
+
+    public String getAddress_detail() {
+        return address_detail;
+    }
+
+    public void setAddress_detail(String address_detail) {
+        this.address_detail = address_detail;
+    }
+
+    public String getHostel_image() {
+        return hostel_image;
+    }
+
+    public void setHostel_image(String hostel_image) {
+        this.hostel_image = hostel_image;
     }
 
     public String getPhone_contact() {
@@ -87,4 +109,6 @@ public class Hostel {
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
+
+
 }
