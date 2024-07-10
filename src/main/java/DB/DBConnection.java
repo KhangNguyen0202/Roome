@@ -17,7 +17,7 @@ public class DBConnection {
         try{
             
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-         String url ="jdbc:sqlserver://LAPTOP-9CBUJ8HG:1433;databaseName=FinalProject_PRJ192;user=sa;password=Khang02022004;encrypt=true;trustServerCertificate=true;";
+            String url = "jdbc:sqlserver://SAKAKI:1433;databaseName=FinalProject_PRJ192;user=sa;password=1234567890;encrypt=true;trustServerCertificate=true";
             conn = DriverManager.getConnection(url);
         }catch(Exception ex){
             conn = null;
