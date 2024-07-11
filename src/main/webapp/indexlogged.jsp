@@ -17,6 +17,7 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         .header {
             background-color: #003580;
@@ -52,15 +53,62 @@
         .header-right {
             display: flex;
             align-items: center;
+            position: relative;
         }
-        .header-right button {
-            background-color: white;
-            color: #003580;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            margin-left: 10px;
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 20px;
             cursor: pointer;
+        }
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1001;
+            top: 0;
+            right: 0;
+            background-color: #003580;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            color: white;
+            border-left: 2px solid #ccc; /* Add border */
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 36px;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            margin-bottom: 20px;
+            border-bottom: 0.5px solid #ddd;                         
+        }
+        .sidebar-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .sidebar-header .username {
+            font-size: 20px;
+            font-weight: bold;
         }
         .search-section {
             background-color: #003580;
@@ -167,21 +215,31 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <img src="img/Roome2.jpg"s alt="LOGO">
+            <img src="logo.png" alt="LOGO">
         </div>
         <nav>
-            <a href="infohostel.jsp">Info</a>
-            <a href="createhostel.jsp">Create</a>
-            <a href="userprofile.jsp">User</a>
+            <a href="#">Stays</a>
+            <a href="#">Flights</a>
+            <a href="#">Flight + Hotel</a>
             <a href="#">Car rentals</a>
             <a href="#">Attractions</a>
             <a href="#">Airport taxis</a>
         </nav>
         <div class="header-right">
-            <button>Sign In</button>
-            <button>Sign Up</button>
+            <img src="user-avatar.jpg" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
         </div>
     </header>
+    <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+        <div class="sidebar-header">
+            <img src="user-avatar.jpg" alt="User Avatar">
+            <span class="username">Hung mat lon</span>
+        </div>
+        <a href="#">Profile</a>
+        <a href="#">Bookings</a>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+    </div>
     <section class="search-section">
         <h1 class="text-left">Find your room</h1>
         <p class="text-left">Search low prices on hotels, homes and much more...</p>
@@ -256,9 +314,14 @@
                 document.getElementById("dropdown").style.display = "none";
             });
         });
+
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+        
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
     </script>
 </body>
 </html>
-
-
-
