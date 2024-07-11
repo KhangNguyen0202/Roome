@@ -81,4 +81,37 @@ public class UserDAO {
         }
         return count;
     }
+    public int updateUserInfo(int user_id, User newinfo) {
+        Connection conn = DBConnection.getConnection();
+        int count;
+        try {
+            String sql = "UPDATE users SET usercall_name = ?, usersurname = ?, email=? , phone_number=? , address=? WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, newinfo.getUsercall_name());
+            pst.setString(2, newinfo.getUserSurname());
+            pst.setString(3, newinfo.getEmail());
+            pst.setString(4, newinfo.getPhone_number());
+            pst.setString(5, newinfo.getAddress());
+            pst.setInt(6, user_id);
+            count = pst.executeUpdate();
+        } catch (SQLException ex) {
+            count = 0;
+        }
+        return count;
+    }
+    public int updateUserImg(int user_id, String img) {
+        Connection conn = DBConnection.getConnection();
+        int count;
+        try {
+            String sql = "UPDATE users SET user_image=? WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, img);
+            
+            pst.setInt(2, user_id);
+            count = pst.executeUpdate();
+        } catch (SQLException ex) {
+            count = 0;
+        }
+        return count;
+    }
 }

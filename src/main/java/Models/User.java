@@ -34,6 +34,14 @@ public class User {
         this.user_type = user_type;
         this.created_at = created_at;
     }
+    public User(int user_id, String usercall_name, String userSurname, String email, String phone_number, String address) {
+        this.user_id = user_id;
+        this.usercall_name = usercall_name;
+        this.userSurname = userSurname;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.address = address;
+    }
 
     public User() {
     }

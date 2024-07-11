@@ -75,17 +75,18 @@
             /* The actual popup */
             .popup .popuptext {
                 visibility: hidden;
-                width: 100px;
-                height: 25px;
+                width: auto;
+                height: auto; /* Allow height to adjust based on content */
                 background-color: #555;
                 color: #fff;
                 text-align: center;
                 border-radius: 3px;
                 position: absolute;
                 z-index: 1;
-                bottom: -42px;
+                top:  12px;
                 left: -30px;
                 margin-left: -50px;
+                padding: 5px;
             }
 
             /* Popup arrow */
@@ -174,80 +175,77 @@
     <body>
         <%
             UserDAO userdao = new UserDAO();
-            User user = userdao.getUserByID(1);
+            User user = userdao.getUserByID(Integer.parseInt(request.getParameter("id")));
         %>
         <div class="container rounded bg-white mt-5 mb-5">
-
-
-            <script>
-                // When the user clicks on div, open the popup
-                function myFunction() {
-                    var popup = document.getElementById("myPopup");
-                    popup.classList.toggle("show");
-                }
-            </script>
-            <form method="post" action="/UserController" enctype="multipart/form-data">
-                <div class="row">
-                    <%--User data --%>
-                    <div class="col-md-3 border-right">
+            <div class="row">
+                <!-- Profile Picture Form -->
+                <div class="col-md-4 border-right">
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
                         <div class="d-flex flex-column align-items-center text-left p-3 py-5">
                             <div class="w-100">
-                                <label class="labels">Profile picture</label>
+                                <label class="labels">Profile picture</label>                                
                             </div>
 
                             <div class="image-container">
                                 <img class="rounded-circle img-fluid" src="<%=user.getUser_image()%>" alt="Your Image">
+                                <input type="hidden" id="txtHidPic" name="txtHidPic" value="<%=user.getUser_image()%>">
                             </div>
-
-                            <div class="popup" onclick="myFunction()"> <button type="button" class="edit-button">Edit</button>                               
+                            
+                            <div class="popup" onclick="myFunction()">
+                                <button type="button" class="edit-button">Edit</button>
                                 <span class="popuptext" id="myPopup">
-                                    <input type="file" class="form-control" id="txtPic" name="txtPic" style="display: none;">
-                                    <label for="txtPic">Choose a file</label> 
+                                    <input type="file" class="form-control" id="txtPic" name="txtPic" onchange="updateLabel()" style="display: none" accept="image/*">
+                                    <label for="txtPic" id="fileLabel">Choose an image</label>
+                                    <button type="submit" name="uploadImg">Change</button>
                                 </span>
                             </div>
-
                         </div>
-                    </div>
-                    <div class="col-md-5 border-right">
+                                <%= request.getParameter("txtHidPic")%>
+                    </form>
+                </div>
+
+                <!-- User Data Form -->
+                <div class="col-md-4">
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4 class="text-right">Profile Settings</h4>
+
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="labels">Name</label>
-                                    <input type="text" class="form-control" placeholder="<%=user.getUsercall_name()%>" value="">
+                                    <input type="text" class="form-control" id="txtCallName" name="txtCallName" value="<%=user.getUsercall_name()%>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="labels">Surname</label>
-                                    <input type="text" class="form-control" value="" placeholder="<%=user.getUserSurname()%>">
+                                    <input type="text" class="form-control" id="txtUserSurname" name="txtUserSurname" value="<%=user.getUserSurname()%>">
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <label class="labels">Mobile Number</label>
-                                    <input type="text" class="form-control" placeholder="<%=user.getPhone_number()%>" value="">
+                                    <input type="text" class="form-control" id="txtPhoneNumber" name="txtPhoneNumber" value="<%=user.getPhone_number()%>">
                                 </div>
                                 <div class="col-md-12">
                                     <label class="labels">Address</label>
-                                    <input type="text" class="form-control" placeholder="<%=user.getAddress()%>" value="">
-                                </div>  
+                                    <input type="text" class="form-control" id="txtAddress" name="txtAddress" value="<%=user.getAddress()%>">
+                                </div>
                                 <div class="col-md-12">
                                     <label class="labels">Email</label>
-                                    <input type="text" class="form-control" placeholder="<%=user.getEmail()%>" value="">
-                                </div>  
-
+                                    <input type="text" class="form-control" id="txtEmail" name="txtEmail" value="<%=user.getEmail()%>">
+                                </div>
                             </div>
-
                             <div class="mt-5 text-center">
                                 <button class="btn btn-primary profile-button" type="submit" name="btnSave">Save Profile</button>
                             </div>
-                        </div>                    
-                    </div>
-                    <%--End User data --%>
-
-                    <%--User hostel --%>            
-                    <div class="col-md-4">
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <!-- User Hostel Data Form -->
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center experience">
                                 <span>Edit Experience</span>
@@ -264,12 +262,32 @@
                                 <input type="text" class="form-control" placeholder="additional details" value="">
                             </div>
                         </div>
-                    </div>
-                    <%-- End User hostel --%>             
+                    </form>
                 </div>
-
-            </form> 
-
+            </div>
         </div>
+        <script>
+            // When the user clicks on div, open the popup
+            function myFunction() {
+                var popup = document.getElementById("myPopup");
+                popup.classList.toggle("show");
+            }
+            function updateLabel() {
+                var fileInput = document.getElementById('txtPic');
+                var fileLabel = document.getElementById('fileLabel');
+
+                // Check if a file is selected
+                if (fileInput.files.length > 0) {
+                    var fileName = fileInput.files[0].name;
+                    fileLabel.innerText = fileName; // Update label text with file name
+                } else {
+                    fileLabel.innerText = "Choose an image"; // Reset label text if no file selected
+                }
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     </body>
 </html>

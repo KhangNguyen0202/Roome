@@ -4,7 +4,8 @@
  */
 package Controllers;
 
-
+import DAOs.UserDAO;
+import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,8 +18,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 
-
-
 /**
  *
  * @author HP
@@ -30,6 +29,8 @@ import java.io.File;
         maxRequestSize = 1024 * 1024 * 50 // 50MB
 )
 public class UserController extends HttpServlet {
+
+    private int user_id;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -72,9 +73,10 @@ public class UserController extends HttpServlet {
 
         String path = request.getRequestURI();
         if (path.equals("/UserController")) {
-            request.getRequestDispatcher("/userprofile.jsp").forward(request, response);
+            user_id = Integer.parseInt(request.getParameter("id"));
+            request.getRequestDispatcher("/userprofile.jsp?id="+user_id).forward(request, response);
 
-        } 
+        }
 
     }
 
@@ -83,15 +85,14 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        
-            //file upload
-            if (request.getParameter("btnSave") != null) {
-            
+        //file upload
+        if (request.getParameter("uploadImg") != null) {
+
             String fileName = "";
-            
-            String uploadPath="";
-                    String s = getServletContext().getRealPath("") + File.separator;
-                    uploadPath=getServletContext().getRealPath("") + File.separator;                 
+
+            String uploadPath = "";
+            String s = getServletContext().getRealPath("") + File.separator;
+            uploadPath = getServletContext().getRealPath("") + File.separator;
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -102,11 +103,29 @@ public class UserController extends HttpServlet {
                     fileName = (String) getFileName(part);
                     if (fileName != null && !fileName.isEmpty()) {
                         part.write(uploadPath + File.separator + fileName);
-                    } 
+                    }
                 }
             }
-            response.sendRedirect("/UserController");
+            UserDAO dao = new UserDAO();
             
+            response.sendRedirect("/UserController?id="+user_id);
+
+        } else if (request.getParameter("btnSave") != null) {
+
+            String Usercall_name = request.getParameter("txtCallName");
+            String UserSurname = request.getParameter("txtUserSurname");
+            String Phone_number = request.getParameter("txtPhoneNumber");
+            String Address = request.getParameter("txtAddress");
+            String Email = request.getParameter("txtEmail");
+
+            User obj = new User(user_id, Usercall_name, UserSurname, Email, Phone_number, Address);
+            UserDAO dao = new UserDAO();
+            int updated = dao.updateUserInfo(user_id, obj);
+            if (updated == 0) {
+                response.sendRedirect("/err"+ user_id);
+            }else
+            response.sendRedirect("/UserController?id=" + user_id);
+
         }
     }
 
