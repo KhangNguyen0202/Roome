@@ -52,7 +52,7 @@
                     <section>
                         <div class="content-wrapper">
                             <h4 class="section-heading">Enter your Hostel details</h4>
-                            <form action="HostelController" method="post" enctype="multipart/form-data">
+                            <form id="hostelForm" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="txtHostelName" class="sr-only">Hostel Name</label>
@@ -94,7 +94,7 @@
                                     <label for="txtPic">Product Picture</label>
                                     <input type="file" class="form-control" id="txtPic" name="txtPic" required>
                                 </div>
-                                <button type="submit" name="btnFinishCreate" class="btn btn-success mt-3 mb-3">Add Product</button>
+                                <button type="button" id="btnNext" class="btn btn-success mt-3 mb-3">Next</button>
                             </form>
                         </div>
                     </section>
@@ -176,6 +176,19 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="assets/js/jquery.steps.min.js"></script>
         <script src="assets/js/bd-wizard.js"></script>
-       
+        <script>
+            $(document).ready(function(){
+                $("#wizard").steps({
+                    headerTag: "h3",
+                    bodyTag: "section",
+                    transitionEffect: "slideLeft",
+                    autoFocus: true
+                });
+
+                $("#btnNext").on("click", function(){
+                    $("#wizard").steps("next");
+                });
+            });
+        </script>
     </body>
 </html>
