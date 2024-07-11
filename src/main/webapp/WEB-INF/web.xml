@@ -4,9 +4,25 @@
         <servlet-name>HostelController</servlet-name>
         <servlet-class>Controllers.HostelController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UserController</servlet-name>
+        <servlet-class>Controllers.LoginController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SignUpController</servlet-name>
+        <servlet-class>Controllers.SignUpController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HostelController</servlet-name>
         <url-pattern>/HostelController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserController</servlet-name>
+        <url-pattern>/UserController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SignUpController</servlet-name>
+        <url-pattern>/SignUpController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

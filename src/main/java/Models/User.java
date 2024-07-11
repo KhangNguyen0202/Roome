@@ -11,10 +11,12 @@ import java.sql.Timestamp;
  * @author nguye
  */
 public class User {
+
     private int user_id;
     private String username;
     private String usercall_name;
     private String userSurname;
+    private String password;
     private String email;
     private String phone_number;
     private String address;
@@ -35,9 +37,13 @@ public class User {
         this.created_at = created_at;
     }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public User() {
     }
-    
 
     public int getUser_id() {
         return user_id;
@@ -118,7 +124,13 @@ public class User {
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
-    
-    
-    
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
