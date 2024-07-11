@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -9,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import Models.User;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -17,6 +20,7 @@ import java.sql.Statement;
  * @author nguye
  */
 public class UserDAO {
+
     public ResultSet getAll() {
         Connection conn = DBConnection.getConnection();
         ResultSet rs = null;
@@ -32,6 +36,7 @@ public class UserDAO {
         }
         return rs;
     }
+
     public User getUserByID(int pro_id) {
         Connection conn = DBConnection.getConnection();
         User obj;
@@ -60,6 +65,37 @@ public class UserDAO {
         }
         return obj;
     }
+
+    public boolean login(User acc) {
+        Connection conn = DBConnection.getConnection();
+        try {
+            String sql = "select * from users where username =? and password=?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, acc.getUsername());
+            pst.setString(2, md5Hash(acc.getPassword()));
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+        return false;
+    }
+
+    public String md5Hash(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(password.getBytes());
+        byte[] bytes = md.digest();
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1).toUpperCase());
+        }
+        return sb.toString();
+    }
+
+
+   
     
     public int updateProduct(int user_id, User newinfo) {
         Connection conn = DBConnection.getConnection();
@@ -115,3 +151,4 @@ public class UserDAO {
         return count;
     }
 }
+

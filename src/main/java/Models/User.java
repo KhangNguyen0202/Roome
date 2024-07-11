@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -11,10 +12,12 @@ import java.sql.Timestamp;
  * @author nguye
  */
 public class User {
+
     private int user_id;
     private String username;
     private String usercall_name;
     private String userSurname;
+    private String password;
     private String email;
     private String phone_number;
     private String address;
@@ -43,8 +46,14 @@ public class User {
         this.address = address;
     }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public User() {
     }
+
     
 
     public int getUser_id() {
@@ -126,7 +135,13 @@ public class User {
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
-    
-    
-    
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
