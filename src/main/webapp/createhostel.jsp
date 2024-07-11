@@ -31,6 +31,14 @@
                 outline: 0;
                 box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             }
+            .btn-next-custom {
+                position: relative;
+                float: right;
+                margin-top: 20px; /* Adjust the top margin as needed */
+            }
+            .bd-wizard-step-num {
+                display: none; /* Hides the step number */
+            }
         </style>
     </head>
     <body>
@@ -67,7 +75,7 @@
                                                 ResultSet rs = dao.getAllProvince();
                                                 while (rs.next()) {
                                             %>
-                                            <option value="<%= rs.getString("Province_ID") %>"><%= rs.getString("Province_Name") %></option>
+                                            <option value="<%= rs.getString("Province_ID")%>"><%= rs.getString("Province_Name")%></option>
                                             <%
                                                 }
                                             %>
@@ -94,80 +102,10 @@
                                     <label for="txtPic">Product Picture</label>
                                     <input type="file" class="form-control" id="txtPic" name="txtPic" required>
                                 </div>
-                                <button type="button" id="btnNext" class="btn btn-success mt-3 mb-3">Next</button>
+                                <button type="button" id="btnNext" class="btn btn-success btn-next-custom mt-3 mb-3">Next</button>
                             </form>
                         </div>
-                    </section>
-                    <h3>
-                        <div class="media">
-                            <div class="bd-wizard-step-icon"><i class="mdi mdi-bank"></i></div>
-                            <div class="media-body">
-                                <div class="bd-wizard-step-title">Rooms Details</div>
-                                <div class="bd-wizard-step-subtitle">Step 2</div>
-                            </div>
-                        </div>
-                    </h3>
-                    <section>
-                        <div class="content-wrapper">
-                            <h4 class="section-heading">Enter your Rooms details</h4>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="txtTotalRooms" class="sr-only">Total Rooms</label>
-                                    <input type="number" name="txtTotalRooms" id="txtTotalRooms" class="form-control" placeholder="Total Rooms">
-                                </div>
-                            </div>
-                            <h5 class="mt-4">Room Types</h5>
-                            <div id="roomTypesContainer"></div>
-                            <button type="button" id="addRoomTypeBtn" class="btn btn-primary mt-3">Add Room Type</button>
-                        </div>
-                    </section>
-                    <h3>
-                        <div class="media">
-                            <div class="bd-wizard-step-icon"><i class="mdi mdi-camera"></i></div>
-                            <div class="media-body">
-                                <div class="bd-wizard-step-title">Upload Room Images</div>
-                                <div class="bd-wizard-step-subtitle">Step 3</div>
-                            </div>
-                        </div>
-                    </h3>
-                    <section>
-                        <div class="content-wrapper">
-                            <h4 class="section-heading">Upload images for each room type</h4>
-                            <form id="uploadForm" action="RoomController" method="post" enctype="multipart/form-data">
-                                <div id="roomImagesContainer"></div>
-                                <button type="submit" class="btn btn-success mt-3">Upload Images</button>
-                            </form>
-                        </div>
-                    </section>
-                    <h3>
-                        <div class="media">
-                            <div class="bd-wizard-step-icon"><i class="mdi mdi-account-check-outline"></i></div>
-                            <div class="media-body">
-                                <div class="bd-wizard-step-title">Review</div>
-                                <div class="bd-wizard-step-subtitle">Step 4</div>
-                            </div>
-                        </div>
-                    </h3>
-                    <section>
-                        <div class="content-wrapper">
-                            <h4 class="section-heading mb-5">Review your Details</h4>
-                            <h6 class="font-weight-bold">Hostel Details</h6>
-                            <p class="mb-4">
-                                Hostel Name: <span id="enteredHostelName"></span><br>
-                                Address: <span id="enteredAddress"></span><br>
-                                Phone: <span id="enteredPhoneNumber"></span><br>
-                                Description: <span id="enteredDescription"></span>
-                            </p>
-                            <h6 class="font-weight-bold">Rooms Details</h6>
-                            <p class="mb-0">
-                                Total Rooms: <span id="enteredTotalRooms"></span><br>
-                                <span id="roomTypesReview"></span>
-                            </p>
-                            <h6 class="font-weight-bold">Room Images</h6>
-                            <div id="roomImagesReview"></div>
-                            <button type="button" name="btnFinishCreate" class="btn btn-success" onclick="submitForm()">Finish</button>
-                        </div>
-                    </section>
+                    </section>                
                 </div>
             </div>
         </main>
@@ -176,19 +114,5 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="assets/js/jquery.steps.min.js"></script>
         <script src="assets/js/bd-wizard.js"></script>
-        <script>
-            $(document).ready(function(){
-                $("#wizard").steps({
-                    headerTag: "h3",
-                    bodyTag: "section",
-                    transitionEffect: "slideLeft",
-                    autoFocus: true
-                });
-
-                $("#btnNext").on("click", function(){
-                    $("#wizard").steps("next");
-                });
-            });
-        </script>
     </body>
 </html>

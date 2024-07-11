@@ -1,43 +1,40 @@
-//Wizard Init
+$(document).ready(function(){
+    $("#wizard").steps({
+        headerTag: "h3",
+        bodyTag: "section",
+        transitionEffect: "slideLeft",
+        autoFocus: true,
+        onInit: function (event, currentIndex) {
+            // Hide the finish button
+            $(".actions a[href='#finish']").hide();
+        }
+    });
 
-$("#wizard").steps({
-    headerTag: "h3",
-    bodyTag: "section",
-    transitionEffect: "none",
-    titleTemplate: '#title#'
+    $("#btnNext").on("click", function(){
+        submitForm();
+    });
 });
 
-//Form control
+function submitForm() {
+    var form = $('#hostelForm')[0];
+    var data = new FormData(form);
 
-$('#firstName').on('change', function(e) {
-    $('#enteredFirstName').text(e.target.value || 'Cha');
-});
-
-$('#lastName').on('change', function(e) {
-    $('#enteredLastName').text(e.target.value || 'Ji-Hun C');
-});
-
-$('#phoneNumber').on('change', function(e) {
-    $('#enteredPhoneNumber').text(e.target.value || '+230-582-6609');
-});
-
-$('#emailAddress').on('change', function(e) {
-    $('#enteredEmailAddress').text(e.target.value || 'willms_abby@gmail.com');
-});
-
-$('#designation').on('change', function(e) {
-    $('#enteredDesignation').text(e.target.value || 'Junior Developer');
-});
-
-$('#department').on('change', function(e) {
-    $('#enteredDepartment').text(e.target.value || 'UI Development');
-});
-
-$('#employeeNumber').on('change', function(e) {
-    $('#enteredEmployeeNumber').text(e.target.value || 'JDUI36849');
-});
-
-$('#workEmailAddress').on('change', function(e) {
-    $('#enteredWorkEmailAddress').text(e.target.value || 'willms_abby@company.com');
-});
-
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "HostelController",
+        data: data,
+        processData: false, // prevent jQuery from converting the data
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (response) {
+            // Move to the next step in the wizard
+            $("#wizard").steps("next");
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+            alert("An error occurred while submitting the form.");
+        }
+    });
+}
