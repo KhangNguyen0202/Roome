@@ -55,7 +55,7 @@ public class HostelController extends HttpServlet {
         // Thêm thông tin log để kiểm tra giá trị landlordId
         System.out.println("landlordId: " + landlordId);
 
-        if (request.getParameter("btnFinishCreate") != null) {
+        if (request.getParameter("btnNext") != null) {
             System.out.println("Processing form submission...");
 
             String hostelName = request.getParameter("txtHostelName");
@@ -99,7 +99,7 @@ public class HostelController extends HttpServlet {
             System.out.println("Inserted rows: " + count);
 
             if (count > 0) {
-                response.sendRedirect("success.jsp");
+                System.out.println("Data succesfully added");
             } else {
                 response.sendRedirect("error.jsp");
             }
