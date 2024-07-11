@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import Models.User;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -58,5 +59,26 @@ public class UserDAO {
             obj = null;
         }
         return obj;
+    }
+    
+    public int updateProduct(int user_id, User newinfo) {
+        Connection conn = DBConnection.getConnection();
+        int count;
+        try {
+            String sql = "UPDATE users SET username = ?, usercall_name = ?, usersurname = ?, email=? , phone_number=? , address=? , user_image=? WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, newinfo.getUsername());
+            pst.setString(2, newinfo.getUsercall_name());
+            pst.setString(3, newinfo.getUsername());
+            pst.setString(4, newinfo.getEmail());
+            pst.setString(5, newinfo.getPhone_number());
+            pst.setString(6, newinfo.getAddress());
+            pst.setString(7, newinfo.getUser_image());
+            pst.setInt(8, user_id);
+            count = pst.executeUpdate();
+        } catch (SQLException ex) {
+            count = 0;
+        }
+        return count;
     }
 }

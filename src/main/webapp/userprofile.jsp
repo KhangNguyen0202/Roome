@@ -75,29 +75,29 @@
             /* The actual popup */
             .popup .popuptext {
                 visibility: hidden;
-                width: 40px;
+                width: 100px;
+                height: 25px;
                 background-color: #555;
                 color: #fff;
                 text-align: center;
                 border-radius: 3px;
-                padding: -2px 0;
                 position: absolute;
                 z-index: 1;
-                bottom: 0%;
-                left: 28%;
-                margin-left: -70px;
+                bottom: -42px;
+                left: -30px;
+                margin-left: -50px;
             }
 
             /* Popup arrow */
             .popup .popuptext::after {
                 content: "";
                 position: absolute;
-                bottom: 86%;
-                left: 95%;
+                bottom: 100%;
+                left: 5%;
                 margin-left: -3px;
                 border-width: 5px;
                 border-style: solid;
-                border-color: transparent transparent #555 #555;
+                border-color: transparent transparent #555 transparent ;
             }
 
             /* Toggle this class - hide and show the popup */
@@ -125,10 +125,47 @@
                     opacity:1 ;
                 }
             }
+            /* Button styles */
+            button {
+                color: white;
+                font-size: 16px;
+                border: 2px solid #000;
+                background-color: black;
+                transition: all 0.3s ease;
+                border-radius: 3px;
+                border-color: grey;
+            }
 
-           
-            input[type="file"] {
-                display: none;
+            button:focus, button:active {
+                color: white;
+                border: 2px solid #000;
+                background-color: black;
+                outline: none;
+                border-color: grey;
+            }
+            .edit-button {
+                position: absolute;
+                top: -25px; /* Adjust this value as needed */
+                left: -80px; /* Adjust this value as needed */
+
+            }
+
+            .image-container {
+                width: 170px; /* Adjust width and height to your desired circle size */
+                height: 170px;
+                border-radius: 50%; /* Ensures the container itself is a circle */
+                overflow: hidden;
+                position: relative; /* Ensures proper positioning for child elements */
+            }
+
+            .image-container img {
+                width: 100%;
+                height: 100%; /* Ensures the image fills the circular container */
+                object-fit: cover; /* Crops the image to fit within the circle */
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
 
         </style>
@@ -151,18 +188,24 @@
             </script>
             <form method="post" action="/UserController" enctype="multipart/form-data">
                 <div class="row">
+                    <%--User data --%>
                     <div class="col-md-3 border-right">
-                        <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                        <div class="d-flex flex-column align-items-center text-left p-3 py-5">
+                            <div class="w-100">
+                                <label class="labels">Profile picture</label>
+                            </div>
 
-                            <div class="popup" onclick="myFunction()"><img class="rounded-circle mt-5" height="200px" width="200px" src="Screenshot 2024-01-04 111008.png">
+                            <div class="image-container">
+                                <img class="rounded-circle img-fluid" src="<%=user.getUser_image()%>" alt="Your Image">
+                            </div>
+
+                            <div class="popup" onclick="myFunction()"> <button type="button" class="edit-button">Edit</button>                               
                                 <span class="popuptext" id="myPopup">
-                                    <input type="file" class="form-control" id="txtPic" name="txtPic">
-                                    <label for="txtPic">Edit</label>
+                                    <input type="file" class="form-control" id="txtPic" name="txtPic" style="display: none;">
+                                    <label for="txtPic">Choose a file</label> 
                                 </span>
                             </div>
 
-                            <span class="font-weight-bold"><%=user.getUsercall_name()%></span>
-                            <span class="text-black-50"><%=user.getEmail()%></span>
                         </div>
                     </div>
                     <div class="col-md-5 border-right">
@@ -199,8 +242,11 @@
                             <div class="mt-5 text-center">
                                 <button class="btn btn-primary profile-button" type="submit" name="btnSave">Save Profile</button>
                             </div>
-                        </div>
+                        </div>                    
                     </div>
+                    <%--End User data --%>
+
+                    <%--User hostel --%>            
                     <div class="col-md-4">
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center experience">
@@ -219,8 +265,11 @@
                             </div>
                         </div>
                     </div>
+                    <%-- End User hostel --%>             
                 </div>
-            </form>       
+
+            </form> 
+
         </div>
     </body>
 </html>
