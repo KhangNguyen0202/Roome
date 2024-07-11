@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import Models.User;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -92,4 +94,61 @@ public class UserDAO {
         return sb.toString();
     }
 
+
+   
+    
+    public int updateProduct(int user_id, User newinfo) {
+        Connection conn = DBConnection.getConnection();
+        int count;
+        try {
+            String sql = "UPDATE users SET username = ?, usercall_name = ?, usersurname = ?, email=? , phone_number=? , address=? , user_image=? WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, newinfo.getUsername());
+            pst.setString(2, newinfo.getUsercall_name());
+            pst.setString(3, newinfo.getUsername());
+            pst.setString(4, newinfo.getEmail());
+            pst.setString(5, newinfo.getPhone_number());
+            pst.setString(6, newinfo.getAddress());
+            pst.setString(7, newinfo.getUser_image());
+            pst.setInt(8, user_id);
+            count = pst.executeUpdate();
+        } catch (SQLException ex) {
+            count = 0;
+        }
+        return count;
+    }
+    public int updateUserInfo(int user_id, User newinfo) {
+        Connection conn = DBConnection.getConnection();
+        int count;
+        try {
+            String sql = "UPDATE users SET usercall_name = ?, usersurname = ?, email=? , phone_number=? , address=? WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, newinfo.getUsercall_name());
+            pst.setString(2, newinfo.getUserSurname());
+            pst.setString(3, newinfo.getEmail());
+            pst.setString(4, newinfo.getPhone_number());
+            pst.setString(5, newinfo.getAddress());
+            pst.setInt(6, user_id);
+            count = pst.executeUpdate();
+        } catch (SQLException ex) {
+            count = 0;
+        }
+        return count;
+    }
+    public int updateUserImg(int user_id, String img) {
+        Connection conn = DBConnection.getConnection();
+        int count;
+        try {
+            String sql = "UPDATE users SET user_image=? WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, img);
+            
+            pst.setInt(2, user_id);
+            count = pst.executeUpdate();
+        } catch (SQLException ex) {
+            count = 0;
+        }
+        return count;
+    }
 }
+

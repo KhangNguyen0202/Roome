@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Controllers;
 
 import DAOs.HostelDAO;
@@ -11,6 +6,7 @@ import Models.Hostel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,24 +15,13 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.sql.Timestamp;
 
-/**
- *
- * @author nguye
- */
+@MultipartConfig
 public class HostelController extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -49,48 +34,42 @@ public class HostelController extends HttpServlet {
         }
     } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
     } 
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-      HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
 //        Integer landlordId = (Integer) session.getAttribute("landlord_id");
 //
 //        if (landlordId == null) {
 //            response.getWriter().write("Please log in first.");
 //            return;
 //        }
-        int  landlordId = 1;
+       
+         int landlordId = 1;
+        // Thêm thông tin log để kiểm tra giá trị landlordId
+        System.out.println("landlordId: " + landlordId);
 
         if (request.getParameter("btnFinishCreate") != null) {
+            System.out.println("Processing form submission...");
+
             String hostelName = request.getParameter("txtHostelName");
-            String provinceName = request.getParameter("txtProvince");
+            int provinceId = Integer.parseInt(request.getParameter("txtProvince"));
             String addressDetail = request.getParameter("txtAddressDetail");
             String phoneContact = request.getParameter("txtPhoneNumber");
             String description = request.getParameter("txtDescription");
             Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-             ProvinceDAO catDao = new ProvinceDAO();
-        int provinceId = catDao.getProvinceIDByName(provinceName);
+
+            System.out.println("hostelName: " + hostelName);
+            System.out.println("provinceId: " + provinceId);
+            System.out.println("addressDetail: " + addressDetail);
+            System.out.println("phoneContact: " + phoneContact);
+            System.out.println("description: " + description);
 
             // Handle file upload
             String fileName = "";
@@ -106,6 +85,7 @@ public class HostelController extends HttpServlet {
                     String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
                     fileName = uniqueFileName;
                     part.write(uploadPath + File.separator + fileName);
+                    System.out.println("File uploaded: " + fileName);
                 }
             }
 
@@ -116,11 +96,15 @@ public class HostelController extends HttpServlet {
             HostelDAO hostelDAO = new HostelDAO();
             int count = hostelDAO.addNew(hostel);
 
+            System.out.println("Inserted rows: " + count);
+
             if (count > 0) {
-                response.sendRedirect("/success.jsp");
+                response.sendRedirect("success.jsp");
             } else {
-                response.sendRedirect("/error.jsp");
+                response.sendRedirect("error.jsp");
             }
+        } else {
+            System.out.println("Button not clicked!");
         }
     }
 
@@ -134,14 +118,9 @@ public class HostelController extends HttpServlet {
         }
         return "";
     }
-    
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
+
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

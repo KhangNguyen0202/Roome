@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -43,6 +44,19 @@ public class User {
     }
 
     public User() {
+    }
+
+    public User(int user_id, String Usercall_name, String UserSurname, String Email, String Phone_number, String Address) {
+        this.user_id = user_id;
+        this.username = username;
+        this.usercall_name = usercall_name;
+        this.userSurname = userSurname;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.user_image = user_image;
+        this.user_type = user_type;
+        this.created_at = created_at;
     }
 
     public int getUser_id() {

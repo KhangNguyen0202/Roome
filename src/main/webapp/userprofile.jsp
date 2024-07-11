@@ -60,78 +60,233 @@
                 cursor: pointer;
                 border: solid 1px #BA68C8
             }
+
+            /* Popup container - can be anything you want */
+            .popup {
+                position: relative;
+                display: inline-block;
+                cursor: pointer;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            /* The actual popup */
+            .popup .popuptext {
+                visibility: hidden;
+                width: auto;
+                height: auto; /* Allow height to adjust based on content */
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 3px;
+                position: absolute;
+                z-index: 1;
+                top:  12px;
+                left: -30px;
+                margin-left: -50px;
+                padding: 5px;
+            }
+
+            /* Popup arrow */
+            .popup .popuptext::after {
+                content: "";
+                position: absolute;
+                bottom: 100%;
+                left: 5%;
+                margin-left: -3px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: transparent transparent #555 transparent ;
+            }
+
+            /* Toggle this class - hide and show the popup */
+            .popup .show {
+                visibility: visible;
+                -webkit-animation: fadeIn 1s;
+                animation: fadeIn 1s;
+            }
+
+            /* Add animation (fade in the popup) */
+            @-webkit-keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity:1 ;
+                }
+            }
+            /* Button styles */
+            button {
+                color: white;
+                font-size: 16px;
+                border: 2px solid #000;
+                background-color: black;
+                transition: all 0.3s ease;
+                border-radius: 3px;
+                border-color: grey;
+            }
+
+            button:focus, button:active {
+                color: white;
+                border: 2px solid #000;
+                background-color: black;
+                outline: none;
+                border-color: grey;
+            }
+            .edit-button {
+                position: absolute;
+                top: -25px; /* Adjust this value as needed */
+                left: -80px; /* Adjust this value as needed */
+
+            }
+
+            .image-container {
+                width: 170px; /* Adjust width and height to your desired circle size */
+                height: 170px;
+                border-radius: 50%; /* Ensures the container itself is a circle */
+                overflow: hidden;
+                position: relative; /* Ensures proper positioning for child elements */
+            }
+
+            .image-container img {
+                width: 100%;
+                height: 100%; /* Ensures the image fills the circular container */
+                object-fit: cover; /* Crops the image to fit within the circle */
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
         </style>
     </head>
 
     <body>
         <%
             UserDAO userdao = new UserDAO();
-            User user = userdao.getUserByID(1);
+            User user = userdao.getUserByID(Integer.parseInt(request.getParameter("id")));
         %>
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
-                <div class="col-md-3 border-right">
-                    <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
-                        <span class="font-weight-bold"><%=user.getUsercall_name()%></span>
-                        <span class="text-black-50"><%=user.getEmail()%></span>
-                    </div>
+                <!-- Profile Picture Form -->
+                <div class="col-md-4 border-right">
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
+                        <div class="d-flex flex-column align-items-center text-left p-3 py-5">
+                            <div class="w-100">
+                                <label class="labels">Profile picture</label>                                
+                            </div>
+
+                            <div class="image-container">
+                                <img class="rounded-circle img-fluid" src="<%=user.getUser_image()%>" alt="Your Image">
+                                <input type="hidden" id="txtHidPic" name="txtHidPic" value="<%=user.getUser_image()%>">
+                            </div>
+                            
+                            <div class="popup" onclick="myFunction()">
+                                <button type="button" class="edit-button">Edit</button>
+                                <span class="popuptext" id="myPopup">
+                                    <input type="file" class="form-control" id="txtPic" name="txtPic" onchange="updateLabel()" style="display: none" accept="image/*">
+                                    <label for="txtPic" id="fileLabel">Choose an image</label>
+                                    <button type="submit" name="uploadImg">Change</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-md-5 border-right">
-                    <div class="p-3 py-5">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">Profile Settings</h4>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <label class="labels">Name</label>
-                                <input type="text" class="form-control" placeholder="<%=user.getUsercall_name()%>" value="">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="labels">Surname</label>
-                                <input type="text" class="form-control" value="" placeholder="<%=user.getUserSurname()%>">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <label class="labels">Mobile Number</label>
-                                <input type="text" class="form-control" placeholder="<%=user.getPhone_number()%>" value="">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">Address</label>
-                                <input type="text" class="form-control" placeholder="<%=user.getAddress()%>" value="">
-                            </div>  
-                            <div class="col-md-12">
-                                <label class="labels">Email</label>
-                                <input type="text" class="form-control" placeholder="<%=user.getEmail()%>" value="">
-                            </div>  
 
-                        </div>
+                <!-- User Data Form -->
+                <div class="col-md-4">
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
+                        <div class="p-3 py-5">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="text-right">Profile Settings</h4>
 
-                        <div class="mt-5 text-center">
-                            <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="labels">Name</label>
+                                    <input type="text" class="form-control" id="txtCallName" name="txtCallName" value="<%=user.getUsercall_name()%>">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="labels">Surname</label>
+                                    <input type="text" class="form-control" id="txtUserSurname" name="txtUserSurname" value="<%=user.getUserSurname()%>">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label class="labels">Mobile Number</label>
+                                    <input type="text" class="form-control" id="txtPhoneNumber" name="txtPhoneNumber" value="<%=user.getPhone_number()%>">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="labels">Address</label>
+                                    <input type="text" class="form-control" id="txtAddress" name="txtAddress" value="<%=user.getAddress()%>">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="labels">Email</label>
+                                    <input type="text" class="form-control" id="txtEmail" name="txtEmail" value="<%=user.getEmail()%>">
+                                </div>
+                            </div>
+                            <div class="mt-5 text-center">
+                                <button class="btn btn-primary profile-button" type="submit" name="btnSave">Save Profile</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="col-md-4">
-                    <div class="p-3 py-5">
-                        <div class="d-flex justify-content-between align-items-center experience">
-                            <span>Edit Experience</span>
-                            <span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Experience</span>
+                    <!-- User Hostel Data Form -->
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
+                        <div class="p-3 py-5">
+                            <div class="d-flex justify-content-between align-items-center experience">
+                                <span>Edit Experience</span>
+                                <span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Experience</span>
+                            </div>
+                            <br>
+                            <div class="col-md-12">
+                                <label class="labels">Experience in Designing</label>
+                                <input type="text" class="form-control" placeholder="experience" value="">
+                            </div>
+                            <br>
+                            <div class="col-md-12">
+                                <label class="labels">Additional Details</label>
+                                <input type="text" class="form-control" placeholder="additional details" value="">
+                            </div>
                         </div>
-                        <br>
-                        <div class="col-md-12">
-                            <label class="labels">Experience in Designing</label>
-                            <input type="text" class="form-control" placeholder="experience" value="">
-                        </div>
-                        <br>
-                        <div class="col-md-12">
-                            <label class="labels">Additional Details</label>
-                            <input type="text" class="form-control" placeholder="additional details" value="">
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
+        <script>
+            // When the user clicks on div, open the popup
+            function myFunction() {
+                var popup = document.getElementById("myPopup");
+                popup.classList.toggle("show");
+            }
+            function updateLabel() {
+                var fileInput = document.getElementById('txtPic');
+                var fileLabel = document.getElementById('fileLabel');
+
+                // Check if a file is selected
+                if (fileInput.files.length > 0) {
+                    var fileName = fileInput.files[0].name;
+                    fileLabel.innerText = fileName; // Update label text with file name
+                } else {
+                    fileLabel.innerText = "Choose an image"; // Reset label text if no file selected
+                }
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     </body>
 </html>
