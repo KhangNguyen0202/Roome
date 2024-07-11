@@ -8,6 +8,10 @@
         <servlet-name>UserController</servlet-name>
         <servlet-class>Controllers.UserController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReviewController</servlet-name>
+        <servlet-class>Controllers.ReviewController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HostelController</servlet-name>
         <url-pattern>/HostelController</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>UserController</servlet-name>
         <url-pattern>/UserController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewController</servlet-name>
+        <url-pattern>/ReviewController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
