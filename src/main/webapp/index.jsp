@@ -30,15 +30,7 @@
             top: 0;
             z-index: 1000;
         }
-        .header-left {
-            display: flex;
-            align-items: left;
-        }
-        .header img {
-            height: 50px;
-            vertical-align: middle;
-            margin-right: 20px;
-        }
+       
         .header nav {
             flex: 1;
             text-align: center;
@@ -49,9 +41,22 @@
             text-decoration: none;
             font-weight: bold;
         }
+        
+         .header img {
+            height: 70px; 
+            vertical-align: middle;
+            margin-left: 20px;
+        }
+        
+         .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
         .header-right {
             display: flex;
             align-items: center;
+            margin-right: 30px;
         }
         .header-right button {
             background-color: white;
@@ -167,7 +172,7 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <img src="img/Roome2.jpg"s alt="LOGO">
+            <img src="img/Roome1.jpg" alt="LOGO">
         </div>
         <nav>
             <a href="infohostel.jsp">Info</a>
@@ -259,6 +264,7 @@
     </script>
 </body>
 </html>
+
 
 
 

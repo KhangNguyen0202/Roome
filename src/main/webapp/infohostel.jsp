@@ -154,7 +154,7 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <img src="logo.png" alt="LOGO">
+            <img src="img/Roome1.jpg" alt="LOGO">
         </div>
         <nav>
             <a href="#">Stays</a>
