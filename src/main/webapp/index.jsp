@@ -167,12 +167,12 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <img src="logo.png" alt="LOGO">
+            <img src="img/Roome2.jpg"s alt="LOGO">
         </div>
         <nav>
-            <a href="#">Stays</a>
-            <a href="#">Flights</a>
-            <a href="#">Flight + Hotel</a>
+            <a href="infohostel.jsp">Info</a>
+            <a href="createhostel.jsp">Create</a>
+            <a href="userprofile.jsp">User</a>
             <a href="#">Car rentals</a>
             <a href="#">Attractions</a>
             <a href="#">Airport taxis</a>

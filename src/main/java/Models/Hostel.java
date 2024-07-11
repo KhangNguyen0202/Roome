@@ -34,8 +34,16 @@ public class Hostel {
         this.created_at = created_at;
     }
 
-    public Hostel(Integer landlordId, String hostelName, int provinceId, String addressDetail, String hostelImage, String phoneContact, String description, Timestamp createdAt) {
-      
+    public Hostel(int landlord_id, String hostel_name, int province_id, String address_detail, 
+                  String hostel_image, String phone_contact, String description, Timestamp created_at) {
+        this.landlord_id = landlord_id;
+        this.hostel_name = hostel_name;
+        this.province_id = province_id;
+        this.address_detail = address_detail;
+        this.hostel_image = hostel_image;
+        this.phone_contact = phone_contact;
+        this.description = description;
+        this.created_at = created_at;
     }
 
     public int getHostel_id() {

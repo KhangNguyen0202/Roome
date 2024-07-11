@@ -32,12 +32,11 @@
                 box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             }
         </style>
-        
     </head>
     <body>
         <%
             session.setAttribute("landlord_id", 1);
-            %>
+        %>
         <main class="my-5">
             <div class="container">
                 <div id="wizard">
@@ -53,53 +52,50 @@
                     <section>
                         <div class="content-wrapper">
                             <h4 class="section-heading">Enter your Hostel details</h4>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="txtHostelName" class="sr-only">Hostel Name</label>
-                                    <input type="text" name="txtHostelName" id="txtHostelName" class="form-control" placeholder="Hostel Name">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="txtProvince" class="sr-only">Province</label>
-                                    <select class="form-select form-select-custom" name="txtProvince" id="txtProvince" required>
-                                        <option value="" disabled selected>Address</option>
-                                        <%
-                                            ProvinceDAO dao = new ProvinceDAO();
-                                            ResultSet rs = dao.getAllProvince();
-                                            while (rs.next()) {
-                                        %>
-                                        <option value="<%= rs.getString("Province_ID") %>"><%= rs.getString("Province_Name") %></option>
-                                        <%
-                                            }
-                                        %>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="txtAddressDetail" class="sr-only">Address Detail</label>
-                                    <input type="text" name="txtAddressDetail" id="txtAddressDetail" class="form-control" placeholder="Address Detail">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="txtPhoneNumber" class="sr-only">Phone Number</label>
-                                    <input type="text" name="phoneNumber" id="txtPhoneNumber" class="form-control" placeholder="Phone Number">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="txtDescription" class="sr-only">Description</label>
-                                    <input type="text" name="txtDescription" id="txtDescription" class="form-control" placeholder="Description">
-                                </div>
-                            </div>
                             <form action="HostelController" method="post" enctype="multipart/form-data">
-                                <div id="roomImagesHostelContainer"></div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="txtHostelName" class="sr-only">Hostel Name</label>
+                                        <input type="text" name="txtHostelName" id="txtHostelName" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="txtProvince" class="sr-only">Province</label>
+                                        <select class="form-select form-select-custom" name="txtProvince" id="txtProvince" required>
+                                            <option value="" disabled selected>Address</option>
+                                            <%
+                                                ProvinceDAO dao = new ProvinceDAO();
+                                                ResultSet rs = dao.getAllProvince();
+                                                while (rs.next()) {
+                                            %>
+                                            <option value="<%= rs.getString("Province_ID") %>"><%= rs.getString("Province_Name") %></option>
+                                            <%
+                                                }
+                                            %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="txtAddressDetail" class="sr-only">Address Detail</label>
+                                        <input type="text" name="txtAddressDetail" id="txtAddressDetail" class="form-control" placeholder="Address Detail" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="txtPhoneNumber" class="sr-only">Phone Number</label>
+                                        <input type="text" name="txtPhoneNumber" id="txtPhoneNumber" class="form-control" placeholder="Phone Number" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="txtDescription" class="sr-only">Description</label>
+                                        <input type="text" name="txtDescription" id="txtDescription" class="form-control" placeholder="Description" required>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="txtPic">Product Picture</label>
                                     <input type="file" class="form-control" id="txtPic" name="txtPic" required>
                                 </div>
-                                <button type="submit" class="btn btn-success mt-3">Upload Images</button>
+                                <button type="submit" name="btnFinishCreate" class="btn btn-success mt-3 mb-3">Add Product</button>
                             </form>
-                                    <button type="submit" name="btnFinishCreate" class="btn btn-success mt-3 mb-3">Add Product</button>
-                 
                         </div>
                     </section>
                     <h3>
@@ -157,7 +153,7 @@
                             <h4 class="section-heading mb-5">Review your Details</h4>
                             <h6 class="font-weight-bold">Hostel Details</h6>
                             <p class="mb-4">
-                                Hostel Name: <span id="entered"></span><br>
+                                Hostel Name: <span id="enteredHostelName"></span><br>
                                 Address: <span id="enteredAddress"></span><br>
                                 Phone: <span id="enteredPhoneNumber"></span><br>
                                 Description: <span id="enteredDescription"></span>
@@ -180,77 +176,6 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="assets/js/jquery.steps.min.js"></script>
         <script src="assets/js/bd-wizard.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const roomTypesContainer = document.getElementById('roomTypesContainer');
-                const roomImagesContainer = document.getElementById('roomImagesContainer');
-                const addRoomTypeBtn = document.getElementById('addRoomTypeBtn');
-                const totalRoomsInput = document.getElementById('txtTotalRooms');
-
-                addRoomTypeBtn.addEventListener('click', function () {
-                    const roomTypeIndex = roomTypesContainer.children.length;
-
-                    const roomTypeDiv = document.createElement('div');
-                    roomTypeDiv.classList.add('room-type', 'mb-3');
-                    roomTypeDiv.innerHTML = `
-                        <h6>Room Type ${roomTypeIndex + 1}</h6>
-                        <button type="button" class="btn btn-danger btn-sm remove-room-type">Remove</button>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="roomTypeName${roomTypeIndex}" class="sr-only">Room Type Name</label>
-                                <input type="text" name="roomTypeName${roomTypeIndex}" id="roomTypeName${roomTypeIndex}" class="form-control" placeholder="Room Type Name">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="roomTypeCount${roomTypeIndex}" class="sr-only">Number of Rooms</label>
-                                <input type="number" name="roomTypeCount${roomTypeIndex}" id="roomTypeCount${roomTypeIndex}" class="form-control" placeholder="Number of Rooms">
-                            </div>
-                        </div>
-                    `;
-
-                    roomTypesContainer.appendChild(roomTypeDiv);
-
-                    const removeRoomTypeBtn = roomTypeDiv.querySelector('.remove-room-type');
-                    removeRoomTypeBtn.addEventListener('click', function () {
-                        roomTypesContainer.removeChild(roomTypeDiv);
-                        updateRoomTypeIndexes();
-                    });
-                });
-
-                function updateRoomTypeIndexes() {
-                    Array.from(roomTypesContainer.children).forEach((roomTypeDiv, index) => {
-                        roomTypeDiv.querySelector('h6').textContent = `Room Type ${index + 1}`;
-                        roomTypeDiv.querySelector('input[name^="roomTypeName"]').setAttribute('name', `roomTypeName${index}`);
-                        roomTypeDiv.querySelector('input[name^="roomTypeCount"]').setAttribute('name', `roomTypeCount${index}`);
-                    });
-                }
-
-                const hostelDetailsForm = document.querySelector('#wizard section:nth-of-type(1)');
-                hostelDetailsForm.addEventListener('submit', function (event) {
-                    event.preventDefault();
-                    const enteredHostelName = document.getElementById('txtHostelName').value;
-                    const enteredAddress = document.getElementById('txtProvince').selectedOptions[0].textContent;
-                    const enteredPhoneNumber = document.getElementById('txtPhoneNumber').value;
-                    const enteredDescription = document.getElementById('txtDescription').value;
-
-                    document.getElementById('entered').textContent = enteredHostelName;
-                    document.getElementById('enteredAddress').textContent = enteredAddress;
-                    document.getElementById('enteredPhoneNumber').textContent = enteredPhoneNumber;
-                    document.getElementById('enteredDescription').textContent = enteredDescription;
-                });
-
-                totalRoomsInput.addEventListener('change', function () {
-                    document.getElementById('enteredTotalRooms').textContent = totalRoomsInput.value;
-                });
-            });
-
-            function submitForm() {
-                swal({
-                    title: "Form Submitted",
-                    text: "Your form has been submitted successfully!",
-                    icon: "success",
-                    button: "OK",
-                });
-            }
-        </script>
+       
     </body>
 </html>
