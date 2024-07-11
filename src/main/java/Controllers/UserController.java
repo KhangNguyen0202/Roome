@@ -31,6 +31,7 @@ import java.io.File;
 public class UserController extends HttpServlet {
 
     private int user_id;
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -107,7 +108,8 @@ public class UserController extends HttpServlet {
                 }
             }
             UserDAO dao = new UserDAO();
-            
+            User user = dao.getUserByID(user_id);
+            dao.updateUserImg(user_id, fileName);
             response.sendRedirect("/UserController?id="+user_id);
 
         } else if (request.getParameter("btnSave") != null) {

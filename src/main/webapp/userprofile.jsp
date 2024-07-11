@@ -201,7 +201,6 @@
                                 </span>
                             </div>
                         </div>
-                                <%= request.getParameter("txtHidPic")%>
                     </form>
                 </div>
 
