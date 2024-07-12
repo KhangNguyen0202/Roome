@@ -10,7 +10,7 @@
     </servlet>
     <servlet>
         <servlet-name>UserController</servlet-name>
-        <servlet-class>Controllers.LoginController</servlet-class>
+        <servlet-class>Controllers.UserController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ReviewController</servlet-name>
@@ -20,6 +20,7 @@
         <servlet-name>ForgotPasswordController</servlet-name>
         <servlet-class>Controllers.ForgotPasswordController</servlet-class>
     </servlet>
+    <servlet>
         <servlet-name>SignUp1Controller</servlet-name>
         <servlet-class>Controllers.SignUp1Controller</servlet-class>
     </servlet>

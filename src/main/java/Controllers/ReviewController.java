@@ -1,40 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controllers;
 
 import DAOs.ReviewDAO;
 import Models.Reviews;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Timestamp;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.Timestamp;
+import java.io.PrintWriter;
 
 /**
- *
- * @author DELL
+ * ReviewController handles review submission.
  */
 public class ReviewController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -47,38 +32,20 @@ public class ReviewController extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (request.getParameter("btnSummitCmt") != null) {
             System.out.println("BTN SUMMIT CMT PRESSED");
 
-            String hostelIDParam = request.getParameter("hostelID");
             String ratingParam = request.getParameter("rating");
-
+            String hostelIDParam = "1"; // Temporary hostelID for testing
             System.out.println("hostelID: " + hostelIDParam);
             System.out.println("rating: " + ratingParam);
 
@@ -93,8 +60,7 @@ public class ReviewController extends HttpServlet {
                 String comment = request.getParameter("comment");
 
                 HttpSession session = request.getSession();
-                System.out.println("Print review data: " + starNumber + " " + comment);
-                String userID = (String) session.getAttribute("userID");
+                String userID = "1"; // Temporary userID for testing
 
                 if (userID == null) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
@@ -102,8 +68,14 @@ public class ReviewController extends HttpServlet {
                 }
 
                 ReviewDAO rDAO = new ReviewDAO();
-                Reviews obj = new Reviews(1, Integer.parseInt(userID), hostelID, starNumber, comment, new Timestamp(System.currentTimeMillis()));
-                rDAO.createReview(obj);
+                Reviews obj = new Reviews(0, Integer.parseInt(userID), hostelID, starNumber, comment, new Timestamp(System.currentTimeMillis()));
+
+                int count = rDAO.createReview(obj);
+                if (count > 0) {
+                    request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
+                } else {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create review");
+                }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid number format");
@@ -111,14 +83,8 @@ public class ReviewController extends HttpServlet {
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Handles review submission";
+    }
 }
