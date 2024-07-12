@@ -74,14 +74,9 @@
                 color: white;
                 padding: 100px 20px 50px;
                 text-align: center;
-                margin-top: 80px;
-            }
-            .search-section h1 {
-                margin: 0;
-                font-size: 36px;
+                margin-top: 100px;
             }
             .search-bar {
-                position: relative;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -89,15 +84,15 @@
                 margin-top: 20px;
             }
             .search-bar .search-input,
-            .search-bar .search-date,
             .search-bar .search-select {
                 background-color: white;
                 border-radius: 5px;
                 padding: 10px;
                 font-size: 16px;
                 border: 3px solid blue;
-                width: 200px;
+                width: 400px; 
             }
+
             .search-bar .search-button {
                 background-color: #0071c2;
                 color: white;
@@ -106,6 +101,7 @@
                 padding: 14.7px 32px;
                 border: none;
             }
+
             .dropdown {
                 position: relative;
             }
@@ -128,7 +124,7 @@
                 background-color: #f1f1f1;
             }
             .hostel-section {
-                padding: 50px 20px;
+                padding: 10px 20px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -190,8 +186,8 @@
             </div>
         </header>
         <section class="search-section">
-            <h1 class="text-left">Find your room</h1>
-            <p class="text-left">Search low prices on hotels, homes and much more...</p>
+            <h1>Find your room</h1>
+            <p>Search low prices on hotels, homes and much more...</p>
             <div class="search-bar">
                 <div class="dropdown">
                     <input type="text" class="search-input" placeholder="Where are you going?" onkeyup="filterFunction()">
@@ -202,14 +198,11 @@
                         <div>Phu Quoc, Vietnam</div>
                         <div>Ho Chi Minh City, Vietnam</div>
                     </div>
-                </div>
-                <input type="text" class="search-date" placeholder="Check-in/out date">
-                <select class="search-select">
-                    <option>2 adults · 0 children · 1 room</option>
-                </select>
+                </div>                
                 <button class="search-button">Search</button>
             </div>
         </section>
+
         <%
             HostelDAO productDao = new HostelDAO();
             ResultSet rs = productDao.getAll();
@@ -217,7 +210,7 @@
         %>
         <section class="hostel-section">
             <div class="hostel">
-                <img src="hostel1.jpg" alt="Hostel Image">
+                <img src="img/hostel1.jpg" alt="Hostel Image">
                 <div class="hostel-info">
                     <h2>Hostel Name</h2>
                     <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
@@ -262,7 +255,3 @@
         </script>
     </body>
 </html>
-
-
-
-
