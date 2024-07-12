@@ -284,4 +284,7 @@
                 document.getElementById("dropdown").style.display = "none";
                 searchHostel(); // Trigger search when a province is selected
             });
-
+        });
+    </script>
+</body>
+</html>
