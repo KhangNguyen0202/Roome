@@ -4,6 +4,7 @@
     Author     : sakak
 --%>
 
+<%@page import="java.io.File"%>
 <%@page import="Models.User"%>
 <%@page import="DAOs.UserDAO"%>
 <%@page import="DB.DBConnection"%>
@@ -174,24 +175,30 @@
 
     <body>
         <%
+            if (session.getAttribute("user_id") == null || session.getAttribute("user_id").equals("")) {
+                response.sendRedirect("LoginController");
+            }
             UserDAO userdao = new UserDAO();
-            User user = userdao.getUserByID(Integer.parseInt(request.getParameter("id")));
+            User user = userdao.getUserByID(Integer.parseInt(session.getAttribute("user_id") + ""));
         %>
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
                 <!-- Profile Picture Form -->
                 <div class="col-md-4 border-right">
-                    <form method="post" action="/UserController" enctype="multipart/form-data">
+                    <form method="post" action="/UserController/userprofile" enctype="multipart/form-data">
                         <div class="d-flex flex-column align-items-center text-left p-3 py-5">
                             <div class="w-100">
-                                <label class="labels">Profile picture</label>                                
+                                <label class="labels">Profile picture</label>       
+                                <%String s = getServletContext().getRealPath("") + File.separator;
+                                    String uploadPath = getServletContext().getRealPath("");%>
+                                <%=uploadPath%><%=user.getUser_image()%>
                             </div>
 
                             <div class="image-container">
                                 <img class="rounded-circle img-fluid" src="<%=user.getUser_image()%>" alt="Your Image">
                                 <input type="hidden" id="txtHidPic" name="txtHidPic" value="<%=user.getUser_image()%>">
                             </div>
-                            
+
                             <div class="popup" onclick="myFunction()">
                                 <button type="button" class="edit-button">Edit</button>
                                 <span class="popuptext" id="myPopup">
@@ -201,13 +208,14 @@
                                 </span>
                             </div>
                         </div>
-                                <%= request.getParameter("txtHidPic")%>
+
+
                     </form>
                 </div>
 
                 <!-- User Data Form -->
                 <div class="col-md-4">
-                    <form method="post" action="/UserController" enctype="multipart/form-data">
+                    <form method="post" action="/UserController/userprofile" enctype="multipart/form-data">
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4 class="text-right">Profile Settings</h4>
@@ -245,7 +253,7 @@
                 </div>
                 <div class="col-md-4">
                     <!-- User Hostel Data Form -->
-                    <form method="post" action="/UserController" enctype="multipart/form-data">
+                    <form method="post" action="/UserController/userprofile" enctype="multipart/form-data">
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center experience">
                                 <span>Edit Experience</span>
