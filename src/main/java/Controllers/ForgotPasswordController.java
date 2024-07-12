@@ -77,7 +77,7 @@ public class ForgotPasswordController extends HttpServlet {
 
         if (path.startsWith("/ForgotPasswordController/EnterEmail")) {
             request.getRequestDispatcher("/forgotPasswordStep1.jsp").forward(request, response);
-} else if (path.startsWith("/ForgotPasswordController/EnterOTP")) {
+        } else if (path.startsWith("/ForgotPasswordController/EnterOTP")) {
             System.out.println("Vo duoc toi EnterOTP");
             String[] s = path.split("/");
             String cus_email = s[s.length - 1];
@@ -135,7 +135,7 @@ public class ForgotPasswordController extends HttpServlet {
             System.out.println("CUSTOMER OTP AFTER INSERT OTP: " + pas_otp);
             try {
                 if (verifyOTP(cus_email, pas_otp)) {
-System.out.println("Verify thanh cong");
+                    System.out.println("Verify thanh cong");
                     updateOTPStatus(cus_email, pas_otp);
                     response.sendRedirect(request.getContextPath() + "/ForgotPasswordController/ResetPassword/" + cus_email);
                 } else {
@@ -201,7 +201,7 @@ System.out.println("Verify thanh cong");
         try {
             message.addHeader("Content-type", "text/HTML; charset=UTF-8");
             message.setFrom(new InternetAddress(user));
-message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(cus_email, false));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(cus_email, false));
             message.setSubject(subject);
             message.setText(body);
 
@@ -271,7 +271,7 @@ message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(cus_email,
 
     public boolean verifyOTP(String cus_email, String otp) throws SQLException {
         Connection conn = DBConnection.getConnection();
-String query = "SELECT TOP 1 otp, otp_expire_at FROM ForgotPassword WHERE cus_email = ? AND otp_status = 1 ORDER BY otp_created_at DESC";
+        String query = "SELECT TOP 1 otp, otp_expire_at FROM ForgotPassword WHERE cus_email = ? AND otp_status = 1 ORDER BY otp_created_at DESC";
 
         try ( PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, cus_email);
