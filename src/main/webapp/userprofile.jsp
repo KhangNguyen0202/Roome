@@ -176,16 +176,21 @@
     <body>
         <%
             if (session.getAttribute("user_id") == null || session.getAttribute("user_id").equals("")) {
-                response.sendRedirect("LoginController");
-            }
-            UserDAO userdao = new UserDAO();
-            User user = userdao.getUserByID(Integer.parseInt(session.getAttribute("user_id") + ""));
+                response.sendRedirect("/LoginController");
+                System.out.println(session.getAttribute("user_id"));
+            } else {
+                UserDAO userdao = new UserDAO();
+                String user_id = session.getAttribute("user_id") + "";
+                System.out.println(user_id);
+                int user_id_int = Integer.parseInt(user_id);
+                User user = userdao.getUserByID(user_id_int);
         %>
+        <a href="/indexlogged.jsp" style="color: black">Back</a>
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
                 <!-- Profile Picture Form -->
                 <div class="col-md-4 border-right">
-                    <form method="post" action="/UserController/userprofile" enctype="multipart/form-data">
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
                         <div class="d-flex flex-column align-items-center text-left p-3 py-5">
                             <div class="w-100">
                                 <label class="labels">Profile picture</label>       
@@ -215,7 +220,7 @@
 
                 <!-- User Data Form -->
                 <div class="col-md-4">
-                    <form method="post" action="/UserController/userprofile" enctype="multipart/form-data">
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4 class="text-right">Profile Settings</h4>
@@ -253,7 +258,7 @@
                 </div>
                 <div class="col-md-4">
                     <!-- User Hostel Data Form -->
-                    <form method="post" action="/UserController/userprofile" enctype="multipart/form-data">
+                    <form method="post" action="/UserController" enctype="multipart/form-data">
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center experience">
                                 <span>Edit Experience</span>
@@ -296,6 +301,10 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <% 
+            }
+        %>
+
 
     </body>
 </html>

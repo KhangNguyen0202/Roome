@@ -218,7 +218,7 @@
         <%
             if (session.getAttribute("user_id") == null || session.getAttribute("user_id").equals("")) {
                 response.sendRedirect("LoginController");
-            }
+            }else{
 
         %>
         <header class="header">
@@ -237,17 +237,17 @@
                 User user = dao.getUserByID(Integer.parseInt(session.getAttribute("user_id") + ""));
             %>
             <div class="header-right">
-                <img src="/img/<%=user.getUser_image()%>" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
+                <img src="<%=user.getUser_image()%>" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
             </div>
         </header>
 
         <div id="sidebar" class="sidebar">
             <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
             <div class="sidebar-header">
-                <img src="/img/<%=user.getUser_image()%>" alt="User Avatar">
+                <img src="<%=user.getUser_image()%>" alt="User Avatar">
                 <span class="username"><%=user.getUsername()%></span>
             </div>
-            <a href="/UserController/userprofile">Profile</a>
+            <a href="/UserController">Profile</a>
             <a href="#">Bookings</a>
             <a href="#">Settings</a>
             <a href="#">Logout</a>
@@ -335,5 +335,8 @@
                 document.getElementById("sidebar").style.width = "0";
             }
         </script>
+        <%
+            }
+        %>
     </body>
 </html>
