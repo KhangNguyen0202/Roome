@@ -92,7 +92,7 @@
             padding: 10px;
             font-size: 16px;
             border: 3px solid blue;
-            width: 385  px;
+            width: 385px;
         }
 
         .search-bar .search-button {
