@@ -14,6 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home Page</title>
         <style>
+            /* Styles here (same as your existing styles) */
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
@@ -90,7 +91,7 @@
                 padding: 10px;
                 font-size: 16px;
                 border: 3px solid blue;
-                width: 400px; 
+                width: 400px;
             }
 
             .search-bar .search-button {
@@ -124,14 +125,16 @@
                 background-color: #f1f1f1;
             }
             .hostel-section {
-                padding: 10px 20px;
+                padding: 20px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 text-align: left;
-                overflow-y: auto;
-                max-height: calc(100vh - 160px); /* Adjust to fit within the viewport */
+                overflow-y: auto; /* Allow scrolling if content overflows */
+                min-height: 500px; /* Set a minimum height */
+                background-color: #f4f4f4; /* Optional: Add a background color for better visibility */
             }
+
             .hostel {
                 display: flex;
                 gap: 20px;
@@ -199,17 +202,17 @@
                         <div>Ho Chi Minh City, Vietnam</div>
                     </div>
                 </div>                
-                <button class="search-button">Search</button>
+                <button class="search-button" onclick="searchHostel()">Search</button>
             </div>
         </section>
 
-        <%
-            HostelDAO productDao = new HostelDAO();
-            ResultSet rs = productDao.getAll();
-            while (rs.next()) {
-        %>
-        <section class="hostel-section">
-            <div class="hostel">
+        <section class="hostel-section" id="hostel-section">
+            <%
+                HostelDAO hostelDao = new HostelDAO();
+                ResultSet rs = hostelDao.getAll();
+                while (rs.next()) {
+            %>
+            <div class="hostel" data-address="<%=rs.getString("address_detail")%>">
                 <img src="img/hostel1.jpg" alt="Hostel Image">
                 <div class="hostel-info">
                     <h2>Hostel Name</h2>
@@ -218,10 +221,11 @@
                     <p><strong>Description:</strong> <%=rs.getString("description")%></p>
                 </div>
             </div>
+            <%
+                }
+            %>
         </section>
-        <%
-            }
-        %>
+
         <script>
             function filterFunction() {
                 var input, filter, div, i;
@@ -238,14 +242,30 @@
                     }
                 }
             }
+
+            function searchHostel() {
+                var input = document.querySelector('.search-input').value.toUpperCase();
+                var hostels = document.querySelectorAll('.hostel');
+                hostels.forEach(function (hostel) {
+                    var address = hostel.getAttribute('data-address').toUpperCase();
+                    if (address.includes(input)) {
+                        hostel.style.display = 'flex';
+                    } else {
+                        hostel.style.display = 'none';
+                    }
+                });
+            }
+
             document.querySelector('.search-input').addEventListener('focus', function () {
                 document.getElementById("dropdown").style.display = "block";
             });
+
             document.addEventListener('click', function (e) {
                 if (!e.target.matches('.search-input')) {
                     document.getElementById("dropdown").style.display = "none";
                 }
             });
+
             document.querySelectorAll('#dropdown div').forEach(function (item) {
                 item.addEventListener('click', function () {
                     document.querySelector('.search-input').value = this.innerText;
