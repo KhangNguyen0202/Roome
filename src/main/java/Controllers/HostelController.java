@@ -1,7 +1,6 @@
 package Controllers;
 
 import DAOs.HostelDAO;
-import DAOs.ProvinceDAO;
 import Models.Hostel;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +14,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.sql.Timestamp;
-
 
 @WebServlet("/HostelController/*")
 @MultipartConfig
@@ -31,31 +29,29 @@ public class HostelController extends HttpServlet {
             out.println("<title>Servlet HostelController</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HostelController at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet HostelController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession();
-//        Integer landlordId = (Integer) session.getAttribute("landlord_id");
-//
-//        if (landlordId == null) {
-//            response.getWriter().write("Please log in first.");
-//            return;
-//        }
+        // Integer landlordId = (Integer) session.getAttribute("landlord_id");
+        // if (landlordId == null) {
+        //     response.getWriter().write("Please log in first.");
+        //     return;
+        // }
        
-         int user_id = 1;
-        // Thêm thông tin log để kiểm tra giá trị landlordId
+        int user_id = 1;
         System.out.println("landlordId: " + user_id);
 
         if (request.getParameter("btnNext") != null) {
@@ -66,9 +62,8 @@ public class HostelController extends HttpServlet {
             String addressDetail = request.getParameter("txtAddressDetail");
             String phoneContact = request.getParameter("txtPhoneNumber");
             String description = request.getParameter("txtDescription");
-            String total_roooms = request.getParameter("txtTotalRooms");
+            int total_rooms = Integer.parseInt(request.getParameter("txtTotalRooms"));
             Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-
 
             // Handle file upload
             String fileName = "";
@@ -90,17 +85,19 @@ public class HostelController extends HttpServlet {
 
             String hostelImage = "img/" + fileName;
 
-          
-            Hostel hostel = new Hostel(user_id, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description,total_roooms, createdAt);
+            // Create Hostel object
+            Hostel hostel = new Hostel(user_id, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description, total_rooms, createdAt);
             HostelDAO hostelDAO = new HostelDAO();
-            int count = hostelDAO.addNew(hostel);
+            int hostelId = hostelDAO.addNew(hostel); // Assume this returns the newly created hostel_id
 
-            System.out.println("Inserted rows: " + count);
+            System.out.println("Inserted rows: " + hostelId);
 
-            if (count > 0) {
-                  response.sendRedirect("suc.jsp");
+            if (hostelId > 0) {
+                // Store the hostel_id in the session
+                session.setAttribute("hostel_id", hostelId);
+                response.sendRedirect("createroom.jsp");
             } else {
-                response.sendRedirect("error.jsp");
+                response.sendRedirect("createhostel.jsp");
             }
         } else {
             System.out.println("Button not clicked!");

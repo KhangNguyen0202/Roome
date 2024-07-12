@@ -17,12 +17,24 @@
         <servlet-class>Controllers.ReviewController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <servlet-class>Controllers.ForgotPasswordController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <url-pattern>/ForgotPasswordController/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>SignUp1Controller</servlet-name>
         <servlet-class>Controllers.SignUp1Controller</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SignUp2Controller</servlet-name>
         <servlet-class>Controllers.SignUp2Controller</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RoomController</servlet-name>
+        <servlet-class>Controllers.RoomController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
@@ -47,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>SignUp2Controller</servlet-name>
         <url-pattern>/SignUp2Controller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RoomController</servlet-name>
+        <url-pattern>/RoomController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -36,7 +36,7 @@ public class Hostel {
         this.created_at = created_at;
     }
 
-    public Hostel(int user_id, String hostel_name, int province_id, String address_detail, String hostel_image, String phone_contact, String description, String total_roooms, Timestamp createdAt) {
+    public Hostel(int user_id, String hostel_name, int province_id, String address_detail, String hostel_image, String phone_contact, String description, int total_rooms, Timestamp created_at) {
         this.user_id = user_id;
         this.hostel_name = hostel_name;
         this.province_id = province_id;
@@ -47,6 +47,8 @@ public class Hostel {
         this.total_rooms = total_rooms;
         this.created_at = created_at;
     }
+    
+    
 
     public int getHostel_id() {
         return hostel_id;

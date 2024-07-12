@@ -31,6 +31,10 @@ public class Reviews {
         this.created_at = created_at;
     }
 
+    public Reviews(int reviewID, int parseInt, int hostelID, int starNumber, String comment) {
+        
+    }
+
     public int getReviewID() {
         return reviewID;
     }

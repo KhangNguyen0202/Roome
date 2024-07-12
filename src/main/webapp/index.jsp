@@ -4,6 +4,9 @@
     Author     : sakak
 --%>
 
+<%@page import="java.sql.ResultSet"%>
+<%@page import="DAOs.HostelDAO"%>
+<%@page import="DAOs.ProvinceDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <style>
+        /* Your existing styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -30,7 +34,7 @@
             top: 0;
             z-index: 1000;
         }
-       
+
         .header nav {
             flex: 1;
             text-align: center;
@@ -41,18 +45,18 @@
             text-decoration: none;
             font-weight: bold;
         }
-        
-         .header img {
-            height: 70px; 
+
+        .header img {
+            height: 70px;
             vertical-align: middle;
             margin-left: 20px;
         }
-        
-         .header-left {
+
+        .header-left {
             display: flex;
             align-items: center;
         }
-        
+
         .header-right {
             display: flex;
             align-items: center;
@@ -72,14 +76,9 @@
             color: white;
             padding: 100px 20px 50px;
             text-align: center;
-            margin-top: 80px;
-        }
-        .search-section h1 {
-            margin: 0;
-            font-size: 36px;
+            margin-top: 45px;
         }
         .search-bar {
-            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -87,15 +86,15 @@
             margin-top: 20px;
         }
         .search-bar .search-input,
-        .search-bar .search-date,
         .search-bar .search-select {
             background-color: white;
             border-radius: 5px;
             padding: 10px;
             font-size: 16px;
             border: 3px solid blue;
-            width: 200px;
+            width: 385px;
         }
+
         .search-bar .search-button {
             background-color: #0071c2;
             color: white;
@@ -104,8 +103,10 @@
             padding: 14.7px 32px;
             border: none;
         }
+
         .dropdown {
             position: relative;
+            width: 400px; /* Match width with search input */
         }
         .dropdown-content {
             display: none;
@@ -116,6 +117,9 @@
             z-index: 1;
             top: 100%; /* Align directly below the search input */
             left: 0;
+            max-height: 200px; /* Set maximum height for scroll */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border-radius: 5px;
         }
         .dropdown-content div {
             color: black;
@@ -126,14 +130,16 @@
             background-color: #f1f1f1;
         }
         .hostel-section {
-            padding: 50px 20px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: left;
-            overflow-y: auto;
-            max-height: calc(100vh - 160px); /* Adjust to fit within the viewport */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+            min-height: 500px; /* Set a minimum height */
+            background-color: #f4f4f4; /* Optional: Add a background color for better visibility */
         }
+
         .hostel {
             display: flex;
             gap: 20px;
@@ -188,49 +194,50 @@
         </div>
     </header>
     <section class="search-section">
-        <h1 class="text-left">Find your room</h1>
-        <p class="text-left">Search low prices on hotels, homes and much more...</p>
+        <h1>Find your room</h1>
+        <p>Search low prices on hotels, homes and much more...</p>
         <div class="search-bar">
             <div class="dropdown">
                 <input type="text" class="search-input" placeholder="Where are you going?" onkeyup="filterFunction()">
                 <div id="dropdown" class="dropdown-content">
-                    <div>Can Tho, Vietnam</div>
-                    <div>Da Lat, Vietnam</div>
-                    <div>Vung Tau, Vietnam</div>
-                    <div>Phu Quoc, Vietnam</div>
-                    <div>Ho Chi Minh City, Vietnam</div>
+                    <% 
+                        ProvinceDAO provinceDao = new ProvinceDAO();
+                        ResultSet rsProvinces = provinceDao.getAllProvince();
+                        while (rsProvinces.next()) { 
+                    %>
+                    <div><%= rsProvinces.getString("Province_Name") %></div>
+                    <% 
+                        } 
+                        rsProvinces.close(); 
+                    %>
                 </div>
             </div>
-            <input type="text" class="search-date" placeholder="Check-in/out date">
-            <select class="search-select">
-                <option>2 adults · 0 children · 1 room</option>
-            </select>
-            <button class="search-button">Search</button>
+            <button class="search-button" onclick="searchHostel()">Search</button>
         </div>
     </section>
-    <section class="hostel-section">
-        <div class="hostel">
-            <img src="hostel1.jpg" alt="Hostel Image">
+
+    <section class="hostel-section" id="hostel-section">
+        <%
+            HostelDAO hostelDao = new HostelDAO();
+            ResultSet rs = hostelDao.getAll();
+            while (rs.next()) {
+        %>
+        <div class="hostel" data-address="<%=rs.getString("address_detail")%>">
+            <img src="img/hostel1.jpg" alt="Hostel Image">
             <div class="hostel-info">
-                <h2>Hostel Name</h2>
-                <p><strong>Address:</strong> 123 Hostel Street, City, Country</p>
-                <p><strong>Price per night:</strong> $25</p>
-                <p><strong>Amenities:</strong> Free Wi-Fi, Breakfast included, Shared kitchen, 24-hour reception</p>
-                <p><strong>Description:</strong> This is a wonderful hostel located in the heart of the city. It offers comfortable accommodation at an affordable price.</p>
+                <input type="hidden" value="<%=rs.getString("hostel_name")%>" readonly>
+                <h2>Hostel Name: <%=rs.getString("hostel_name")%></h2>
+                <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
+                <p><strong>Phone contact:</strong> <%=rs.getString("phone_contact")%></p>
+                <p><strong>Description:</strong> <%=rs.getString("description")%></p>
             </div>
         </div>
-        <!-- Add more hostels as needed -->
-        <div class="hostel">
-            <img src="hostel2.jpg" alt="Hostel Image">
-            <div class="hostel-info">
-                <h2>Another Hostel</h2>
-                <p><strong>Address:</strong> 456 Another Street, City, Country</p>
-                <p><strong>Price per night:</strong> $30</p>
-                <p><strong>Amenities:</strong> Free Wi-Fi, Pool, Gym, 24-hour reception</p>
-                <p><strong>Description:</strong> A great place to stay with excellent facilities and a central location.</p>
-            </div>
-        </div>
+        <%
+            }
+            rs.close();
+        %>
     </section>
+
     <script>
         function filterFunction() {
             var input, filter, div, i;
@@ -247,24 +254,37 @@
                 }
             }
         }
+
+        function searchHostel() {
+            var input = document.querySelector('.search-input').value.toUpperCase();
+            var hostels = document.querySelectorAll('.hostel');
+            hostels.forEach(function (hostel) {
+                var address = hostel.getAttribute('data-address').toUpperCase();
+                if (address.includes(input)) {
+                    hostel.style.display = 'flex';
+                } else {
+                    hostel.style.display = 'none';
+                }
+            });
+        }
+
         document.querySelector('.search-input').addEventListener('focus', function () {
             document.getElementById("dropdown").style.display = "block";
         });
-        document.addEventListener('click', function (e) {
-            if (!e.target.matches('.search-input')) {
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.dropdown')) {
                 document.getElementById("dropdown").style.display = "none";
             }
         });
+
         document.querySelectorAll('#dropdown div').forEach(function (item) {
             item.addEventListener('click', function () {
                 document.querySelector('.search-input').value = this.innerText;
                 document.getElementById("dropdown").style.display = "none";
+                searchHostel(); // Trigger search when a province is selected
             });
         });
     </script>
 </body>
 </html>
-
-
-
-

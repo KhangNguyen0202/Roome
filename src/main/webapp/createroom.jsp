@@ -1,12 +1,11 @@
-<%@page import="java.sql.ResultSet"%>
-<%@page import="DAOs.ProvinceDAO"%>
+<!-- index.jsp -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>BootstrapDash Wizard</title>
+    <title>Room Creation</title>
     <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -35,7 +34,10 @@
 </head>
 <body>
     <%
-        session.setAttribute("landlord_id", 1);
+        if (session.getAttribute("hostel_id") == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
     %>
     <main class="my-5">
         <div class="container">
@@ -52,23 +54,18 @@
                 <section>
                     <div class="content-wrapper">
                         <h4 class="section-heading">Enter your Rooms details</h4>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="txtTotalRooms" class="sr-only">Total Rooms</label>
-                                <input type="number" name="txtTotalRooms" id="txtTotalRooms" class="form-control" placeholder="Total Rooms">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="txtRoomTypes" class="sr-only">Number of Room Types</label>
-                                <input type="number" name="txtRoomTypes" id="txtRoomTypes" class="form-control" placeholder="Number of Room Types">
-                            </div>
-                        </div>
-                        <button type="button" id="generateRoomTypesBtn" class="btn btn-primary mt-3">Generate Room Types</button>
-                        <h5 class="mt-4">Room Types</h5>
                         <form id="roomTypesForm" action="RoomController" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="txtRoomTypes" class="sr-only">Number of Room Types</label>
+                                    <input type="number" name="txtRoomTypes" id="txtRoomTypes" class="form-control" placeholder="Number of Room Types">
+                                </div>
+                            </div>
+                            <button type="button" id="generateRoomTypesBtn" class="btn btn-primary mt-3">Generate Room Types</button>
+                            <h5 class="mt-4">Room Types</h5>
                             <div id="roomTypesContainer"></div>
-                            <button type="submit" class="btn btn-success mt-3">Save Room Types</button>
+                            <input type="submit" name="btnCreate" class="btn btn-success mt-3" value="Save Room Types">
                         </form>
-                        <button type="button" id="btnCreate" class="btn btn-success mt-3">Create</button>
                     </div>
                 </section>
             </div>
@@ -115,10 +112,17 @@
                 }
             });
 
-            $('#btnCreate').click(function() {
-                // Th?c hi?n hành ??ng c?n thi?t khi nh?n nút "Create"
-                // Ví d?: submit form, hi?n th? thông báo, ho?c chuy?n h??ng trang
-                alert('Create button clicked!');
+            $('#roomTypesForm').submit(function(e) {
+                console.log("Form is being submitted");
+                var numberOfRoomTypes = $('#txtRoomTypes').val();
+                console.log("Number of Room Types: " + numberOfRoomTypes);
+
+                $('#roomTypesContainer .room-type').each(function(index) {
+                    console.log("Room Name " + index + ": " + $(this).find('input[name="roomName' + index + '"]').val());
+                    console.log("Room Size " + index + ": " + $(this).find('input[name="roomSize' + index + '"]').val());
+                    console.log("Room Price " + index + ": " + $(this).find('input[name="roomPrice' + index + '"]').val());
+                    console.log("Rooms Available " + index + ": " + $(this).find('input[name="roomAvailability' + index + '"]').val());
+                });
             });
         });
     </script>
