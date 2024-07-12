@@ -12,6 +12,10 @@
         <servlet-name>ReviewController</servlet-name>
         <servlet-class>Controllers.ReviewController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <servlet-class>Controllers.ForgotPasswordController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HostelController</servlet-name>
         <url-pattern>/HostelController</url-pattern>
@@ -24,6 +28,11 @@
         <servlet-name>ReviewController</servlet-name>
         <url-pattern>/ReviewController</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <url-pattern>/ForgotPasswordController/*</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30
