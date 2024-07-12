@@ -24,6 +24,10 @@
         <servlet-name>SignUp2Controller</servlet-name>
         <servlet-class>Controllers.SignUp2Controller</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RoomController</servlet-name>
+        <servlet-class>Controllers.RoomController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>SignUp2Controller</servlet-name>
         <url-pattern>/SignUp2Controller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RoomController</servlet-name>
+        <url-pattern>/RoomController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
