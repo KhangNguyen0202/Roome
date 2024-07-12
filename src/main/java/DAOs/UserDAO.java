@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -9,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import Models.User;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -17,6 +20,7 @@ import java.sql.Statement;
  * @author nguye
  */
 public class UserDAO {
+
     public ResultSet getAll() {
         Connection conn = DBConnection.getConnection();
         ResultSet rs = null;
@@ -32,6 +36,7 @@ public class UserDAO {
         }
         return rs;
     }
+
     public User getUserByID(int pro_id) {
         Connection conn = DBConnection.getConnection();
         User obj;
@@ -60,7 +65,35 @@ public class UserDAO {
         }
         return obj;
     }
-    
+
+    public boolean login(User acc) {
+        Connection conn = DBConnection.getConnection();
+        try {
+            String sql = "select * from users where username =? and password=?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, acc.getUsername());
+            pst.setString(2, md5Hash(acc.getPassword()));
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+        return false;
+    }
+
+    public String md5Hash(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(password.getBytes());
+        byte[] bytes = md.digest();
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1).toUpperCase());
+        }
+        return sb.toString();
+    }
+
     public int updateProduct(int user_id, User newinfo) {
         Connection conn = DBConnection.getConnection();
         int count;
@@ -81,6 +114,7 @@ public class UserDAO {
         }
         return count;
     }
+
     public int updateUserInfo(int user_id, User newinfo) {
         Connection conn = DBConnection.getConnection();
         int count;
@@ -99,6 +133,7 @@ public class UserDAO {
         }
         return count;
     }
+
     public int updateUserImg(int user_id, String img) {
         Connection conn = DBConnection.getConnection();
         int count;
@@ -106,12 +141,70 @@ public class UserDAO {
             String sql = "UPDATE users SET user_image=? WHERE user_id = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, img);
-            
+
             pst.setInt(2, user_id);
             count = pst.executeUpdate();
         } catch (SQLException ex) {
             count = 0;
         }
         return count;
+    }
+
+    public boolean isUsernameTaken(String username) {
+        boolean exists = false;
+        Connection conn = DBConnection.getConnection();
+        try {
+            String sql = "SELECT username FROM users WHERE username = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, username);
+            ResultSet rs = pst.executeQuery();
+            exists = rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
+    public int addUser(User user) {
+        Connection conn = DBConnection.getConnection();
+        int count = 0;
+        if (conn != null) {
+            try {
+                String sql = "INSERT INTO users (username, password, user_type, usercall_name, usersurname, phone_number, email, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setString(1, user.getUsername());
+                pst.setString(2, user.getPassword());
+                pst.setString(3, user.getUser_type());
+                pst.setString(4, user.getUsercall_name());
+                pst.setString(5, user.getUserSurname());
+                pst.setString(6, user.getPhone_number());
+                pst.setString(7, user.getEmail());
+                pst.setString(8, user.getAddress());
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                count = 0;
+            }
+        }
+        return count;
+    }
+
+    public int getUserIdByUser(String username) {
+        Connection conn = DBConnection.getConnection();
+        User obj;
+        try {
+            String sql = "select user_id from users where username= ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, username);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                obj = new User();
+                obj.setUser_id(rs.getInt("user_id"));
+            } else {
+                obj = null;
+            }
+        } catch (Exception ex) {
+            obj = null;
+        }
+        return obj.getUser_id();
     }
 }

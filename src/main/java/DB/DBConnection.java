@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -17,7 +18,7 @@ public class DBConnection {
         try{
             
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String url = "jdbc:sqlserver://DESKTOP-DEPD7RC;databaseName=Roome;user=sa;password=s0nd3pz4i;encrypt=true;trustServerCertificate=true";
+            String url ="jdbc:sqlserver://LAPTOP-9CBUJ8HG:1433;databaseName=FinalProject_PRJ192;user=sa;password=Khang02022004;encrypt=true;trustServerCertificate=true;";
             conn = DriverManager.getConnection(url);
         }catch(Exception ex){
             conn = null;

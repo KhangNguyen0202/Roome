@@ -267,7 +267,7 @@
             </div>
             <div class="review-form">
                 <h3>Leave a Review</h3>
-                <form action="/ReviewController" method="post">
+                <form action="${pageContext.request.contextPath}/ReviewController" method="post">
                     <div class="star-rating">
                         <input type="radio" id="5-stars" name="rating" value="5" />
                         <label for="5-stars" class="star">&#9733;</label>
@@ -282,8 +282,9 @@
                     </div>
                     <textarea name="comment" rows="4" cols="50" placeholder="Write your comment here..." required></textarea>
                     <br>
-                    <button type="btnSummitCmt">Submit Review</button>
+                    <button type="submit" name="btnSummitCmt">Submit Review</button>
                 </form>
+
             </div>
         </section>
     </body>

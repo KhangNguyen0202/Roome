@@ -4,22 +4,21 @@
  */
 package Controllers;
 
-import DAOs.ReviewDAO;
-import Models.Reviews;
+import DAOs.UserDAO;
+import DAOs.UserDAO;
+import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.sql.Timestamp;
 
 /**
  *
- * @author DELL
+ * @author phanp
  */
-public class ReviewController extends HttpServlet {
+public class SignUp2Controller extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +37,10 @@ public class ReviewController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ReviewController</title>");
+            out.println("<title>Servlet SignUp2Controller</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ReviewController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SignUp2Controller at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,7 +58,10 @@ public class ReviewController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String path = request.getRequestURI();
+        if (path.equals("/SignUp2Controller")) {
+            request.getRequestDispatcher("/signup2.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -70,45 +72,31 @@ public class ReviewController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private UserDAO userDAO = new UserDAO();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (request.getParameter("btnSummitCmt") != null) {
-            System.out.println("BTN SUMMIT CMT PRESSED");
+        User user = (User) request.getSession().getAttribute("newUser");
+        if (user != null) {
+            user.setUsercall_name(request.getParameter("txtCN"));
+            user.setUserSurname(request.getParameter("txtSN"));
+            user.setPhone_number(request.getParameter("txtPN"));
+            user.setEmail(request.getParameter("txtMail"));
+            user.setAddress(request.getParameter("txtAddress"));
 
-            String hostelIDParam = request.getParameter("hostelID");
-            String ratingParam = request.getParameter("rating");
+            // Add user to the database
+            userDAO.addUser(user);
 
-            System.out.println("hostelID: " + hostelIDParam);
-            System.out.println("rating: " + ratingParam);
+            // Clear the user from the session
+            request.getSession().removeAttribute("newUser");
 
-            if (hostelIDParam == null || ratingParam == null) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required parameters");
-                return;
-            }
-
-            try {
-                int hostelID = Integer.parseInt(hostelIDParam);
-                int starNumber = Integer.parseInt(ratingParam);
-                String comment = request.getParameter("comment");
-
-                HttpSession session = request.getSession();
-                System.out.println("Print review data: " + starNumber + " " + comment);
-                String userID = (String) session.getAttribute("userID");
-
-                if (userID == null) {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
-                    return;
-                }
-
-                ReviewDAO rDAO = new ReviewDAO();
-                Reviews obj = new Reviews(1, Integer.parseInt(userID), hostelID, starNumber, comment, new Timestamp(System.currentTimeMillis()));
-                rDAO.createReview(obj);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid number format");
-            }
+            // Redirect to the success page
+            response.sendRedirect("indexlogged.jsp");
+        } else {
+            response.sendRedirect("/");
         }
+
     }
 
     /**
