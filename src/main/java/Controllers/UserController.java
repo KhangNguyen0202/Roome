@@ -73,9 +73,9 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (path.equals("/UserController")) {
-            user_id = Integer.parseInt(request.getParameter("id"));
-            request.getRequestDispatcher("/userprofile.jsp?id="+user_id).forward(request, response);
+        if (path.equals("/UserController/userprofile")) {
+            
+            request.getRequestDispatcher("/userprofile.jsp").forward(request, response);
 
         }
 
@@ -85,7 +85,7 @@ public class UserController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-
+        user_id = Integer.parseInt(session.getAttribute("user_id")+"");
         //file upload
         if (request.getParameter("uploadImg") != null) {
 
@@ -93,7 +93,7 @@ public class UserController extends HttpServlet {
 
             String uploadPath = "";
             String s = getServletContext().getRealPath("") + File.separator;
-            uploadPath = getServletContext().getRealPath("") + File.separator;
+            uploadPath=getServletContext().getRealPath("") + File.separator;
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -110,7 +110,7 @@ public class UserController extends HttpServlet {
             UserDAO dao = new UserDAO();
             User user = dao.getUserByID(user_id);
             dao.updateUserImg(user_id, fileName);
-            response.sendRedirect("/UserController?id="+user_id);
+            response.sendRedirect("/UserController/userprofile");
 
         } else if (request.getParameter("btnSave") != null) {
 
@@ -126,7 +126,7 @@ public class UserController extends HttpServlet {
             if (updated == 0) {
                 response.sendRedirect("/err"+ user_id);
             }else
-            response.sendRedirect("/UserController?id=" + user_id);
+            response.sendRedirect("/UserController/userprofile");
 
         }
     }

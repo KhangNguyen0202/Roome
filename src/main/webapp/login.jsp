@@ -11,6 +11,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
         <title>Login Page</title>
         <style>
             * {
@@ -72,7 +74,7 @@
                 font-size: 14px;
                 margin: -15px 0 15px;
             }
-            
+
 
         </style>
     </head>
@@ -80,18 +82,18 @@
         <div class="wrapper">
             <form method="post" action="LoginController">
                 <h1>Sign In</h1>
-
+                
                 <div class="input-box">
                     <label for="txtUS">Username</label>
-                    <input type="text" class="form-control" id="txtUS" placeholder="Username" required>
+                    <input type="text" class="form-control" id="txtUS" name="txtUS" value="" required>
                 </div>
 
                 <div class="input-box">
                     <label for="txtPWD">Password</label>
-                    <input type="password" class="form-control" id="txtPWD" placeholder="Password" required>
+                    <input type="password" class="form-control" id="txtPWD" name="txtPWD" value="" required>
                 </div>
 
-                <button type="submit" name="btnLogin">Login</button>
+                <button type="submit" name="btnLogin" class="btn btn-primary btn-block">Login</button>
 
                 <div class="register-link">
                     <p>Don't have an account?</p>

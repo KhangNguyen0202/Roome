@@ -86,24 +86,23 @@ public class LoginController extends HttpServlet {
 
             User acc = new User(us, pwd);
             UserDAO dao = new UserDAO();
-
+             System.out.println("cac:" +us);
             // Set cookies if "Remember me" is checked
             if (dao.login(acc)) {
-                // Create session
-                UserDAO user = new UserDAO();
-                session.setAttribute("username", user.getUserIdByUser(us));
-                Cookie userCookie = new Cookie("username", user.getUserIdByUser(us) + "");
-                userCookie.setMaxAge(1 * 24 * 60 * 60); // 1 day
-                userCookie.setHttpOnly(true);
+                
+                session.setAttribute("user_id", dao.getUserIdByUser(us));
+                Cookie userCookie = new Cookie("user_id", dao.getUserIdByUser(us)+"");
+                userCookie.setMaxAge(3 * 24 * 60 * 60); // 3 days
+                userCookie.setHttpOnly(true); // Recommended for security
                 response.addCookie(userCookie);
-            }
 
-            // Redirect to a welcome page or dashboard
-            response.sendRedirect("indexlogged.jsp");
-        } else {
-            // Redirect back to login page with error message
-            response.sendRedirect("login.jsp?error=true");
-        }
+                response.sendRedirect("indexlogged.jsp");
+            } else{response.sendRedirect(us+" "+pwd);}
+            
+//            else {
+//                response.sendRedirect("?error=1"); // Ensure correct redirect with context
+//            }
+        } 
     }
 
     /**
