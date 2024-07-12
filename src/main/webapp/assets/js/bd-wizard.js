@@ -7,8 +7,17 @@ $(document).ready(function(){
         onInit: function (event, currentIndex) {
             // Hide the finish button
             $(".actions a[href='#finish']").hide();
+            // Remove the spannumber elements inherited from wizard-t-0
+            $(".wizard-t-0").find("span.number").remove();
+        },
+        onStepChanged: function (event, currentIndex, priorIndex) {
+            // Remove the spannumber elements inherited from wizard-t-0 after step change
+            $(".wizard-t-0").find("span.number").remove();
         }
     });
+
+    // Immediately remove any spannumber elements inherited from wizard-t-0 on document ready
+    $(".wizard-t-0").find("span.number").remove();
 
     $("#btnNext").on("click", function(){
         submitForm();

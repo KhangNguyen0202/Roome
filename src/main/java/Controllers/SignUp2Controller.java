@@ -4,6 +4,9 @@
  */
 package Controllers;
 
+import DAOs.UserDAO;
+import DAOs.UserDAO;
+import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author phanp
  */
-public class SignUpController extends HttpServlet {
+public class SignUp2Controller extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,10 +37,10 @@ public class SignUpController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SignUpController</title>");            
+            out.println("<title>Servlet SignUp2Controller</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SignUpController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SignUp2Controller at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +58,10 @@ public class SignUpController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String path = request.getRequestURI();
+        if (path.equals("/SignUp2Controller")) {
+            request.getRequestDispatcher("/signup2.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -66,10 +72,31 @@ public class SignUpController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private UserDAO userDAO = new UserDAO();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        User user = (User) request.getSession().getAttribute("newUser");
+        if (user != null) {
+            user.setUsercall_name(request.getParameter("txtCN"));
+            user.setUserSurname(request.getParameter("txtSN"));
+            user.setPhone_number(request.getParameter("txtPN"));
+            user.setEmail(request.getParameter("txtMail"));
+            user.setAddress(request.getParameter("txtAddress"));
+
+            // Add user to the database
+            userDAO.addUser(user);
+
+            // Clear the user from the session
+            request.getSession().removeAttribute("newUser");
+
+            // Redirect to the success page
+            response.sendRedirect("indexlogged.jsp");
+        } else {
+            response.sendRedirect("/");
+        }
+
     }
 
     /**

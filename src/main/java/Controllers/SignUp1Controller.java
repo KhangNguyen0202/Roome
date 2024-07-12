@@ -5,21 +5,20 @@
 package Controllers;
 
 import DAOs.UserDAO;
+import DAOs.UserDAO;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 /**
  *
  * @author phanp
  */
-public class LoginController extends HttpServlet {
+public class SignUp1Controller extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +37,10 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UserController</title>");
+            out.println("<title>Servlet SignUp1Controller</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UserController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SignUp1Controller at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,8 +59,8 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        if (path.equals("/LoginController")) {
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+        if (path.equals("/SignUp1Controller")) {
+            request.getRequestDispatcher("/signup1.jsp").forward(request, response);
         }
     }
 
@@ -73,35 +72,34 @@ public class LoginController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private UserDAO userDAO = new UserDAO();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
+        String username = request.getParameter("txtUS");
+        String password = request.getParameter("txtPWD");
+        String confirmPassword = request.getParameter("txtCPWD");
+        String user_type = request.getParameter("txtUST");
 
-        if (request.getParameter("btnLogin") != null) {
-
-            String us = request.getParameter("txtUS");
-            String pwd = request.getParameter("txtPWD");
-
-            User acc = new User(us, pwd);
-            UserDAO dao = new UserDAO();
-
-            // Set cookies if "Remember me" is checked
-            if (dao.login(acc)) {
-                // Create session
-                session.setAttribute("username", us);
-                Cookie userCookie = new Cookie("username", us);
-                userCookie.setMaxAge(1 * 24 * 60 * 60); // 1 day
-                userCookie.setHttpOnly(true);
-                response.addCookie(userCookie);
-            }
-
-            // Redirect to a welcome page or dashboard
-            response.sendRedirect("indexlogged.jsp");
+        if (userDAO.isUsernameTaken(username)) {
+            request.setAttribute("error", "Username already exists!");
+            request.getRequestDispatcher("/SignUp1Controller").forward(request, response);
+        } else if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Passwords do not match!");
+            request.getRequestDispatcher("/SignUp1Controller").forward(request, response);
         } else {
-            // Redirect back to login page with error message
-            response.sendRedirect("login.jsp?error=true");
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setUser_type(user_type);
+
+            // Temporarily store the user in the session
+            request.getSession().setAttribute("newUser", user);
+
+            // Redirect to the second signup page
+            response.sendRedirect("/SignUp2Controller");
         }
     }
 
@@ -114,4 +112,5 @@ public class LoginController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

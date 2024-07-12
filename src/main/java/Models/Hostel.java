@@ -13,36 +13,38 @@ import java.sql.Timestamp;
 
 public class Hostel {
     private int hostel_id;
-    private int landlord_id;
+    private int user_id;
     private String hostel_name;
     private int province_id;
     private String address_detail;
     private String hostel_image;
     private String phone_contact;
     private String description;
+    private int total_rooms;
     private Timestamp created_at;
 
-    public Hostel(int hostel_id, int landlord_id, String hostel_name, int province_id, String address_detail, String hostel_image, String phone_contact, String description, Timestamp created_at) {
+    public Hostel(int hostel_id, int user_id, String hostel_name, int province_id, String address_detail, String hostel_image, String phone_contact, String description, int total_rooms, Timestamp created_at) {
         this.hostel_id = hostel_id;
-        this.landlord_id = landlord_id;
+        this.user_id = user_id;
         this.hostel_name = hostel_name;
         this.province_id = province_id;
         this.address_detail = address_detail;
         this.hostel_image = hostel_image;
         this.phone_contact = phone_contact;
         this.description = description;
+        this.total_rooms = total_rooms;
         this.created_at = created_at;
     }
 
-    public Hostel(int landlord_id, String hostel_name, int province_id, String address_detail, 
-                  String hostel_image, String phone_contact, String description, Timestamp created_at) {
-        this.landlord_id = landlord_id;
+    public Hostel(int user_id, String hostel_name, int province_id, String address_detail, String hostel_image, String phone_contact, String description, String total_roooms, Timestamp createdAt) {
+        this.user_id = user_id;
         this.hostel_name = hostel_name;
         this.province_id = province_id;
         this.address_detail = address_detail;
         this.hostel_image = hostel_image;
         this.phone_contact = phone_contact;
         this.description = description;
+        this.total_rooms = total_rooms;
         this.created_at = created_at;
     }
 
@@ -54,12 +56,12 @@ public class Hostel {
         this.hostel_id = hostel_id;
     }
 
-    public int getLandlord_id() {
-        return landlord_id;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setLandlord_id(int landlord_id) {
-        this.landlord_id = landlord_id;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getHostel_name() {
@@ -110,6 +112,14 @@ public class Hostel {
         this.description = description;
     }
 
+    public int getTotal_rooms() {
+        return total_rooms;
+    }
+
+    public void setTotal_rooms(int total_rooms) {
+        this.total_rooms = total_rooms;
+    }
+
     public Timestamp getCreated_at() {
         return created_at;
     }
@@ -117,6 +127,8 @@ public class Hostel {
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
+
+    
 
 
 }

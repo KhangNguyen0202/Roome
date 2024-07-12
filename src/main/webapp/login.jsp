@@ -95,8 +95,7 @@
 
                 <div class="register-link">
                     <p>Don't have an account?</p>
-                    <p> <a href="signup1.jsp">Create account for tenants</a></p>
-                    <p> <a href="signup1.jsp">Create account for landlords</a></p>
+                    <p> <a href="signup1.jsp">Create an account</a></p>
                 </div>
             </form>
         </div>

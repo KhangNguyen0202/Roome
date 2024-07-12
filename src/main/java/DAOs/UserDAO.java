@@ -150,5 +150,44 @@ public class UserDAO {
         }
         return count;
     }
+    
+    public boolean isUsernameTaken(String username) {
+        boolean exists = false;
+        Connection conn = DBConnection.getConnection();
+        try {
+            String sql = "SELECT username FROM users WHERE username = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, username);
+            ResultSet rs = pst.executeQuery();
+            exists = rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
+    public int addUser(User user) {
+        Connection conn = DBConnection.getConnection();
+        int count = 0;
+        if (conn != null) {
+            try {
+                String sql = "INSERT INTO users (username, password, user_type, usercall_name, usersurname, phone_number, email, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setString(1, user.getUsername());
+                pst.setString(2, user.getPassword());
+                pst.setString(3, user.getUser_type());
+                pst.setString(4, user.getUsercall_name());
+                pst.setString(5, user.getUserSurname());
+                pst.setString(6, user.getPhone_number());
+                pst.setString(7, user.getEmail());
+                pst.setString(8, user.getAddress());
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                count = 0;
+            }
+        }
+        return count;
+    }
+    
 }
 

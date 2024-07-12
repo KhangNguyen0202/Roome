@@ -5,13 +5,29 @@
         <servlet-class>Controllers.HostelController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>LoginController</servlet-name>
+        <servlet-class>Controllers.LoginController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>UserController</servlet-name>
-        <servlet-class>Controllers.UserController</servlet-class>
+        <servlet-class>Controllers.LoginController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ReviewController</servlet-name>
         <servlet-class>Controllers.ReviewController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SignUp1Controller</servlet-name>
+        <servlet-class>Controllers.SignUp1Controller</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SignUp2Controller</servlet-name>
+        <servlet-class>Controllers.SignUp2Controller</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginController</servlet-name>
+        <url-pattern>/LoginController</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HostelController</servlet-name>
         <url-pattern>/HostelController</url-pattern>
@@ -23,6 +39,14 @@
     <servlet-mapping>
         <servlet-name>ReviewController</servlet-name>
         <url-pattern>/ReviewController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SignUp1Controller</servlet-name>
+        <url-pattern>/SignUp1Controller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SignUp2Controller</servlet-name>
+        <url-pattern>/SignUp2Controller</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

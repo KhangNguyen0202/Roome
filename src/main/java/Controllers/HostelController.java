@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +16,8 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.sql.Timestamp;
 
+
+@WebServlet("/HostelController/*")
 @MultipartConfig
 public class HostelController extends HttpServlet {
 
@@ -51,9 +54,9 @@ public class HostelController extends HttpServlet {
 //            return;
 //        }
        
-         int landlordId = 1;
+         int user_id = 1;
         // Thêm thông tin log để kiểm tra giá trị landlordId
-        System.out.println("landlordId: " + landlordId);
+        System.out.println("landlordId: " + user_id);
 
         if (request.getParameter("btnNext") != null) {
             System.out.println("Processing form submission...");
@@ -63,13 +66,9 @@ public class HostelController extends HttpServlet {
             String addressDetail = request.getParameter("txtAddressDetail");
             String phoneContact = request.getParameter("txtPhoneNumber");
             String description = request.getParameter("txtDescription");
+            String total_roooms = request.getParameter("txtTotalRooms");
             Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
-            System.out.println("hostelName: " + hostelName);
-            System.out.println("provinceId: " + provinceId);
-            System.out.println("addressDetail: " + addressDetail);
-            System.out.println("phoneContact: " + phoneContact);
-            System.out.println("description: " + description);
 
             // Handle file upload
             String fileName = "";
@@ -91,15 +90,15 @@ public class HostelController extends HttpServlet {
 
             String hostelImage = "img/" + fileName;
 
-            // Create Hostel object
-            Hostel hostel = new Hostel(landlordId, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description, createdAt);
+          
+            Hostel hostel = new Hostel(user_id, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description,total_roooms, createdAt);
             HostelDAO hostelDAO = new HostelDAO();
             int count = hostelDAO.addNew(hostel);
 
             System.out.println("Inserted rows: " + count);
 
             if (count > 0) {
-                System.out.println("Data succesfully added");
+                  response.sendRedirect("suc.jsp");
             } else {
                 response.sendRedirect("error.jsp");
             }
