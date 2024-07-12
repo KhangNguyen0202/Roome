@@ -191,7 +191,7 @@
                                 <img class="rounded-circle img-fluid" src="<%=user.getUser_image()%>" alt="Your Image">
                                 <input type="hidden" id="txtHidPic" name="txtHidPic" value="<%=user.getUser_image()%>">
                             </div>
-                            
+
                             <div class="popup" onclick="myFunction()">
                                 <button type="button" class="edit-button">Edit</button>
                                 <span class="popuptext" id="myPopup">
@@ -201,7 +201,7 @@
                                 </span>
                             </div>
                         </div>
-                                <%= request.getParameter("txtHidPic")%>
+                        <%= request.getParameter("txtHidPic")%>
                     </form>
                 </div>
 

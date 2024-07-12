@@ -90,8 +90,9 @@ public class LoginController extends HttpServlet {
             // Set cookies if "Remember me" is checked
             if (dao.login(acc)) {
                 // Create session
-                session.setAttribute("username", us);
-                Cookie userCookie = new Cookie("username", us);
+                UserDAO user = new UserDAO();
+                session.setAttribute("username", user.getUserIdByUser(us));
+                Cookie userCookie = new Cookie("username", user.getUserIdByUser(us) + "");
                 userCookie.setMaxAge(1 * 24 * 60 * 60); // 1 day
                 userCookie.setHttpOnly(true);
                 response.addCookie(userCookie);

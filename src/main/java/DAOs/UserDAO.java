@@ -94,9 +94,6 @@ public class UserDAO {
         return sb.toString();
     }
 
-
-   
-    
     public int updateProduct(int user_id, User newinfo) {
         Connection conn = DBConnection.getConnection();
         int count;
@@ -117,6 +114,7 @@ public class UserDAO {
         }
         return count;
     }
+
     public int updateUserInfo(int user_id, User newinfo) {
         Connection conn = DBConnection.getConnection();
         int count;
@@ -135,6 +133,7 @@ public class UserDAO {
         }
         return count;
     }
+
     public int updateUserImg(int user_id, String img) {
         Connection conn = DBConnection.getConnection();
         int count;
@@ -142,7 +141,7 @@ public class UserDAO {
             String sql = "UPDATE users SET user_image=? WHERE user_id = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, img);
-            
+
             pst.setInt(2, user_id);
             count = pst.executeUpdate();
         } catch (SQLException ex) {
@@ -150,7 +149,7 @@ public class UserDAO {
         }
         return count;
     }
-    
+
     public boolean isUsernameTaken(String username) {
         boolean exists = false;
         Connection conn = DBConnection.getConnection();
@@ -188,6 +187,24 @@ public class UserDAO {
         }
         return count;
     }
-    
-}
 
+    public int getUserIdByUser(String username) {
+        Connection conn = DBConnection.getConnection();
+        User obj;
+        try {
+            String sql = "select user_id from users where username= ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, username);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                obj = new User();
+                obj.setUser_id(rs.getInt("user_id"));
+            } else {
+                obj = null;
+            }
+        } catch (Exception ex) {
+            obj = null;
+        }
+        return obj.getUser_id();
+    }
+}

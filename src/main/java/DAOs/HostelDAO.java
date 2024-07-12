@@ -17,8 +17,9 @@ import java.sql.Statement;
  * @author DELL
  */
 public class HostelDAO {
-     public int addNew(Hostel hostel) {
-         Connection conn = DBConnection.getConnection();
+
+    public int addNew(Hostel hostel) {
+        Connection conn = DBConnection.getConnection();
     int hostelId = 0;
     if (conn != null) {
         try {
@@ -50,4 +51,22 @@ public class HostelDAO {
     }
     return hostelId;
 }
+
+
+    public ResultSet getAll() {
+        Connection conn = DBConnection.getConnection();
+        ResultSet rs = null;
+
+        if (conn != null) {
+            try {
+                Statement st = conn.createStatement();
+                rs = st.executeQuery("Select * from hostels");
+
+            } catch (Exception ex) {
+                rs = null;
+            }
+        }
+        return rs;
+    }
+
 }

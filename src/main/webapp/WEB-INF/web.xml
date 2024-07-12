@@ -10,12 +10,20 @@
     </servlet>
     <servlet>
         <servlet-name>UserController</servlet-name>
-        <servlet-class>Controllers.LoginController</servlet-class>
+        <servlet-class>Controllers.UserController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ReviewController</servlet-name>
         <servlet-class>Controllers.ReviewController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <servlet-class>Controllers.ForgotPasswordController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <url-pattern>/ForgotPasswordController/*</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>SignUp1Controller</servlet-name>
         <servlet-class>Controllers.SignUp1Controller</servlet-class>
