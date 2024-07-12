@@ -66,7 +66,7 @@
                                     <label for="txtHostelName" class="sr-only">Hostel Name</label>
                                     <input type="text" name="txtHostelName" id="txtHostelName" class="form-control" placeholder="Hostel Name" required>
                                 </div>
-                                <div class="form-group col-md-6">
+<div class="form-group col-md-6">
                                     <label for="txtProvince" class="sr-only">Province</label>
                                     <select class="form-select form-select-custom" name="txtProvince" id="txtProvince" required>
                                         <option value="" disabled selected>Address</option>
@@ -107,7 +107,7 @@
                                 <label for="txtPic">Product Picture</label>
                                 <input type="file" class="form-control" id="txtPic" name="txtPic" required>
                             </div>
-                            <button type="submit" name="btnNext" id="btnNext" class="btn btn-success btn-next-custom mt-3 mb-3">Next</button>
+<button type="submit" name="btnNext" id="btnNext" class="btn btn-success btn-next-custom mt-3 mb-3">Next</button>
                         </form>
                     </div>
                 </section>                
