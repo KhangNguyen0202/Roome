@@ -75,7 +75,7 @@
                 color: white;
                 padding: 100px 20px 50px;
                 text-align: center;
-                margin-top: 100px;
+                margin-top: 45px;
             }
             .search-bar {
                 display: flex;
@@ -215,7 +215,8 @@
             <div class="hostel" data-address="<%=rs.getString("address_detail")%>">
                 <img src="img/hostel1.jpg" alt="Hostel Image">
                 <div class="hostel-info">
-                    <h2>Hostel Name</h2>
+                    <input type="hidden" value="<%=rs.getString("hostel_name")%>" readonly>
+                    <h2>Hostel Name: <%=rs.getString("hostel_name")%></h2>
                     <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
                     <p><strong>Phone contact:</strong> <%=rs.getString("phone_contact")%></p>
                     <p><strong>Description:</strong> <%=rs.getString("description")%></p>
