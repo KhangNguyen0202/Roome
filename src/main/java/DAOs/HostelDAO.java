@@ -8,14 +8,17 @@ import DB.DBConnection;
 import Models.Hostel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
  * @author DELL
  */
 public class HostelDAO {
-     public int addNew(Hostel hostel) {
+
+    public int addNew(Hostel hostel) {
         Connection conn = DBConnection.getConnection();
         int count = 0;
         if (conn != null) {
@@ -29,7 +32,7 @@ public class HostelDAO {
                 stmt.setString(5, hostel.getHostel_image());
                 stmt.setString(6, hostel.getPhone_contact());
                 stmt.setString(7, hostel.getDescription());
-                  stmt.setInt(8, hostel.getTotal_rooms());
+                stmt.setInt(8, hostel.getTotal_rooms());
                 stmt.setTimestamp(9, hostel.getCreated_at());
 
                 count = stmt.executeUpdate();
@@ -41,5 +44,21 @@ public class HostelDAO {
             }
         }
         return count;
+    }
+
+    public ResultSet getAll() {
+        Connection conn = DBConnection.getConnection();
+        ResultSet rs = null;
+
+        if (conn != null) {
+            try {
+                Statement st = conn.createStatement();
+                rs = st.executeQuery("Select * from hostels");
+
+            } catch (Exception ex) {
+                rs = null;
+            }
+        }
+        return rs;
     }
 }
