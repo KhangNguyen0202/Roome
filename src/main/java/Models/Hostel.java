@@ -47,6 +47,10 @@ public class Hostel {
         this.total_rooms = total_rooms;
         this.created_at = created_at;
     }
+
+    public Hostel() {
+    
+    }
     
     
 

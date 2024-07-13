@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : Jun 30, 2024, 9:19:25 PM
-    Author     : sakak
---%>
-
 <%@page import="java.sql.ResultSet"%>
 <%@page import="DAOs.HostelDAO"%>
 <%@page import="DAOs.ProvinceDAO"%>
@@ -151,6 +145,7 @@
             background-color: white;
             margin-bottom: 20px;
             transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer; /* Add cursor pointer */
         }
         .hostel:hover {
             transform: translateY(-5px);
@@ -182,7 +177,7 @@
         </div>
         <nav>
             <a href="infohostel.jsp">Info</a>
-            <a href="createhostel.jsp">Create</a>
+            <a href="/HostelController/Create">Create</a>
             <a href="userprofile.jsp">User</a>
             <a href="#">Car rentals</a>
             <a href="#">Attractions</a>
@@ -222,8 +217,8 @@
             ResultSet rs = hostelDao.getAll();
             while (rs.next()) {
         %>
-        <div class="hostel" data-address="<%=rs.getString("address_detail")%>">
-            <img src="img/hostel1.jpg" alt="Hostel Image">
+        <div class="hostel" data-hostel-id="<%=rs.getString("hostel_id")%>" data-address="<%=rs.getString("address_detail")%>">
+            <img src="img/<%=rs.getString("hostel_image")%>" alt="Hostel Image">
             <div class="hostel-info">
                 <input type="hidden" value="<%=rs.getString("hostel_name")%>" readonly>
                 <h2>Hostel Name: <%=rs.getString("hostel_name")%></h2>
@@ -283,6 +278,14 @@
                 document.querySelector('.search-input').value = this.innerText;
                 document.getElementById("dropdown").style.display = "none";
                 searchHostel(); // Trigger search when a province is selected
+            });
+        });
+
+        // Add click event to each hostel div
+        document.querySelectorAll('.hostel').forEach(function (hostel) {
+            hostel.addEventListener('click', function () {
+                var hostelId = this.getAttribute('data-hostel-id');
+                window.location.href = 'HostelController/View/' + hostelId;
             });
         });
     </script>

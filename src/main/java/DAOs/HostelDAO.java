@@ -68,5 +68,35 @@ public class HostelDAO {
         }
         return rs;
     }
-
+    
+     public Hostel getHostelByID(int hostel_id) {
+        Connection conn = DBConnection.getConnection();
+        Hostel obj;
+        try {
+            String sql = "select * from hostels where hostel_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql); 
+            pst.setInt(1, hostel_id); 
+            ResultSet rs = pst.executeQuery(); 
+            if (rs.next()) {
+                obj = new Hostel();
+                obj.setHostel_id(rs.getInt("hostel_id"));
+                obj.setUser_id(rs.getInt("user_id")); 
+                obj.setHostel_name(rs.getString("hostel_name"));
+                obj.setProvince_id(rs.getInt("province_id"));
+                obj.setAddress_detail(rs.getString("address_detail"));
+                obj.setHostel_image(rs.getString("hostel_image"));
+                obj.setPhone_contact(rs.getString("phone_contact"));
+                obj.setDescription(rs.getString("description"));
+                obj.setTotal_rooms(rs.getInt("total_rooms"));
+                obj.setCreated_at(rs.getTimestamp("created_at"));
+            } else {
+                obj = null;
+                
+            }
+        } catch (Exception ex) {
+            obj = null;
+            
+        }
+        return obj;
+    }
 }

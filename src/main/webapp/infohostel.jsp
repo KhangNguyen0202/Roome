@@ -1,3 +1,4 @@
+<%@page import="Models.Hostel"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -6,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hostel Info Page</title>
         <style>
+            
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
@@ -26,12 +28,13 @@
             }
 
             .blur-background {
+                
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background-image: url('your-background-image.jpg'); /* Replace with your background image */
+                background-image: src=('img/<%= obj.getHostel_image() %>'); /* Replace with your background image */
                 background-size: cover;
                 background-position: center;
                 filter: blur(8px);
@@ -87,7 +90,7 @@
 
             .hero {
                 position: relative;
-                background-image: url('img/hostel1.jpg'); /* Replace with your main hostel image */
+                background-image:url('img/tro1.jpg');; /* Replace with your main hostel image */
                 background-size: cover;
                 background-position: center;
                 height: 400px;
@@ -295,6 +298,10 @@
         </style>
     </head>
     <body>
+        <%
+                Hostel obj = (Hostel) session.getAttribute("hs");
+            %>
+            
         <div class="blur-background-container">
             <div class="blur-background"></div>
         </div>
@@ -330,7 +337,7 @@
             </div>
             <div class="hostel-info">
                 <h2>About the Hostel</h2>
-                <p>Price per night: $25</p>
+                <p>Price per night: <%= obj.getTotal_rooms()%></p>
                 <div class="amenities">
                     <div class="amenity">
                         <img src="wifi-icon.png" alt="Free Wi-Fi"> Free Wi-Fi

@@ -1,19 +1,50 @@
-<!-- index.jsp -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Room Creation</title>
+    <title>Create Room</title>
     <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bd-wizard.css">
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <style>
-        .form-select-custom {
-            height: calc(2.25rem + 17px);
+        body {
+            font-family: 'Karla', sans-serif;
+            background: #003580;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 0;
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .container h3 {
+            text-align: center;
+            margin: 0;
+            background-color: black;
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-content {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-control, .form-select {
+            display: block;
+            width: 100%;
             padding: 0.375rem 0.75rem;
             font-size: 1rem;
             line-height: 1.5;
@@ -23,59 +54,94 @@
             border: 1px solid #ced4da;
             border-radius: 0.25rem;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            width: 100%;
         }
-        .form-select-custom:focus {
+        .form-select:focus, .form-control:focus {
             border-color: #80bdff;
             outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            padding: 0.3rem 1.5rem;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            border: 1px solid transparent;
+            color: #fff;
+            background-color: #28a745;
+            cursor: pointer;
+            width: 80%; /* Adjust the width as needed */
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .btn-center {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .custom-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .custom-control-input {
+            position: absolute;
+            z-index: -1;
+            opacity: 0;
+        }
+        .custom-control-label {
+            margin-left: 1.25rem;
+            cursor: pointer;
+        }
+        .custom-control-input:checked ~ .custom-control-label::before {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .custom-control-label::before {
+            position: absolute;
+            top: 0.25rem;
+            left: 0;
+            display: block;
+            width: 1rem;
+            height: 1rem;
+            content: "";
+            background-color: #fff;
+            border: 1px solid #adb5bd;
+            border-radius: 50%;
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <%
-        if (session.getAttribute("hostel_id") == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-    %>
-    <main class="my-5">
-        <div class="container">
-            <div id="wizard">
-                <h3>
-                    <div class="media">
-                        <div class="bd-wizard-step-icon"><i class="mdi mdi-sofa"></i></div>
-                        <div class="media-body">
-                            <div class="bd-wizard-step-title">Rooms Details</div>
-                            <div class="bd-wizard-step-subtitle">Step 2</div>
-                        </div>
-                    </div>
-                </h3>
-                <section>
-                    <div class="content-wrapper">
-                        <h4 class="section-heading">Enter your Rooms details</h4>
-                        <form id="roomTypesForm" action="RoomController" method="post" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="txtRoomTypes" class="sr-only">Number of Room Types</label>
-                                    <input type="number" name="txtRoomTypes" id="txtRoomTypes" class="form-control" placeholder="Number of Room Types">
-                                </div>
-                            </div>
-                            <button type="button" id="generateRoomTypesBtn" class="btn btn-primary mt-3">Generate Room Types</button>
-                            <h5 class="mt-4">Room Types</h5>
-                            <div id="roomTypesContainer"></div>
-                            <input type="submit" name="btnCreate" class="btn btn-success mt-3" value="Save Room Types">
-                        </form>
-                    </div>
-                </section>
-            </div>
+    <main class="container">
+        <h3>Create Room</h3>
+        <div class="form-content">
+            <form id="roomTypesForm" action="RoomController" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="txtRoomTypes" class="sr-only">Number of Room Types</label>
+                    <input type="number" name="txtRoomTypes" id="txtRoomTypes" class="form-control" placeholder="Number of Room Types" required>
+                </div>
+                <div class="btn-center">
+                    <button type="button" id="generateRoomTypesBtn" class="btn btn-primary">Generate Room Types</button>
+                </div>
+                <h5 class="mt-4">Room Types</h5>
+                <div id="roomTypesContainer"></div>
+                <div class="btn-center">
+                    <input type="submit" name="btnCreate" class="btn btn-success" value="Save Room Types">
+                </div>
+            </form>
         </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery.steps.min.js"></script>
-    <script src="assets/js/bd-wizard.js"></script>
     <script>
         $(document).ready(function() {
             $('#generateRoomTypesBtn').click(function() {
