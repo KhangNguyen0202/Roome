@@ -193,7 +193,7 @@
                             </div>
 
                             <div class="image-container">
-                                <img class="rounded-circle img-fluid" src="<%=user.getUser_image()%>" alt="Your Image">
+                                <img class="rounded-circle img-fluid" src="img\<%=user.getUser_image()%>" alt="Your Image">
                                 <input type="hidden" id="txtHidPic" name="txtHidPic" value="<%=user.getUser_image()%>">
                             </div>
 
