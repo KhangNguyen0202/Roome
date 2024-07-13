@@ -1,40 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Models;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
-/**
- *
- * @author DELL
- */
 public class Reviews {
+
     private int reviewID;
     private int userID;
     private int hostelID;
-    private int starNumber;
+    private int starRating;
     private String comment;
-    private Timestamp created_at;
+    private Timestamp createdAt;
+    private String userName; // Add username field
 
-    public Reviews() {
-    }
-
-    public Reviews(int reviewID, int userID, int hostelID, int starNumber, String comment, Timestamp created_at) {
+    public Reviews(int reviewID, int userID, int hostelID, int starRating, String comment, Timestamp createdAt, String userName) {
         this.reviewID = reviewID;
         this.userID = userID;
         this.hostelID = hostelID;
-        this.starNumber = starNumber;
+        this.starRating = starRating;
         this.comment = comment;
-        this.created_at = created_at;
+        this.createdAt = createdAt;
+        this.userName = userName; // Initialize username
     }
 
-    public Reviews(int reviewID, int parseInt, int hostelID, int starNumber, String comment) {
-        
+    public Reviews(int reviewID, int userID, int hostelID, int starRating, String comment, Timestamp createdAt) {
+        this.reviewID = reviewID;
+        this.userID = userID;
+        this.hostelID = hostelID;
+        this.starRating = starRating;
+        this.comment = comment;
+        this.createdAt = createdAt;
     }
 
+    // Getters and Setters
     public int getReviewID() {
         return reviewID;
     }
@@ -59,12 +56,12 @@ public class Reviews {
         this.hostelID = hostelID;
     }
 
-    public int getStarNumber() {
-        return starNumber;
+    public int getStarRating() {
+        return starRating;
     }
 
-    public void setStarNumber(int starNumber) {
-        this.starNumber = starNumber;
+    public void setStarRating(int starRating) {
+        this.starRating = starRating;
     }
 
     public String getComment() {
@@ -75,14 +72,20 @@ public class Reviews {
         this.comment = comment;
     }
 
-    public Timestamp getCreated_at() {
-        return created_at;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
-    
-    
-    
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
 }

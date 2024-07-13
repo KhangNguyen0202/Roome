@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="Models.Reviews"%>
+<%@page import="DAOs.ReviewDAO"%>
 <%@page import="Models.Hostel"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,7 +10,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hostel Info Page</title>
         <style>
-            
+
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
@@ -28,13 +31,13 @@
             }
 
             .blur-background {
-                
+
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background-image: src=('img/<%= obj.getHostel_image() %>'); /* Replace with your background image */
+                background-image: src=('img/<%= obj.getHostel_image()%>'); /* Replace with your background image */
                 background-size: cover;
                 background-position: center;
                 filter: blur(8px);
@@ -90,7 +93,8 @@
 
             .hero {
                 position: relative;
-                background-image:url('img/tro1.jpg');; /* Replace with your main hostel image */
+                background-image:url('img/tro1.jpg');
+                ; /* Replace with your main hostel image */
                 background-size: cover;
                 background-position: center;
                 height: 400px;
@@ -259,16 +263,16 @@
 
             /* Modal styles */
             .modal {
-                display: none; 
-                position: fixed; 
-                z-index: 3; 
+                display: none;
+                position: fixed;
+                z-index: 3;
                 left: 0;
                 top: 0;
                 width: 100%;
                 height: 100%;
                 overflow: auto;
-                background-color: rgb(0,0,0); 
-                background-color: rgba(0,0,0,0.9); 
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.9);
             }
 
             .modal-content {
@@ -299,9 +303,9 @@
     </head>
     <body>
         <%
-                Hostel obj = (Hostel) session.getAttribute("hs");
-            %>
-            
+            Hostel obj = (Hostel) session.getAttribute("hs");
+        %>
+
         <div class="blur-background-container">
             <div class="blur-background"></div>
         </div>
@@ -354,23 +358,9 @@
                 </div>
                 <p>Description: This is a wonderful hostel located in the heart of the city. It offers comfortable accommodation at an affordable price.</p>
             </div>
-            <div class="reviews">
-                <h2>Reviews</h2>
-                <div class="review">
-                    <h3>John Doe</h3>
-                    <p>★★★★☆</p>
-                    <p>Great place to stay! Very clean and friendly staff.</p>
-                </div>
-                <div class="review">
-                    <h3>Jane Smith</h3>
-                    <p>★★★★★</p>
-                    <p>Absolutely loved this hostel. The location is perfect and the amenities are top-notch.</p>
-                </div>
-                <!-- Add more reviews as needed -->
-            </div>
             <div class="review-form">
                 <h3>Leave a Review</h3>
-                <form action="${pageContext.request.contextPath}/ReviewController" method="post">
+                <form action="${pageContext.request.contextPath}/ReviewController" method="post" onsubmit="return validateReviewForm()">
                     <div class="star-rating">
                         <input type="radio" id="5-stars" name="rating" value="5" />
                         <label for="5-stars" class="star">&#9733;</label>
@@ -389,26 +379,70 @@
                 </form>
 
             </div>
-        </section>
-        
-        <!-- The Modal -->
-        <div id="myModal" class="modal">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img class="modal-content" id="img01">
-        </div>
-        
-        <script>
-            function openModal(element) {
-                var modal = document.getElementById("myModal");
-                var modalImg = document.getElementById("img01");
-                modal.style.display = "block";
-                modalImg.src = element.src;
-            }
 
-            function closeModal() {
-                var modal = document.getElementById("myModal");
-                modal.style.display = "none";
-            }
-        </script>
+            <%
+                // This logic is typically handled in a servlet, but for debugging, we are doing it here
+                int hostelID = 1; // Temporary hostelID for testing
+
+                // Fetch reviews from the database
+                ReviewDAO reviewDAO = new ReviewDAO();
+                List<Reviews> reviewsList = reviewDAO.getReviewsByHostelID(hostelID);
+
+                // Debugging: Print reviews to the console
+                if (reviewsList != null) {
+                    for (Reviews review : reviewsList) {
+                        System.out.println("Hostel ID that are created by a variable: " + hostelID);
+                        System.out.println("Hostel ID after do this and that with the database: " + review.getHostelID());
+                        System.out.println("Username: " + review.getUserName());
+                        System.out.println("Star: " + review.getStarRating());
+                        System.out.println("Comment: " + review.getComment());
+                    }
+                } else {
+                    System.out.println("No reviews found or an error occurred.");
+                }
+            %>
+
+            <section class="reviews" id="review-section">
+                <h2>Reviews</h2>
+                <%
+                    if (reviewsList != null) {
+                        for (Reviews review : reviewsList) {
+                %>
+                <div class="review">
+                    <h3><%= review.getUserName()%></h3>
+                    <div>
+                        <span class="star">&#9733;</span><span><%= review.getStarRating()%></span>
+                    </div>
+                    <p><%= review.getComment()%></p>
+                </div>
+                <%
+                    }
+                } else {
+                %>
+                <p>No reviews found or an error occurred.</p>
+                <%
+                    }
+                %>
+            </section>
+
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img class="modal-content" id="img01">
+            </div>
+
+            <script>
+                function openModal(element) {
+                    var modal = document.getElementById("myModal");
+                    var modalImg = document.getElementById("img01");
+                    modal.style.display = "block";
+                    modalImg.src = element.src;
+                }
+
+                function closeModal() {
+                    var modal = document.getElementById("myModal");
+                    modal.style.display = "none";
+                }
+            </script>
     </body>
 </html>
