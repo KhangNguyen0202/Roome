@@ -119,7 +119,7 @@ public class UserController extends HttpServlet {
             response.sendRedirect("/LoginController");
         }
         } catch (Exception e) {
-            System.out.println("err");
+            System.out.println("u err"+session.getAttribute("user_id"));
             response.sendRedirect("/LoginController");
         }
     }

@@ -60,48 +60,52 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-
-        String userId;
-        try {
-            userId = (String) session.getAttribute("user_id");
-            // Debugging information
+        String path = request.getRequestURI();
+        if (path.equals("/LoginController")) {
+            Integer userId;
+            try {
+                userId = (Integer) session.getAttribute("user_id");
+                // Debugging information
 //    System.out.println("Session user_id: " + userId);
 //    System.out.println("Request URI: " + request.getRequestURI());
 
-            // If the user is already logged in, forward to UserController
-            if (userId != null) {
-                System.out.println("User is already logged in. Forwarding to /UserController");
-                response.sendRedirect("/indexlogged.jsp");
-                return;
-            }
+                // If the user is already logged in, forward to UserController
+                if (userId != null) {
+                    System.out.println("User is already logged in. Forwarding to /UserController");
+                    response.sendRedirect("/indexlogged.jsp");
+                    return;
+                }
 
-            Cookie[] cookies = request.getCookies();
-            boolean userCookieFound = false;
+                Cookie[] cookies = request.getCookies();
+                boolean userCookieFound = false;
 
-            // Check if cookies array is not null
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    System.out.println("Found cookie: " + cookie.getName() + " = " + cookie.getValue());
-                    if ("user_id".equals(cookie.getName())) {
-                        // If "user_id" cookie is found, set it in the session
-                        userId = cookie.getValue();
-                        session.setAttribute("user_id", userId);
-                        userCookieFound = true;
-                        break; // Exit the loop once the cookie is found and processed
+                // Check if cookies array is not null
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        System.out.println("Found cookie: " + cookie.getName() + " = " + cookie.getValue());
+                        if ("user_id".equals(cookie.getName())) {
+                            // If "user_id" cookie is found, set it in the session
+                            int userIdStr = Integer.parseUnsignedInt(cookie.getValue());
+                            session.setAttribute("user_id", userIdStr);
+                            userCookieFound = true;
+                            break; // Exit the loop once the cookie is found and processed
+                        }
                     }
                 }
-            }
 
-            // If the user_id cookie was found, forward to UserController
-            if (userCookieFound) {
-                System.out.println("user_id cookie found. Forwarding to /UserController");
-                request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
-            } else {
-                // Otherwise, forward to login.jsp
-                System.out.println("No user_id cookie found. Forwarding to /login.jsp");
+                // If the user_id cookie was found, forward to UserController
+                if (userCookieFound) {
+                    System.out.println("user_id cookie found. Forwarding to /UserController");
+                    request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
+                } else {
+                    // Otherwise, forward to login.jsp
+                    System.out.println("No user_id cookie found. Forwarding to /login.jsp");
+                    request.getRequestDispatcher("/login.jsp").forward(request, response);
+                }
+            } catch (Exception e) {
+                System.out.println("L err"+session.getAttribute("user_id"));
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
-        } catch (Exception e) {
         }
 
     }
@@ -139,7 +143,7 @@ public class LoginController extends HttpServlet {
                     response.addCookie(userCookie);
 
                     System.out.println("Login successful. Redirecting to /UserController");
-                request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
+                    request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
                 } else {
                     System.out.println("Login failed. Redirecting to /LoginController");
                     response.sendRedirect("/LoginController");
