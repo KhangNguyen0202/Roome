@@ -38,7 +38,26 @@ public class HostelController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String path = request.getRequestURI();
+        if (path.equals("/HostelController/Create")) {
+            request.getRequestDispatcher("/createhostel.jsp").forward(request, response);
+        }else if (path.startsWith("/HostelController/View/")) {
+                String[] s = path.split("/");
+                String loc = s[s.length - 1];
+                 int hosel_id = Integer.parseInt(loc);
+                HostelDAO dao = new HostelDAO();
+                Hostel obj = dao.getHostelByID(hosel_id);
+                System.out.println("hosel_id:" + hosel_id);
+                System.out.println("obj:" +obj);
+                if (obj == null) {
+                    response.sendRedirect("/ProductController");
+                } else {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("hs", obj);
+                    request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
+                }
+
+            }
     }
 
     @Override
@@ -67,7 +86,10 @@ public class HostelController extends HttpServlet {
 
             // Handle file upload
             String fileName = "";
-            String uploadPath = getServletContext().getRealPath("") + File.separator + "img";
+
+            String uploadPath = "";
+            String s = getServletContext().getRealPath("") + File.separator;
+            uploadPath = getServletContext().getRealPath("") + File.separator;
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -75,15 +97,14 @@ public class HostelController extends HttpServlet {
 
             for (Part part : request.getParts()) {
                 if (part.getName().equals("txtPic")) {
-                    String originalFileName = getFileName(part);
-                    String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
-                    fileName = uniqueFileName;
-                    part.write(uploadPath + File.separator + fileName);
-                    System.out.println("File uploaded: " + fileName);
+                    fileName = (String) getFileName(part);
+                    if (fileName != null && !fileName.isEmpty()) {
+                        part.write(uploadPath + File.separator + "img/" + fileName);
+                    }
                 }
             }
 
-            String hostelImage = "img/" + fileName;
+            String hostelImage = fileName;
 
             // Create Hostel object
             Hostel hostel = new Hostel(user_id, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description, total_rooms, createdAt);
@@ -95,9 +116,9 @@ public class HostelController extends HttpServlet {
             if (hostelId > 0) {
                 // Store the hostel_id in the session
                 session.setAttribute("hostel_id", hostelId);
-                response.sendRedirect("createroom.jsp");
+                response.sendRedirect("/RoomController/Create");
             } else {
-                response.sendRedirect("createhostel.jsp");
+                response.sendRedirect("/HostelCOntroller");
             }
         } else {
             System.out.println("Button not clicked!");

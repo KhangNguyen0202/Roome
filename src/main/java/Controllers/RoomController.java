@@ -121,24 +121,26 @@ public class RoomController extends HttpServlet {
                     return;
                 }
 
-                String fileName = "";
-                String uploadPath = getServletContext().getRealPath("") + File.separator + "img";
-                File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
+                 String fileName = "";
 
-                for (Part part : request.getParts()) {
-                    if (part.getName().equals("roomImage" + i)) {
-                        String originalFileName = getFileName(part);
-                        String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
-                        fileName = uniqueFileName;
-                        part.write(uploadPath + File.separator + fileName);
-                        System.out.println("File uploaded: " + fileName);
+            String uploadPath = "";
+            String s = getServletContext().getRealPath("") + File.separator;
+            uploadPath = getServletContext().getRealPath("") + File.separator;
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            for (Part part : request.getParts()) {
+                if (part.getName().equals("txtPic")) {
+                    fileName = (String) getFileName(part);
+                    if (fileName != null && !fileName.isEmpty()) {
+                        part.write(uploadPath + File.separator + "img/" + fileName);
                     }
                 }
+            }
 
-                String roomImage = "img/" + fileName;
+            String roomImage = fileName;
                 Timestamp createdAt = new Timestamp(System.currentTimeMillis());
                 RoomType room = new RoomType(hostelId, roomName, roomSize, roomPrice, roomAvailability, roomImage, createdAt);
                 roomList.add(room);
@@ -149,7 +151,7 @@ public class RoomController extends HttpServlet {
                 roomDAO.addNew(room);
             }
 
-            response.sendRedirect("success.jsp");
+            response.sendRedirect("/MainPageController");
         }
     }
 

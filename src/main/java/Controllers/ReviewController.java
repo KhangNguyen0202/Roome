@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * ReviewController handles review submission.
@@ -35,7 +36,29 @@ public class ReviewController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int hostelID = Integer.parseInt(request.getParameter("hostelID"));
+        hostelID = 1; // Temporary hostelID for testing
+
+        // Fetch reviews from the database
+        ReviewDAO reviewDAO = new ReviewDAO();
+        List<Reviews> reviews = reviewDAO.getReviewsByHostelID(hostelID);
+
+        // Debugging: Print reviews to the console
+        if (reviews != null) {
+            for (Reviews review : reviews) {
+                System.out.println("Username: " + review.getUserName());
+                System.out.println("Star: " + review.getStarRating());
+                System.out.println("Comment: " + review.getComment());
+            }
+        } else {
+            System.out.println("No reviews found or an error occurred.");
+        }
+
+        // Store reviews in the request scope
+        request.setAttribute("reviews", reviews);
+
+        // Forward to the JSP page
+        request.getRequestDispatcher("/infohotel.jsp").forward(request, response);
     }
 
     @Override
@@ -50,7 +73,7 @@ public class ReviewController extends HttpServlet {
             System.out.println("rating: " + ratingParam);
 
             if (hostelIDParam == null || ratingParam == null) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required parameters");
+response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required parameters");
                 return;
             }
 

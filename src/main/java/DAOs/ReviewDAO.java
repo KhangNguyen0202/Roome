@@ -11,9 +11,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO for managing reviews.
- */
 public class ReviewDAO {
 
     public int createReview(Reviews review) {
@@ -25,9 +22,9 @@ public class ReviewDAO {
                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 stmt.setInt(1, review.getUserID());
                 stmt.setInt(2, review.getHostelID());
-                stmt.setInt(3, review.getStarNumber());
+                stmt.setInt(3, review.getStarRating());
                 stmt.setString(4, review.getComment());
-                stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis())); // Set current timestamp
+                stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 
                 count = stmt.executeUpdate();
 
@@ -46,27 +43,27 @@ public class ReviewDAO {
         return count;
     }
 
-    // Method to get reviews by hostel ID
     public List<Reviews> getReviewsByHostelID(int hostelID) {
-        List<Reviews> reviewsList = new ArrayList<>();
+        List<Reviews> reviews = new ArrayList<>();
         Connection conn = DBConnection.getConnection();
+
         if (conn != null) {
             try {
-                String sql = "SELECT * FROM reviews WHERE hostel_id = ?";
+                String sql = "SELECT r.review_id, r.user_id, r.hostel_id, r.star_number, r.comment, r.created_at, u.usercall_name FROM reviews r JOIN users u ON r.user_id = u.user_id WHERE r.hostel_id = ?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, hostelID);
-
                 ResultSet rs = stmt.executeQuery();
+
                 while (rs.next()) {
-                    Reviews review = new Reviews(
-                            rs.getInt("review_id"),
-                            rs.getInt("user_id"),
-                            rs.getInt("hostel_id"),
-                            rs.getInt("star_number"),
-                            rs.getString("comment"),
-                            rs.getTimestamp("created_at")
-                    );
-                    reviewsList.add(review);
+                    int reviewID = rs.getInt("review_id");
+                    int userID = rs.getInt("user_id");
+                    int starRating = rs.getInt("star_number");
+                    String comment = rs.getString("comment");
+                    Timestamp createdAt = rs.getTimestamp("created_at");
+                    String userName = rs.getString("usercall_name");
+
+                    Reviews review = new Reviews(reviewID, userID, hostelID, starRating, comment, createdAt, userName);
+                    reviews.add(review);
                 }
 
                 rs.close();
@@ -75,7 +72,9 @@ public class ReviewDAO {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
+        } else {
+            System.out.println("Failed to establish a database connection.");
         }
-        return reviewsList;
+        return reviews;
     }
 }

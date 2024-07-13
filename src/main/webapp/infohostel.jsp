@@ -1,3 +1,7 @@
+<%@page import="java.util.List"%>
+<%@page import="DAOs.ReviewDAO"%>
+<%@page import="Models.Reviews"%>
+<%@page import="Models.Hostel"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +91,7 @@
 
             .hero {
                 position: relative;
-                background-image: url('img/hostel1.jpg'); /* Replace with your main hostel image */
+                background-image: url('img/tro1.jpg'); /* Replace with your main hostel image */
                 background-size: cover;
                 background-position: center;
                 height: 400px;
@@ -295,6 +299,9 @@
         </style>
     </head>
     <body>
+        <%
+            Hostel obj = (Hostel) session.getAttribute("hs");
+        %>
         <div class="blur-background-container">
             <div class="blur-background"></div>
         </div>
@@ -347,23 +354,28 @@
                 </div>
                 <p>Description: This is a wonderful hostel located in the heart of the city. It offers comfortable accommodation at an affordable price.</p>
             </div>
-            <div class="reviews">
-                <h2>Reviews</h2>
-                <div class="review">
-                    <h3>John Doe</h3>
-                    <p>★★★★☆</p>
-                    <p>Great place to stay! Very clean and friendly staff.</p>
+          <div class="hostel-info">
+                <h2>About the Hostel</h2>
+                <p>Price per night: $25</p>
+                <div class="amenities">
+                    <div class="amenity">
+                        <img src="wifi-icon.png" alt="Free Wi-Fi"> Free Wi-Fi
+                    </div>
+                    <div class="amenity">
+                        <img src="breakfast-icon.png" alt="Breakfast included"> Breakfast included
+                    </div>
+                    <div class="amenity">
+                        <img src="kitchen-icon.png" alt="Shared kitchen"> Shared kitchen
+                    </div>
+                    <div class="amenity">
+                        <img src="reception-icon.png" alt="24-hour reception"> 24-hour reception
+                    </div>
                 </div>
-                <div class="review">
-                    <h3>Jane Smith</h3>
-                    <p>★★★★★</p>
-                    <p>Absolutely loved this hostel. The location is perfect and the amenities are top-notch.</p>
-                </div>
-                <!-- Add more reviews as needed -->
+                <p>Description: This is a wonderful hostel located in the heart of the city. It offers comfortable accommodation at an affordable price.</p>
             </div>
             <div class="review-form">
                 <h3>Leave a Review</h3>
-                <form action="${pageContext.request.contextPath}/ReviewController" method="post">
+                <form action="${pageContext.request.contextPath}/ReviewController" method="post" onsubmit="return validateReviewForm()">
                     <div class="star-rating">
                         <input type="radio" id="5-stars" name="rating" value="5" />
                         <label for="5-stars" class="star">&#9733;</label>
@@ -382,7 +394,51 @@
                 </form>
 
             </div>
-        </section>
+
+            <%
+                // This logic is typically handled in a servlet, but for debugging, we are doing it here
+                int hostelID = 1; // Temporary hostelID for testing
+
+                // Fetch reviews from the database
+                ReviewDAO reviewDAO = new ReviewDAO();
+                List<Reviews> reviewsList = reviewDAO.getReviewsByHostelID(hostelID);
+
+                // Debugging: Print reviews to the console
+                if (reviewsList != null) {
+                    for (Reviews review : reviewsList) {
+                        System.out.println("Hostel ID that are created by a variable: " + hostelID);
+System.out.println("Hostel ID after do this and that with the database: " + review.getHostelID());
+                        System.out.println("Username: " + review.getUserName());
+                        System.out.println("Star: " + review.getStarRating());
+                        System.out.println("Comment: " + review.getComment());
+                    }
+                } else {
+                    System.out.println("No reviews found or an error occurred.");
+                }
+            %>
+            <section class="reviews" id="review-section">
+                <h2>Reviews</h2>
+                <%
+                    if (reviewsList != null) {
+                        for (Reviews review : reviewsList) {
+                %>
+                <div class="review">
+                    <h3><%= review.getUserName()%></h3>
+                    <div>
+                        <span class="star">&#9733;</span><span><%= review.getStarRating()%></span>
+                    </div>
+                    <p><%= review.getComment()%></p>
+                    <p><small>Reviewed on: <%= review.getCreatedAt()%></small></p>
+                </div>
+                <%
+                    }
+                } else {
+                %>
+                <p>No reviews found or an error occurred.</p>
+                <%
+                    }
+                %>
+            </section>
         
         <!-- The Modal -->
         <div id="myModal" class="modal">

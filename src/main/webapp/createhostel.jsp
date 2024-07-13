@@ -6,118 +6,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>BootstrapDash Wizard</title>
-    <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bd-wizard.css">
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <title>Create Hostel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .form-select-custom {
-            height: calc(2.25rem + 17px);
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        body {
+            font-family: 'Karla', sans-serif;
+            background: #003580;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            padding: 0;
+            max-width: 600px;
             width: 100%;
+            overflow: hidden;
         }
-        .form-select-custom:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        .container h3 {
+            text-align: center;
+            margin: 0;
+            background-color: #212529;
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            width: 100%;
+            box-sizing: border-box;
         }
-        .btn-next-custom {
-            position: relative;
-            float: right;
-            margin-top: 20px; /* Adjust the top margin as needed */
+        .form-content {
+            padding: 30px;
+            max-height: calc(100vh - 60px); /* Adjust for header height */
+            overflow-y: auto;
         }
-        .bd-wizard-step-num {
-            display: none; /* Hides the step number */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-control, .form-select {
+            border-radius: 0.25rem;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: none;
+            border-color: #003580;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #003580;
+            border-color: #003580;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s ease;
+        }
+        .btn:hover {
+            background-color: #002c6d;
+            border-color: #002c6d;
         }
     </style>
 </head>
 <body>
-    <%
-        session.setAttribute("landlord_id", 1);
-    %>
-    <main class="my-5">
-        <div class="container">
-            <div id="wizard">
-                <h3>
-                    <div class="media">
-                        <div class="bd-wizard-step-icon"><i class="mdi mdi-home-account"></i></div>
-                        <div class="media-body">
-                            <div class="bd-wizard-step-title">Hostel Details</div>
-                            <div class="bd-wizard-step-subtitle">Step 1</div>
-                        </div>
-                    </div>
-                </h3>
-                <section>
-                    <div class="content-wrapper">
-                        <h4 class="section-heading">Enter your Hostel details</h4>
-                        <form id="hostelForm" action="HostelController" method="post" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="txtHostelName" class="sr-only">Hostel Name</label>
-                                    <input type="text" name="txtHostelName" id="txtHostelName" class="form-control" placeholder="Hostel Name" required>
-                                </div>
-<div class="form-group col-md-6">
-                                    <label for="txtProvince" class="sr-only">Province</label>
-                                    <select class="form-select form-select-custom" name="txtProvince" id="txtProvince" required>
-                                        <option value="" disabled selected>Address</option>
-                                        <%
-                                            ProvinceDAO dao = new ProvinceDAO();
-                                            ResultSet rs = dao.getAllProvince();
-                                            while (rs.next()) {
-                                        %>
-                                        <option value="<%= rs.getString("Province_ID")%>"><%= rs.getString("Province_Name")%></option>
-                                        <%
-                                            }
-                                        %>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="txtAddressDetail" class="sr-only">Address Detail</label>
-                                    <input type="text" name="txtAddressDetail" id="txtAddressDetail" class="form-control" placeholder="Address Detail" required>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="txtPhoneNumber" class="sr-only">Phone Number</label>
-                                    <input type="text" name="txtPhoneNumber" id="txtPhoneNumber" class="form-control" placeholder="Phone Number" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="txtDescription" class="sr-only">Description</label>
-                                    <input type="text" name="txtDescription" id="txtDescription" class="form-control" placeholder="Description" required></textarea>
-                                </div>
-                            
-                                <div class="form-group col-md-6">
-                                    <label for="txtTotalRooms" class="sr-only">Total Rooms</label>
-                                    <input type="number" name="txtTotalRooms" id="txtTotalRooms" class="form-control" placeholder="Total Rooms" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="txtPic">Product Picture</label>
-                                <input type="file" class="form-control" id="txtPic" name="txtPic" required>
-                            </div>
-<button type="submit" name="btnNext" id="btnNext" class="btn btn-success btn-next-custom mt-3 mb-3">Next</button>
-                        </form>
-                    </div>
-                </section>                
-            </div>
+    <main class="container">
+        <h3>Create Hostel</h3>
+        <div class="form-content">
+            <form id="hostelForm" action="HostelController" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="txtHostelName" class="form-label">Hostel Name</label>
+                    <input type="text" name="txtHostelName" id="txtHostelName" class="form-control" placeholder="Hostel Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="txtProvince" class="form-label">Province</label>
+                    <select class="form-select" name="txtProvince" id="txtProvince" required>
+                        <option value="" disabled selected>Select Province</option>
+                        <%
+                            ProvinceDAO dao = new ProvinceDAO();
+                            ResultSet rs = dao.getAllProvince();
+                            while (rs.next()) {
+                        %>
+                        <option value="<%= rs.getString("Province_ID")%>"><%= rs.getString("Province_Name")%></option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtAddressDetail" class="form-label">Address Detail</label>
+                    <input type="text" name="txtAddressDetail" id="txtAddressDetail" class="form-control" placeholder="Address Detail" required>
+                </div>
+                <div class="form-group">
+                    <label for="txtPhoneNumber" class="form-label">Phone Number</label>
+                    <input type="text" name="txtPhoneNumber" id="txtPhoneNumber" class="form-control" placeholder="Phone Number" required>
+                </div>
+                <div class="form-group">
+                    <label for="txtDescription" class="form-label">Description</label>
+                    <textarea name="txtDescription" id="txtDescription" class="form-control" placeholder="Description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="txtTotalRooms" class="form-label">Total Rooms</label>
+                    <input type="number" name="txtTotalRooms" id="txtTotalRooms" class="form-control" placeholder="Total Rooms" required>
+                </div>
+                <div class="form-group">
+                    <label for="txtPic" class="form-label">Product Picture</label>
+                    <input type="file" class="form-control" id="txtPic" name="txtPic" required>
+                </div>
+                <button type="submit" name="btnNext" id="btnNext" class="btn">Create Hostel</button>
+            </form>
         </div>
     </main>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery.steps.min.js"></script>
-    <script src="assets/js/bd-wizard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -149,7 +149,7 @@ public class UserController extends HttpServlet {
                 if (part.getName().equals("txtPic")) {
                     fileName = (String) getFileName(part);
                     if (fileName != null && !fileName.isEmpty()) {
-                        part.write(uploadPath + File.separator + fileName);
+                        part.write(uploadPath + File.separator +"img\\"+fileName);
                     }
                 }
             }
