@@ -38,10 +38,10 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UserController</title>");
+            out.println("<title>Servlet LoginController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UserController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,10 +59,51 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String path = request.getRequestURI();
-        if (path.equals("/LoginController")) {
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+
+        String userId;
+        try {
+            userId = (String) session.getAttribute("user_id");
+            // Debugging information
+//    System.out.println("Session user_id: " + userId);
+//    System.out.println("Request URI: " + request.getRequestURI());
+
+            // If the user is already logged in, forward to UserController
+            if (userId != null) {
+                System.out.println("User is already logged in. Forwarding to /UserController");
+                response.sendRedirect("/indexlogged.jsp");
+                return;
+            }
+
+            Cookie[] cookies = request.getCookies();
+            boolean userCookieFound = false;
+
+            // Check if cookies array is not null
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    System.out.println("Found cookie: " + cookie.getName() + " = " + cookie.getValue());
+                    if ("user_id".equals(cookie.getName())) {
+                        // If "user_id" cookie is found, set it in the session
+                        userId = cookie.getValue();
+                        session.setAttribute("user_id", userId);
+                        userCookieFound = true;
+                        break; // Exit the loop once the cookie is found and processed
+                    }
+                }
+            }
+
+            // If the user_id cookie was found, forward to UserController
+            if (userCookieFound) {
+                System.out.println("user_id cookie found. Forwarding to /UserController");
+                request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
+            } else {
+                // Otherwise, forward to login.jsp
+                System.out.println("No user_id cookie found. Forwarding to /login.jsp");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
         }
+
     }
 
     /**
@@ -79,30 +120,37 @@ public class LoginController extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        if (request.getParameter("btnLogin") != null) {
+        // Debugging information
+        System.out.println("doPost called in LoginController");
 
+        if (request.getParameter("btnLogin") != null) {
             String us = request.getParameter("txtUS");
             String pwd = request.getParameter("txtPWD");
 
-            User acc = new User(us, pwd);
-            UserDAO dao = new UserDAO();
+            // Additional null check for parameters
+            if (us != null && pwd != null) {
+                User acc = new User(us, pwd);
+                UserDAO dao = new UserDAO();
 
-            // Set cookies if "Remember me" is checked
-            if (dao.login(acc)) {
-                // Create session
-                UserDAO user = new UserDAO();
-                session.setAttribute("username", user.getUserIdByUser(us));
-                Cookie userCookie = new Cookie("username", user.getUserIdByUser(us) + "");
-                userCookie.setMaxAge(1 * 24 * 60 * 60); // 1 day
-                userCookie.setHttpOnly(true);
-                response.addCookie(userCookie);
+                if (dao.login(acc)) {
+                    session.setAttribute("user_id", dao.getUserIdByUser(us));
+                    Cookie userCookie = new Cookie("user_id", dao.getUserIdByUser(us) + "");
+                    userCookie.setMaxAge(3 * 24 * 60 * 60); // Cookie expiry time: 3 days
+                    response.addCookie(userCookie);
+
+                    System.out.println("Login successful. Redirecting to /UserController");
+                request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
+                } else {
+                    System.out.println("Login failed. Redirecting to /LoginController");
+                    response.sendRedirect("/LoginController");
+                }
+            } else {
+                System.out.println("Username or password parameter is missing.");
+                response.sendRedirect("/LoginController");
             }
-
-            // Redirect to a welcome page or dashboard
-            response.sendRedirect("indexlogged.jsp");
         } else {
-            // Redirect back to login page with error message
-            response.sendRedirect("login.jsp?error=true");
+            System.out.println("btnLogin parameter is missing.");
+            response.sendRedirect("/LoginController");
         }
     }
 

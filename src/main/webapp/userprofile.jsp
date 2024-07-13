@@ -175,7 +175,7 @@
     <body>
         <%
             UserDAO userdao = new UserDAO();
-            User user = userdao.getUserByID(Integer.parseInt(request.getParameter("id")));
+            User user = userdao.getUserByID(Integer.parseInt(session.getAttribute("user_id")+""));
         %>
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
@@ -201,7 +201,6 @@
                                 </span>
                             </div>
                         </div>
-                        <%= request.getParameter("txtHidPic")%>
                     </form>
                 </div>
 
