@@ -151,7 +151,7 @@ public class RoomController extends HttpServlet {
                 roomDAO.addNew(room);
             }
 
-            response.sendRedirect("success.jsp");
+            response.sendRedirect("/MainPageController");
         }
     }
 

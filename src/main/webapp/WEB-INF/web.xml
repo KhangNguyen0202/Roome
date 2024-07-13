@@ -20,6 +20,10 @@
         <servlet-name>ForgotPasswordController</servlet-name>
         <servlet-class>Controllers.ForgotPasswordController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MainPageController</servlet-name>
+        <servlet-class>Controllers.MainPageController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ForgotPasswordController</servlet-name>
         <url-pattern>/ForgotPasswordController/*</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>RoomController</servlet-name>
         <url-pattern>/RoomController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MainPageController</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

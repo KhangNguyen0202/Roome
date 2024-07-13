@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +32,6 @@ import java.io.File;
 public class UserController extends HttpServlet {
 
     private int user_id;
-    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -70,22 +70,68 @@ public class UserController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    String path = request.getRequestURI();
+    if (path.equals("/UserController")) {
+ 
+        Integer userId;
+        try {
+           userId  = (Integer) session.getAttribute("user_id");
+        
+        // Debugging information
+        System.out.println("Session user_id: " + userId);
+        System.out.println("Request URI: " + request.getRequestURI());
 
-        String path = request.getRequestURI();
-        if (path.equals("/UserController")) {
-            user_id = Integer.parseInt(request.getParameter("id"));
-            request.getRequestDispatcher("/userprofile.jsp?id="+user_id).forward(request, response);
-
+        // If the user is already logged in, forward to userprofile.jsp
+        if (userId != null) {
+            System.out.println("User is already logged in. Forwarding to /userprofile.jsp");
+            request.getRequestDispatcher("/userprofile.jsp").forward(request, response);
+            return;
         }
 
+        Cookie[] cookies = request.getCookies();
+        boolean userCookieFound = false;
+
+        // Check if cookies array is not null
+        if (cookies != null) {
+            UserDAO dao = new UserDAO();
+            for (Cookie cookie : cookies) {
+                System.out.println("Found cookie: " + cookie.getName() + " = " + cookie.getValue());
+                if ("user_id".equals(cookie.getName())) {
+                    // If "user_id" cookie is found, set it in the session
+                    int userIdStr = Integer.parseUnsignedInt(cookie.getValue());
+                    
+                    session.setAttribute("user_id", userIdStr);
+                    userCookieFound = true;
+                    break; // Exit the loop once the cookie is found and processed
+                }
+            }
+        }
+
+        // If the user_id cookie was found, forward to userprofile.jsp
+        if (userCookieFound) {
+            System.out.println("user_id cookie found. Forwarding to /userprofile.jsp");
+            request.getRequestDispatcher("/userprofile.jsp").forward(request, response);
+        } else {
+            // Otherwise, forward to login.jsp
+            System.out.println("No user_id cookie found. Redirecting to /LoginController");
+            response.sendRedirect("/LoginController");
+        }
+        } catch (Exception e) {
+            System.out.println("u err"+session.getAttribute("user_id"));
+            response.sendRedirect("/LoginController");
+        }
     }
+}
+
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-
+        user_id = Integer.parseInt(session.getAttribute("user_id") + "");
         //file upload
         if (request.getParameter("uploadImg") != null) {
 
@@ -110,7 +156,7 @@ public class UserController extends HttpServlet {
             UserDAO dao = new UserDAO();
             User user = dao.getUserByID(user_id);
             dao.updateUserImg(user_id, fileName);
-            response.sendRedirect("/UserController?id="+user_id);
+            response.sendRedirect("/UserController");
 
         } else if (request.getParameter("btnSave") != null) {
 
@@ -124,9 +170,10 @@ public class UserController extends HttpServlet {
             UserDAO dao = new UserDAO();
             int updated = dao.updateUserInfo(user_id, obj);
             if (updated == 0) {
-                response.sendRedirect("/err"+ user_id);
-            }else
-            response.sendRedirect("/UserController?id=" + user_id);
+                response.sendRedirect("/err" + user_id);
+            } else {
+                response.sendRedirect("/indexlogged.jsp");
+            }
 
         }
     }
@@ -151,4 +198,5 @@ public class UserController extends HttpServlet {
         }
         return "";
     }
+
 }

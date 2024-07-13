@@ -72,7 +72,7 @@ public class UserDAO {
             String sql = "select * from users where username =? and password=?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, acc.getUsername());
-            pst.setString(2, md5Hash(acc.getPassword()));
+            pst.setString(2, (acc.getPassword()));
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 return true;

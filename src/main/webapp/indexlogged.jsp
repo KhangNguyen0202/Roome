@@ -4,6 +4,8 @@
     Author     : sakak
 --%>
 
+<%@page import="Models.User"%>
+<%@page import="DAOs.UserDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -213,6 +215,10 @@
     </style>
 </head>
 <body>
+    <%
+            UserDAO userdao = new UserDAO();
+            User user = userdao.getUserByID(Integer.parseInt(session.getAttribute("user_id")+""));
+        %>
     <header class="header">
         <div class="header-left">
             <img src="logo.png" alt="LOGO">
@@ -226,16 +232,16 @@
             <a href="#">Airport taxis</a>
         </nav>
         <div class="header-right">
-            <img src="user-avatar.jpg" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
+            <img src="<%=user.getUser_image()%>" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
         </div>
     </header>
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
         <div class="sidebar-header">
-            <img src="user-avatar.jpg" alt="User Avatar">
+            <img src="<%=user.getUser_image()%>" alt="User Avatar">
             <span class="username">Hung mat lon</span>
         </div>
-        <a href="#">Profile</a>
+        <a href="/UserController">Profile</a>
         <a href="#">Bookings</a>
         <a href="#">Settings</a>
         <a href="#">Logout</a>

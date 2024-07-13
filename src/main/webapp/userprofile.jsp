@@ -4,6 +4,9 @@
     Author     : sakak
 --%>
 
+<%@page import="Models.Hostel"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="DAOs.HostelDAO"%>
 <%@page import="Models.User"%>
 <%@page import="DAOs.UserDAO"%>
 <%@page import="DB.DBConnection"%>
@@ -168,6 +171,7 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
+            
 
         </style>
     </head>
@@ -175,7 +179,8 @@
     <body>
         <%
             UserDAO userdao = new UserDAO();
-            User user = userdao.getUserByID(Integer.parseInt(request.getParameter("id")));
+            int user_id = Integer.parseInt(session.getAttribute("user_id") + "");
+            User user = userdao.getUserByID(user_id);
         %>
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
@@ -201,7 +206,6 @@
                                 </span>
                             </div>
                         </div>
-                        <%= request.getParameter("txtHidPic")%>
                     </form>
                 </div>
 
@@ -246,22 +250,30 @@
                 <div class="col-md-4">
                     <!-- User Hostel Data Form -->
                     <form method="post" action="/UserController" enctype="multipart/form-data">
-                        <div class="p-3 py-5">
-                            <div class="d-flex justify-content-between align-items-center experience">
-                                <span>Edit Experience</span>
-                                <span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Experience</span>
+                        <section class="hostel-section" id="hostel-section">
+                            <%
+                                HostelDAO hostelDao = new HostelDAO();
+                                ResultSet rs = hostelDao.getAll();
+                                while (rs.next()) {
+                                    if (rs.getInt("user_id") == user_id) {
+                            %>
+                            <div class="hostel" data-address="<%=rs.getString("address_detail")%>">
+                                <img src="img/hostel1.jpg" alt="Hostel Image">
+                                <div class="hostel-info">
+                                    <input type="hidden" value="<%=rs.getString("hostel_name")%>" readonly>
+                                    <h2>Hostel Name: <%=rs.getString("hostel_name")%></h2>
+                                    <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
+                                    <p><strong>Phone contact:</strong> <%=rs.getString("phone_contact")%></p>
+                                    <p><strong>Description:</strong> <%=rs.getString("description")%></p>
+                                </div>
                             </div>
-                            <br>
-                            <div class="col-md-12">
-                                <label class="labels">Experience in Designing</label>
-                                <input type="text" class="form-control" placeholder="experience" value="">
-                            </div>
-                            <br>
-                            <div class="col-md-12">
-                                <label class="labels">Additional Details</label>
-                                <input type="text" class="form-control" placeholder="additional details" value="">
-                            </div>
-                        </div>
+                            <%
+                                    }
+                                }
+                                rs.close();
+                            %>
+                        </section>
+
                     </form>
                 </div>
             </div>
