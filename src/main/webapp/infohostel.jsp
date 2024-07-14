@@ -368,7 +368,7 @@
           <div class="hostel-info">
                 <div class="card">
                     <h2>About the Hostel</h2>
-                    <p>Price per night: $25</p>
+                    <p>Total Rooms:  <%= obj.getTotal_rooms()%></p>
                     <p>Owner: <%= user.getUsercall_name()%> <%= user.getUserSurname()%></p>  
                     <p>Description: <%= obj.getDescription()%></p>
                 </div>

@@ -20,13 +20,13 @@ import java.sql.Timestamp;
 public class HostelController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HostelController</title>");  
+            out.println("<title>Servlet HostelController</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet HostelController at " + request.getContextPath() + "</h1>");
@@ -37,93 +37,51 @@ public class HostelController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        
-         String path = request.getRequestURI();
-
-    if (path.equals("/HostelController/Create")) {
-        HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("user_id");
-
-        if (userId == null) {
-            response.sendRedirect("/LoginController");
-            return;
-        }
-
-        request.getRequestDispatcher("/createhostel.jsp").forward(request, response);
-    }else if (path.startsWith("/HostelController/View/")) {
-                String[] s = path.split("/");
-                String loc = s[s.length - 1];
-                 int hosel_id = Integer.parseInt(loc);
-                HostelDAO dao = new HostelDAO();
-                Hostel obj = dao.getHostelByID(hosel_id);
-                System.out.println("hosel_id:" + hosel_id);
-                System.out.println("obj:" +obj);
-                if (obj == null) {
-                    response.sendRedirect("/MainPageController");
-                } else {
-                    HttpSession session = request.getSession();
-                    session.setAttribute("hs", obj);
-                    request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
-                }
-
-            }else if (path.startsWith("/HostelController/Edit/")) {
-                String[] s = path.split("/");
-                String loc = s[s.length - 1];
-                 int hosel_id = Integer.parseInt(loc);
-                HostelDAO dao = new HostelDAO();
-                Hostel obj = dao.getHostelByID(hosel_id);
-                System.out.println("hosel_id:" + hosel_id);
-                System.out.println("obj:" +obj);
-                if (obj == null) {
-                    response.sendRedirect("/MainPageController");
-                } else {
-                    HttpSession session = request.getSession();
-                    session.setAttribute("ehs", obj);
-                    request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
-                }
-
-            }else if (path.equals("/HostelController/List")) {
-                 HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("user_id");
-
-        if (userId == null) {
-            response.sendRedirect("/LoginController");
-            return;
-        }
-            request.getRequestDispatcher("/listhostel.jsp").forward(request, response);
+            throws ServletException, IOException {
+        String path = request.getRequestURI();
+        if (path.equals(request.getContextPath() + "/HostelController/Create")) {
+            request.getRequestDispatcher("/createhostel.jsp").forward(request, response);
+        } else if (path.startsWith(request.getContextPath() + "/HostelController/View/")) {
+            String[] s = path.split("/");
+            String loc = s[s.length - 1];
+            int hostel_id = Integer.parseInt(loc);
+            HostelDAO dao = new HostelDAO();
+            Hostel obj = dao.getHostelByID(hostel_id);
+            System.out.println("hostel_id:" + hostel_id);
+            System.out.println("obj:" + obj);
+            if (obj == null) {
+                response.sendRedirect(request.getContextPath() + "/ProductController");
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("hs", obj);
+                request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
-       
-       
-    Integer user_id = (Integer) session.getAttribute("user_id");
-        
-        if (user_id == null) {
-            response.sendRedirect("/LoginController");
-            return;
-        }       
+        int user_id = 1;
+        System.out.println("user_id: " + user_id);
+
         if (request.getParameter("btnNext") != null) {
             System.out.println("Processing form submission...");
-
-            String hostelName = request.getParameter("txtHostelName");
+String hostelName = request.getParameter("txtHostelName");
             int provinceId = Integer.parseInt(request.getParameter("txtProvince"));
             String addressDetail = request.getParameter("txtAddressDetail");
             String phoneContact = request.getParameter("txtPhoneNumber");
             String description = request.getParameter("txtDescription");
             int total_rooms = Integer.parseInt(request.getParameter("txtTotalRooms"));
             Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+            String status = "pending"; // Default status
 
             // Handle file upload
             String fileName = "";
-
-            String uploadPath = "";
-            String s = getServletContext().getRealPath("") + File.separator;
-            uploadPath = getServletContext().getRealPath("") + File.separator;
+            String uploadPath = getServletContext().getRealPath("") + File.separator + "img";
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -131,9 +89,9 @@ public class HostelController extends HttpServlet {
 
             for (Part part : request.getParts()) {
                 if (part.getName().equals("txtPic")) {
-                    fileName = (String) getFileName(part);
+                    fileName = getFileName(part);
                     if (fileName != null && !fileName.isEmpty()) {
-                        part.write(uploadPath + File.separator + "img/" + fileName);
+                        part.write(uploadPath + File.separator + fileName);
                     }
                 }
             }
@@ -141,18 +99,17 @@ public class HostelController extends HttpServlet {
             String hostelImage = fileName;
 
             // Create Hostel object
-            Hostel hostel = new Hostel(user_id, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description, total_rooms, createdAt);
+            Hostel hostel = new Hostel(user_id, hostelName, provinceId, addressDetail, hostelImage, phoneContact, description, total_rooms, createdAt, status);
             HostelDAO hostelDAO = new HostelDAO();
-            int hostelId = hostelDAO.addNew(hostel); // Assume this returns the newly created hostel_id
+            int hostelId = hostelDAO.addNew(hostel);
 
             System.out.println("Inserted rows: " + hostelId);
 
             if (hostelId > 0) {
-                // Store the hostel_id in the session
                 session.setAttribute("hostel_id", hostelId);
-                response.sendRedirect("/RoomController/Create");
+                response.sendRedirect(request.getContextPath() + "/RoomController/Create");
             } else {
-                response.sendRedirect("/HostelCOntroller");
+                response.sendRedirect(request.getContextPath() + "/HostelController");
             }
         } else {
             System.out.println("Button not clicked!");

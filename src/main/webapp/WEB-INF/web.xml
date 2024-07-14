@@ -24,6 +24,14 @@
         <servlet-name>MainPageController</servlet-name>
         <servlet-class>Controllers.MainPageController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BookingController</servlet-name>
+        <servlet-class>Controllers.BookingController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RequestController</servlet-name>
+        <servlet-class>Controllers.RequestController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ForgotPasswordController</servlet-name>
         <url-pattern>/ForgotPasswordController/*</url-pattern>
@@ -71,6 +79,14 @@
     <servlet-mapping>
         <servlet-name>MainPageController</servlet-name>
         <url-pattern>/MainPageController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingController</servlet-name>
+        <url-pattern>/BookingController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestController</servlet-name>
+        <url-pattern>/RequestController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

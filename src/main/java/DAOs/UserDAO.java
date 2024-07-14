@@ -232,4 +232,47 @@ public class UserDAO {
         }
         return user;
     }
+    
+    public String getUserEmailById(int userId) {
+        Connection conn = DBConnection.getConnection();
+        String email = null;
+        try {
+            String sql = "SELECT email FROM users WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+
+    public String getUsernameByID(int userId) {
+        Connection conn = DBConnection.getConnection();
+        String username = null;
+        try {
+            String sql = "SELECT username FROM users WHERE user_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return username;
+    }
 }
+

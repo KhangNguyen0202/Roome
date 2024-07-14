@@ -233,7 +233,7 @@
         </nav>
         <div class="header-right">
             <button> <a href="/LoginController">Sign In</a></button>
-            <button>Sign Up</button>
+            <button><a href="/SignUp1Controller">Sign Up</a></button>
         </div>
     </header>
     <section class="search-section">
@@ -262,7 +262,7 @@
     <section class="hostel-section" id="hostel-section">
         <%
             HostelDAO hostelDao = new HostelDAO();
-            ResultSet rs = hostelDao.getAll();
+            ResultSet rs = hostelDao.getAllApproved();
             while (rs.next()) {
         %>
         <div class="hostel" data-hostel-id="<%=rs.getString("hostel_id")%>" data-address="<%=rs.getString("address_detail")%>">
