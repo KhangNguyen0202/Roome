@@ -19,8 +19,7 @@
             Cookie cookie = new Cookie("user_id", "");
             cookie.setMaxAge(0); // 0 seconds, so it expires immediately
             response.addCookie(cookie);
-            response.sendRedirect("/index.jsp"); // If index.jsp is in the root directory
+            response.sendRedirect("/MainPageController"); // If index.jsp is in the root directory
         %>
-        
     </body>
 </html>

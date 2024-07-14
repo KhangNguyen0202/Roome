@@ -222,6 +222,76 @@
             margin: 8px 0;
             line-height: 1.6;
         }
+        #modal-container {
+                display: none; /* Hide the modal by default */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                align-items: center;
+                justify-content: center;
+                z-index: 1002; /* Make sure it covers the sidebar */
+            }
+
+            #modal {
+                background: white;
+                max-width: 500px;
+                position: relative;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                animation: showModal 0.3s ease;
+            }
+
+            #modal .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            #modal .modal-header h3 {
+                margin: 0;
+            }
+
+            .modal-close-btn {
+                outline: none;
+                border: none;
+                background: none;
+                font-size: 24px;
+                cursor: pointer;
+            }
+
+            #modal .modal-body {
+                padding: 20px;
+            }
+
+            #modal .modal-footer {
+                padding: 10px 20px;
+                border-top: 1px solid #ddd;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            #modal .modal-footer button {
+                padding: 10px 20px;
+                background-color: #0071c2;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            @keyframes showModal {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
         </style>
     </head>
     <body>
@@ -254,7 +324,7 @@
             <a href="/UserController">Profile</a>
             <a href="#">Bookings</a>
             <a href="#">Settings</a>
-            <a href="#">Logout</a>
+            <a id="logoutLink" onclick="openModal()">Logout</a>
         </div>
         <section class="search-section">
             <h1>Find your room</h1>
@@ -278,7 +348,20 @@
                 <button class="search-button" onclick="searchHostel()">Search</button>
             </div>
         </section>
-
+                     <div id="modal-container">
+            <div id="modal">
+                <div class="modal-header">
+                    <h3>Sign Out</h3>
+                    <a class="modal-close-btn" onclick="closeModal()">&times;</a>
+                </div>
+                    <div class="modal-body">
+                        <p>Are you want to sign out</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/MainPageController/LogOut">Sign Out</a>
+                    </div>
+            </div>
+        </div>
         <section class="hostel-section" id="hostel-section">
             <%
                 HostelDAO hostelDao = new HostelDAO();
@@ -364,6 +447,16 @@
             function closeSidebar() {
                 document.getElementById("sidebar").style.width = "0";
             }
+            function openModal() {
+                document.getElementById("modal-container").style.display = "flex";
+            }
+
+            function closeModal() {
+                document.getElementById("modal-container").style.display = "none";
+            }
+
+            // Adding event listener to close button
+            document.querySelector('.modal-close-btn').addEventListener('click', closeModal);
         </script>
     </body>
 </html>

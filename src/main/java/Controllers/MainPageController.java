@@ -60,7 +60,7 @@ public class MainPageController extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getRequestURI();
         HttpSession session = request.getSession();
-        if (path.equals("/MainPageController")||path.equals("")) {
+        if (path.equals("/MainPageController") || path.equals("")) {
 
             Integer userId;
             try {
@@ -109,6 +109,24 @@ public class MainPageController extends HttpServlet {
                 System.out.println("u err" + session.getAttribute("user_id"));
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
             }
+        } else if (path.equals("/MainPageController/LogOut")) {
+            if (session != null) {
+                System.out.println("Invalidating session for user_id: " + session.getAttribute("user_id"));
+                session.invalidate();
+            }
+
+            System.out.println("Deleting cookies");
+            Cookie cookie = new Cookie("user_id", "");
+            cookie.setMaxAge(0);
+            cookie.setPath("/"); // Ensure the cookie is deleted from the correct path
+            response.addCookie(cookie);
+
+            // Clear the browser cache to prevent the old session or cookie data from being used
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+            response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+            response.setDateHeader("Expires", 0); // Proxies
+
+            response.sendRedirect("/MainPageController");
         }
     }
 
