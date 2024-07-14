@@ -72,7 +72,7 @@ public class LoginController extends HttpServlet {
                 // If the user is already logged in, forward to UserController
                 if (userId != null) {
                     System.out.println("User is already logged in. Forwarding to /UserController");
-                    response.sendRedirect("/indexlogged.jsp");
+                    response.sendRedirect("/MainPageController/Login=true");
                     return;
                 }
 

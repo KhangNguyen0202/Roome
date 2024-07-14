@@ -36,29 +36,38 @@ public class ReviewController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int hostelID = Integer.parseInt(request.getParameter("hostelID"));
-        hostelID = 1; // Temporary hostelID for testing
+        String path = request.getRequestURI();
+        if (path.startsWith("/HostelController/View/")) {
+            String[] s = path.split("/");
+            String loc = s[s.length - 1];
+            int hostelID = Integer.parseInt(loc);
+            
 
-        // Fetch reviews from the database
-        ReviewDAO reviewDAO = new ReviewDAO();
-        List<Reviews> reviews = reviewDAO.getReviewsByHostelID(hostelID);
+            // Lưu hostelID vào session
+            HttpSession session = request.getSession();
+            session.setAttribute("hostelID", hostelID);
 
-        // Debugging: Print reviews to the console
-        if (reviews != null) {
-            for (Reviews review : reviews) {
-                System.out.println("Username: " + review.getUserName());
-                System.out.println("Star: " + review.getStarRating());
-                System.out.println("Comment: " + review.getComment());
+            // Fetch reviews from the database
+            ReviewDAO reviewDAO = new ReviewDAO();
+            List<Reviews> reviews = reviewDAO.getReviewsByHostelID(hostelID);
+
+            // Debugging: Print reviews to the console
+            if (reviews != null) {
+                for (Reviews review : reviews) {
+                    System.out.println("Username: " + review.getUserName());
+                    System.out.println("Star: " + review.getStarRating());
+                    System.out.println("Comment: " + review.getComment());
+                }
+            } else {
+                System.out.println("No reviews found or an error occurred.");
             }
-        } else {
-            System.out.println("No reviews found or an error occurred.");
+
+            // Store reviews in the request scope
+            request.setAttribute("reviews", reviews);
+
+            // Forward to the JSP page
+            request.getRequestDispatcher("/infohotel.jsp").forward(request, response);
         }
-
-        // Store reviews in the request scope
-        request.setAttribute("reviews", reviews);
-
-        // Forward to the JSP page
-        request.getRequestDispatcher("/infohotel.jsp").forward(request, response);
     }
 
     @Override
@@ -66,23 +75,25 @@ public class ReviewController extends HttpServlet {
             throws ServletException, IOException {
         if (request.getParameter("btnSummitCmt") != null) {
             System.out.println("BTN SUMMIT CMT PRESSED");
-
+            
             String ratingParam = request.getParameter("rating");
-            String hostelIDParam = "1"; // Temporary hostelID for testing
-            System.out.println("hostelID: " + hostelIDParam);
+
+            // Lấy hostelID từ session
+            HttpSession session = request.getSession();
+            System.out.println("Tao ne:" + session.getAttribute("hostelID"));
+            Integer hostelID = (Integer) session.getAttribute("hostelID");
+            System.out.println("hostelID: " + hostelID);
             System.out.println("rating: " + ratingParam);
 
-            if (hostelIDParam == null || ratingParam == null) {
-response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required parameters");
+            if (hostelID == null || ratingParam == null) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required parameters");
                 return;
             }
 
             try {
-                int hostelID = Integer.parseInt(hostelIDParam);
                 int starNumber = Integer.parseInt(ratingParam);
                 String comment = request.getParameter("comment");
 
-                HttpSession session = request.getSession();
                 String userID = "1"; // Temporary userID for testing
 
                 if (userID == null) {

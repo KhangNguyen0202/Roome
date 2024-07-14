@@ -41,6 +41,11 @@ public class RoomType {
         this.created_at = created_at;
     }
 
+    public RoomType() {
+    }
+
+   
+
    
     
 

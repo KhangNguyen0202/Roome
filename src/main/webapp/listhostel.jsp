@@ -227,6 +227,7 @@
         <%
             UserDAO userdao = new UserDAO();
             User user = userdao.getUserByID(Integer.parseInt(session.getAttribute("user_id") + ""));
+            Integer user_id = (Integer) session.getAttribute("user_id");
         %>
         <header class="header">
             <div class="header-left">
@@ -281,7 +282,7 @@
         <section class="hostel-section" id="hostel-section">
             <%
                 HostelDAO hostelDao = new HostelDAO();
-                ResultSet rs = hostelDao.getAll();
+                ResultSet rs = hostelDao.getHostelByUserIdRS(user_id);
                 while (rs.next()) {
             %>
             <div class="hostel" data-hostel-id="<%=rs.getString("hostel_id")%>" data-address="<%=rs.getString("address_detail")%>">

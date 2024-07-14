@@ -15,121 +15,90 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>User Profile</title>
         <!-- Include Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                background: rgb(128, 151, 189)
+                background: rgb(128, 151, 189);
             }
 
             .form-control:focus {
                 box-shadow: none;
-                border-color: #BA68C8
+                border-color: #BA68C8;
             }
 
             .profile-button {
                 background: rgb(128, 151, 189);
                 box-shadow: none;
-                border: none
+                border: none;
             }
 
-            .profile-button:hover {
-                background: #682773
-            }
-
-            .profile-button:focus {
-                background: #682773;
-                box-shadow: none
-            }
-
+            .profile-button:hover,
+            .profile-button:focus,
             .profile-button:active {
                 background: #682773;
-                box-shadow: none
+                box-shadow: none;
             }
 
             .back:hover {
                 color: #682773;
-                cursor: pointer
+                cursor: pointer;
             }
 
             .labels {
-                font-size: 11px
+                font-size: 11px;
             }
 
             .add-experience:hover {
                 background: #BA68C8;
                 color: #fff;
                 cursor: pointer;
-                border: solid 1px #BA68C8
+                border: solid 1px #BA68C8;
             }
 
-            /* Popup container - can be anything you want */
             .popup {
                 position: relative;
                 display: inline-block;
                 cursor: pointer;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
                 user-select: none;
             }
 
-            /* The actual popup */
             .popup .popuptext {
                 visibility: hidden;
                 width: auto;
-                height: auto; /* Allow height to adjust based on content */
                 background-color: #555;
                 color: #fff;
                 text-align: center;
                 border-radius: 3px;
                 position: absolute;
                 z-index: 1;
-                top:  12px;
+                top: 12px;
                 left: -30px;
-                margin-left: -50px;
                 padding: 5px;
             }
 
-            /* Popup arrow */
             .popup .popuptext::after {
                 content: "";
                 position: absolute;
                 bottom: 100%;
-                left: 5%;
-                margin-left: -3px;
+                left: 50%;
+                margin-left: -5px;
                 border-width: 5px;
                 border-style: solid;
-                border-color: transparent transparent #555 transparent ;
+                border-color: transparent transparent #555 transparent;
             }
 
-            /* Toggle this class - hide and show the popup */
             .popup .show {
                 visibility: visible;
-                -webkit-animation: fadeIn 1s;
                 animation: fadeIn 1s;
             }
 
-            /* Add animation (fade in the popup) */
-            @-webkit-keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
             }
 
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity:1 ;
-                }
-            }
-            /* Button styles */
             button {
                 color: white;
                 font-size: 16px;
@@ -147,32 +116,56 @@
                 outline: none;
                 border-color: grey;
             }
+
             .edit-button {
                 position: absolute;
-                top: -25px; /* Adjust this value as needed */
-                left: -80px; /* Adjust this value as needed */
-
+                top: -25px;
+                left: -80px;
             }
 
             .image-container {
-                width: 170px; /* Adjust width and height to your desired circle size */
+                width: 170px;
                 height: 170px;
-                border-radius: 50%; /* Ensures the container itself is a circle */
+                border-radius: 50%;
                 overflow: hidden;
-                position: relative; /* Ensures proper positioning for child elements */
+                position: relative;
             }
 
             .image-container img {
                 width: 100%;
-                height: 100%; /* Ensures the image fills the circular container */
-                object-fit: cover; /* Crops the image to fit within the circle */
+                height: 100%;
+                object-fit: cover;
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
-            
 
+            .hostel-section {
+                max-height: 600px;
+                overflow-y: auto;
+            }
+
+            .hostel-card {
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                padding: 15px;
+                background-color: #fff;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .hostel-card img {
+                max-width: 100%;
+                height: auto;
+                max-height: 200px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+
+            .hostel-info {
+                margin-top: 15px;
+            }
         </style>
     </head>
 
@@ -193,8 +186,8 @@
                             </div>
 
                             <div class="image-container">
-                                <img class="rounded-circle img-fluid" src="img\<%=user.getUser_image()%>" alt="Your Image">
-                                <input type="hidden" id="txtHidPic" name="txtHidPic" value="<%=user.getUser_image()%>">
+                                <img class="rounded-circle img-fluid" src="img/<%=user.getUser_image()%>" alt="Your Image">
+                                <input type="hidden" id="txtHidPic" name="txtHidPic" value="img/<%=user.getUser_image()%>">
                             </div>
 
                             <div class="popup" onclick="myFunction()">
@@ -215,7 +208,6 @@
                         <div class="p-3 py-5">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4 class="text-right">Profile Settings</h4>
-
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-6">
@@ -247,8 +239,9 @@
                         </div>
                     </form>
                 </div>
+
+                <!-- User Hostel Data Form -->
                 <div class="col-md-4">
-                    <!-- User Hostel Data Form -->
                     <form method="post" action="/UserController" enctype="multipart/form-data">
                         <section class="hostel-section" id="hostel-section">
                             <%
@@ -257,11 +250,10 @@
                                 while (rs.next()) {
                                     if (rs.getInt("user_id") == user_id) {
                             %>
-                            <div class="hostel" data-address="<%=rs.getString("address_detail")%>">
-                                <img src="img/hostel1.jpg" alt="Hostel Image">
+                            <div class="hostel-card">
+                               <img src="/img/<%=rs.getString("hostel_image")%>" alt="Hostel Image">
                                 <div class="hostel-info">
-                                    <input type="hidden" value="<%=rs.getString("hostel_name")%>" readonly>
-                                    <h2>Hostel Name: <%=rs.getString("hostel_name")%></h2>
+                                    <h5>Hostel Name: <%=rs.getString("hostel_name")%></h5>
                                     <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
                                     <p><strong>Phone contact:</strong> <%=rs.getString("phone_contact")%></p>
                                     <p><strong>Description:</strong> <%=rs.getString("description")%></p>
@@ -273,7 +265,6 @@
                                 rs.close();
                             %>
                         </section>
-
                     </form>
                 </div>
             </div>
@@ -300,6 +291,5 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     </body>
 </html>
