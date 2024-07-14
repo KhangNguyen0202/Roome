@@ -186,6 +186,8 @@
             #modal {
                 background: white;
                 max-width: 500px;
+                width: 100%;
+                margin: 0 20px; /* Margin for better mobile view */
                 position: relative;
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -196,12 +198,13 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 15px;
+                padding: 20px;
                 border-bottom: 1px solid #ddd;
             }
 
             #modal .modal-header h3 {
                 margin: 0;
+                font-size: 24px;
             }
 
             .modal-close-btn {
@@ -214,22 +217,26 @@
 
             #modal .modal-body {
                 padding: 20px;
+                font-size: 18px;
+                line-height: 1.5;
             }
 
             #modal .modal-footer {
-                padding: 10px 20px;
+                padding: 20px;
                 border-top: 1px solid #ddd;
                 display: flex;
                 justify-content: flex-end;
             }
 
-            #modal .modal-footer button {
+            #modal .modal-footer a {
                 padding: 10px 20px;
                 background-color: #0071c2;
                 color: white;
                 border: none;
                 border-radius: 5px;
+                text-decoration: none;
                 cursor: pointer;
+                font-size: 16px;
             }
 
             @keyframes showModal {
@@ -247,7 +254,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                
+
                 width: 100%;
                 top: 0;
                 z-index: 1000;
@@ -345,37 +352,51 @@
             int user_id = Integer.parseInt(session.getAttribute("user_id") + "");
             User user = userdao.getUserByID(user_id);
         %>
-<header class="header">
-                    <div class="header-left">
-                        <img src="\img/Roome1.jpg" alt="LOGO">
-                    </div>
-                    <nav>
-                        <a href="/MainPageController">Home</a>
-                        <a href="/HostelController/Create">Create</a>
-                        <a href="/HostelController/List">View your hostel</a>
-                        <a href="#">Car rentals</a>
-                        <a href="#">Attractions</a>
-                        <a href="#">Airport taxis</a>
-                    </nav>
-                    <div class="header-right">
-                        <img src="\img\<%=user.getUser_image()%>" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
-                    </div>
-                </header>
-                <div id="sidebar" class="sidebar">
-                    <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
-                    <div class="sidebar-header">
-                        <img src="\img\<%=user.getUser_image()%>" alt="User Avatar">
-                        <span class="username"><%=user.getUsercall_name()%></span>
-                    </div>
-                    <a href="/UserController">Profile</a>
-                    <a href="#">Bookings</a>
-                    <a href="#">Settings</a>
-                    <a id="logoutLink" onclick="openModal()">Logout</a>
+        <header class="header">
+            <div class="header-left">
+                <img src="\img/Roome1.jpg" alt="LOGO">
+            </div>
+            <nav>
+                <a href="/MainPageController">Home</a>
+                <a href="/HostelController/Create">Create</a>
+                <a href="/HostelController/List">View your hostel</a>
+                <a href="#">Car rentals</a>
+                <a href="#">Attractions</a>
+                <a href="#">Airport taxis</a>
+            </nav>
+            <div class="header-right">
+                <img src="\img\<%=user.getUser_image()%>" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
+            </div>
+        </header>
+        <div id="sidebar" class="sidebar">
+            <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+            <div class="sidebar-header">
+                <img src="\img\<%=user.getUser_image()%>" alt="User Avatar">
+                <span class="username"><%=user.getUsercall_name()%></span>
+            </div>
+            <a href="/UserController">Profile</a>
+            <a href="#">Bookings</a>
+            <a href="#">Settings</a>
+            <a id="logoutLink" onclick="openModal()">Logout</a>
+        </div>
+        <div id="modal-container">
+            <div id="modal">
+                <div class="modal-header">
+                    <h3>Sign Out</h3>
+                    <a class="modal-close-btn" onclick="closeModal()">&times;</a>
                 </div>
+                <div class="modal-body">
+                    <p>Are you want to sign out</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="/MainPageController/LogOut">Sign Out</a>
+                </div>
+            </div>
+        </div>
         <div class="container rounded bg-white mt-2 mb-5">
-            
+
             <div class="row">
-                
+
                 <!-- Profile Picture Form -->
                 <div class="col-md-4 border-right">
                     <form method="post" action="/UserController" enctype="multipart/form-data">
