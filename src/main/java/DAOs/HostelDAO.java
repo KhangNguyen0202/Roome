@@ -68,11 +68,11 @@ public class HostelDAO {
         return rs;
     }
 
-    public Hostel getHostelByID(int hostel_id) {
+   public Hostel getHostelByID(int hostel_id) {
         Connection conn = DBConnection.getConnection();
-        Hostel obj;
+        Hostel obj = null;
         try {
-            String sql = "select * from hostels where hostel_id = ?";
+            String sql = "SELECT * FROM hostels WHERE hostel_id = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, hostel_id);
             ResultSet rs = pst.executeQuery();
@@ -88,21 +88,18 @@ public class HostelDAO {
                 obj.setDescription(rs.getString("description"));
                 obj.setTotal_rooms(rs.getInt("total_rooms"));
                 obj.setCreated_at(rs.getTimestamp("created_at"));
-            } else {
-                obj = null;
-
+                obj.setStatus(rs.getString("status"));
             }
         } catch (Exception ex) {
-            obj = null;
-
+            ex.printStackTrace();
         }
         return obj;
     }
     public Hostel getHostelByUserId(int user_id) {
         Connection conn = DBConnection.getConnection();
-        Hostel obj;
+        Hostel obj = null;
         try {
-            String sql = "select * from hostels where user_id = ?";
+            String sql = "SELECT * FROM hostels WHERE user_id = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, user_id);
             ResultSet rs = pst.executeQuery();
@@ -118,13 +115,10 @@ public class HostelDAO {
                 obj.setDescription(rs.getString("description"));
                 obj.setTotal_rooms(rs.getInt("total_rooms"));
                 obj.setCreated_at(rs.getTimestamp("created_at"));
-            } else {
-                obj = null;
-
+                obj.setStatus(rs.getString("status"));
             }
         } catch (Exception ex) {
-            obj = null;
-
+            ex.printStackTrace();
         }
         return obj;
     }
@@ -141,5 +135,81 @@ public class HostelDAO {
     }
     return rs;
 }
+public ResultSet getAllApproved() {
+        Connection conn = DBConnection.getConnection();
+        ResultSet rs = null;
 
+        if (conn != null) {
+            try {
+                Statement st = conn.createStatement();
+                rs = st.executeQuery("SELECT * FROM hostels WHERE status = 'approved'");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                rs = null;
+            }
+        }
+        return rs;
+    }
+
+    public ResultSet getAllPending() {
+        Connection conn = DBConnection.getConnection();
+        ResultSet rs = null;
+
+        if (conn != null) {
+            try {
+                Statement st = conn.createStatement();
+                rs = st.executeQuery("SELECT * FROM hostels WHERE status = 'pending'");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                rs = null;
+            }
+        }
+        return rs;
+    }
+    
+public Hostel approveHostel(int hostel_id) {
+    Connection conn = DBConnection.getConnection();
+    Hostel hostel = null;
+
+    if (conn != null) {
+        try {
+            String sql = "UPDATE hostels SET status = 'approved' WHERE hostel_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, hostel_id);
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                // If the update was successful, retrieve the updated hostel object
+                hostel = getHostelByID(hostel_id);
+            }
+
+            stmt.close();
+            conn.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    return hostel;
+}
+public int getUserIdByHostelId(int hostel_id) {
+        Connection conn = DBConnection.getConnection();
+        int userId = -1; // Default value indicating not found
+        if (conn != null) {
+            try {
+                String sql = "SELECT user_id FROM hostels WHERE hostel_id = ?";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setInt(1, hostel_id);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    userId = rs.getInt("user_id");
+                }
+                pst.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return userId;
+    }
 }

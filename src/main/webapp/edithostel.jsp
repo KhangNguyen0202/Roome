@@ -1,17 +1,401 @@
-<%-- 
-    Document   : edithostel
-    Created on : 14-07-2024, 15:52:15
-    Author     : nguye
---%>
-
+<%@page import="Models.User"%>
+<%@page import="DAOs.UserDAO"%>
+<%@page import="java.sql.SQLException"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="DAOs.RoomTypeDAO"%>
+<%@page import="java.util.List"%>
+<%@page import="DAOs.ReviewDAO"%>
+<%@page import="Models.Reviews"%>
+<%@page import="Models.Hostel"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <title>Hostel Info Page</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f8f9fa;
+                color: #333;
+                position: relative;
+            }
+            .blur-background-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: -1;
+            }
+            .blur-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url('your-background-image.jpg'); /* Replace with your background image */
+                background-size: cover;
+                background-position: center;
+                filter: blur(8px);
+            }
+            .header {
+                background-color: #003580;
+                color: white;
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .header-left {
+                display: flex;
+                align-items: center;
+            }
+            .header img {
+                height: 50px;
+                vertical-align: middle;
+                margin-right: 20px;
+            }
+            .header nav {
+                flex: 1;
+                text-align: center;
+            }
+            .header nav a {
+                color: white;
+                margin: 0 26px;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            .header-right {
+                display: flex;
+                align-items: center;
+            }
+            .header-right button {
+                background-color: white;
+                color: #003580;
+                border: none;
+                border-radius: 5px;
+                padding: 10px 20px;
+                margin-left: 10px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            .hero {
+                position: relative;
+                background-size: cover;
+                background-position: center;
+                height: 400px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                text-align: center;
+                z-index: 1;
+            }
+            .hero h1 {
+                font-size: 48px;
+                margin: 0;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .hero p {
+                font-size: 20px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .hostel-section {
+                padding: 50px 20px;
+                max-width: 1200px;
+                margin: auto;
+                background-color: white;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+                margin-top: -100px; /* Overlap hero section */
+                position: relative;
+                z-index: 2;
+            }
+            .hostel-gallery {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 10px;
+                overflow-x: auto;
+                padding-bottom: 20px;
+            }
+            .hostel-gallery img {
+                width: 200px;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            .hostel-info {
+                padding: 20px;
+            }
+            .card {
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+                padding: 20px;
+            }
+            .card h2 {
+                margin-top: 0;
+                font-size: 28px;
+                color: #003580;
+            }
+            .card p {
+                margin: 10px 0;
+                font-size: 16px;
+            }
+            .amenities {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 20px 0;
+            }
+            .amenity {
+                background-color: #e9ecef;
+                padding: 10px;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+            }
+            .amenity img {
+                height: 20px;
+                margin-right: 10px;
+            }
+            .reviews {
+                margin-top: 40px;
+            }
+            .review {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+            .review h3 {
+                margin-top: 0;
+                font-size: 20px;
+                color: #003580;
+            }
+            .review p {
+                margin: 10px 0;
+                font-size: 16px;
+            }
+            .review-form {
+                margin-top: 40px;
+            }
+            .review-form h3 {
+                margin-top: 0;
+                font-size: 24px;
+                color: #003580;
+            }
+            .star-rating {
+                display: flex;
+                justify-content: flex-end;
+                font-size: 24px;
+                direction: rtl; /* Ensure stars are displayed from left to right */
+            }
+            .star-rating input {
+                display: none;
+            }
+            .star-rating label {
+                cursor: pointer;
+                color: #ccc;
+                direction: ltr;
+            }
+            .star-rating input:checked ~ label {
+                color: #ffc700;
+            }
+            .star-rating input:hover ~ label,
+            .star-rating input:hover ~ label ~ label {
+                color: #ffc700;
+            }
+            .review-form textarea {
+                width: 100%;
+                height: 150px;
+                padding: 10px;
+                border-radius: 10px;
+                border: 1px solid #ddd;
+                font-size: 16px;
+                resize: vertical;
+                margin-bottom: 20px;
+            }
+            .review-form button {
+                background-color: #003580;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 10px 20px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            .review-form button:hover {
+                background-color: #002b6b;
+            }
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 3;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.9);
+            }
+            .modal-content {
+                margin: auto;
+                display: block;
+                width: 80%;
+                max-width: 1000px;
+                padding-top: 70px;
+            }
+            .close {
+                position: absolute;
+                top: 15px;
+                right: 35px;
+                color: #fff;
+                font-size: 40px;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+            .close:hover,
+            .close:focus {
+                color: #bbb;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <%
+            Hostel obj = (Hostel) session.getAttribute("ehs");
+            RoomTypeDAO RoomTypeDao = new RoomTypeDAO();
+            int hostelID = obj.getHostel_id();
+            ResultSet rs = RoomTypeDao.getRoomImageByHostelID(hostelID);
+            session.setAttribute("hostelclick", hostelID);
+
+            UserDAO userDAO = new UserDAO();
+            User user = userDAO.getUserByHostelId(hostelID);
+
+            RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
+            ResultSet roomDetails = roomTypeDAO.getRoomDetailsByHostelId(hostelID);
+        %>
+        <div class="blur-background-container">
+            <div class="blur-background"></div>
+        </div>
+        <header class="header">
+            <div class="header-left">
+                <img src="/img/Roome1.jpg" alt="LOGO">
+            </div>
+            <nav>
+                <a href="/MainPageController">Home</a>
+                <a href="/HostelController/Create">Create</a>
+                <a href="/HostelController/List">View your hostel</a>
+                <a href="#">Car rentals</a>
+                <a href="#">Attractions</a>
+                <a href="#">Airport taxis</a>
+            </nav>
+            <div class="header-right">
+                <button>Sign In</button>
+                <button>Sign Up</button>
+            </div>
+        </header>
+        <section class="hero" style="background-image: url('/img/<%= obj.getHostel_image()%>');">
+            <div>
+                <h1><%= obj.getHostel_name()%></h1>
+                <p><%= obj.getAddress_detail()%></p>
+            </div>
+        </section>
+        <section class="hostel-section">          
+            <div class="hostel-gallery">
+                <% try {
+                while (rs.next()) {%>
+                <img src="/img/<%=rs.getString("room_image")%>" onclick="openModal(this)">
+                <% }
+                        rs.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                }%>
+            </div>
+
+            <div class="hostel-info">
+                <div class="card">
+                    <h2>About the Hostel</h2>
+                    <form action="/HostelController" method="post">
+                        <p>Total Rooms: <input type="text" class="form-control" name="price_per_night" value="<%= obj.getTotal_rooms()%>"></p>
+                        <p>Owner: <input type="text" class="form-control" name="owner" value="<%= user.getUsercall_name()%> <%= user.getUserSurname()%>"></p>  
+                        <p>Description: <textarea class="form-control" name="description"><%= obj.getDescription()%></textarea></p>
+                        <button type="submit" class="btn btn-success" name="btnChange">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>About Hostel's Rooms</h2>
+                    <% try {
+                    while (roomDetails.next()) {%>
+                    <form action="/RoomController" method="post">
+                        <h3>Room Name: <input type="text" class="form-control" name="room_name" value="<%= roomDetails.getString("room_name")%>"></h3>
+                        <p>Size: <input type="text" class="form-control" name="room_size" value="<%= roomDetails.getString("room_size")%>"></p>
+                        <p>Price: $<input type="text" class="form-control" name="rent_price" value="<%= roomDetails.getBigDecimal("rent_price")%>"></p>
+                        <p>Available Rooms: <input type="text" class="form-control" name="available_rooms" value="<%= roomDetails.getInt("available_rooms")%>"></p>
+                        <button type="submit" class="btn btn-success" name="btnChange">Save Changes</button>
+                    </form>
+                    <% }
+                            roomDetails.close();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                    } %>
+                </div>
+            </div>
+
+            <%
+                ReviewDAO reviewDAO = new ReviewDAO();
+                List<Reviews> reviewsList = reviewDAO.getReviewsByHostelID(hostelID);
+            %>
+            <section class="reviews" id="review-section">
+                <h2>Reviews</h2>
+                <% if (reviewsList != null) {
+                for (Reviews review : reviewsList) {%>
+                <div class="review">
+                    <h3><%= review.getUserName()%></h3>
+                    <div>
+                        <span class="star">&#9733;</span><span><%= review.getStarRating()%></span>
+                    </div>
+                    <p><%= review.getComment()%></p>
+                    <p><small>Reviewed on: <%= review.getCreatedAt()%></small></p>
+                </div>
+                <% }
+            } else { %>
+                <p>No reviews found or an error occurred.</p>
+                <% }%>
+            </section>
+
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img class="modal-content" id="img01">
+            </div>
+
+            <script>
+                function openModal(element) {
+                    var modal = document.getElementById("myModal");
+                    var modalImg = document.getElementById("img01");
+                    modal.style.display = "block";
+                    modalImg.src = element.src;
+                }
+
+                function closeModal() {
+                    var modal = document.getElementById("myModal");
+                    modal.style.display = "none";
+                }
+            </script>
     </body>
 </html>
