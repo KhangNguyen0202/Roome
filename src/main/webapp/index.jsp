@@ -1,3 +1,4 @@
+<%@page import="DAOs.UserDAO"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="DAOs.HostelDAO"%>
 <%@page import="DAOs.ProvinceDAO"%>
@@ -171,6 +172,53 @@
     </style>
 </head>
 <body>
+    <%
+        {
+
+            Integer userId;
+            try {
+                userId = (Integer) session.getAttribute("user_id");
+
+                // Debugging information
+                System.out.println("Session user_id: " + userId);
+                System.out.println("Request URI: " + request.getRequestURI());
+
+                // If the user is already logged in, forward to userprofile.jsp
+                if (userId != null) {
+                    System.out.println("User is already logged in. Forwarding to /userprofile.jsp");
+                    response.sendRedirect("/MainPageController");
+                    return;
+                }
+
+                Cookie[] cookies = request.getCookies();
+                boolean userCookieFound = false;
+
+                // Check if cookies array is not null
+                if (cookies != null) {
+                    UserDAO dao = new UserDAO();
+                    for (Cookie cookie : cookies) {
+                        System.out.println("Found cookie: " + cookie.getName() + " = " + cookie.getValue());
+                        if ("user_id".equals(cookie.getName())) {
+                            // If "user_id" cookie is found, set it in the session
+                            int userIdStr = Integer.parseUnsignedInt(cookie.getValue());
+
+                            session.setAttribute("user_id", userIdStr);
+                            userCookieFound = true;
+                            break; // Exit the loop once the cookie is found and processed
+                        }
+                    }
+                }
+
+                // If the user_id cookie was found, forward to userprofile.jsp
+                if (userCookieFound) {
+                    System.out.println("user_id cookie found. Forwarding to /userprofile.jsp");
+                    response.sendRedirect("/MainPageController");
+                }
+            } catch (Exception e) {
+                
+            }
+        }
+    %>
     <header class="header">
         <div class="header-left">
             <img src="img/Roome1.jpg" alt="LOGO">
@@ -218,7 +266,9 @@
             while (rs.next()) {
         %>
         <div class="hostel" data-hostel-id="<%=rs.getString("hostel_id")%>" data-address="<%=rs.getString("address_detail")%>">
+
             <img src="/img/<%=rs.getString("hostel_image")%>" alt="Hostel Image">
+
             <div class="hostel-info">
                 <input type="hidden" value="<%=rs.getString("hostel_name")%>" readonly>
                 <h2>Hostel Name: <%=rs.getString("hostel_name")%></h2>

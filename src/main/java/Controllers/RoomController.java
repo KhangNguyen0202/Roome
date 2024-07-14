@@ -138,6 +138,7 @@ public class RoomController extends HttpServlet {
                         part.write(uploadPath + File.separator + "img/" + fileName);
                     }
                 }
+            
 
             String roomImage = fileName;
                 Timestamp createdAt = new Timestamp(System.currentTimeMillis());
@@ -149,6 +150,7 @@ public class RoomController extends HttpServlet {
             for (RoomType room : roomList) {
                 roomDAO.addNew(room);
             }
+
 
             response.sendRedirect("/MainPageController/Login=true");
         }

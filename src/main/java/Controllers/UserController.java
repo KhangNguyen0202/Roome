@@ -172,7 +172,7 @@ public class UserController extends HttpServlet {
             if (updated == 0) {
                 response.sendRedirect("/err" + user_id);
             } else {
-                response.sendRedirect("/indexlogged.jsp");
+                response.sendRedirect("/MainPageController");
             }
 
         }

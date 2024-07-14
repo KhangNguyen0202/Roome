@@ -72,7 +72,7 @@ public class LoginController extends HttpServlet {
                 // If the user is already logged in, forward to UserController
                 if (userId != null) {
                     System.out.println("User is already logged in. Forwarding to /UserController");
-                    response.sendRedirect("/MainPageController/Login=true");
+                    response.sendRedirect("/MainPageController");                    
                     return;
                 }
 
@@ -96,7 +96,7 @@ public class LoginController extends HttpServlet {
                 // If the user_id cookie was found, forward to UserController
                 if (userCookieFound) {
                     System.out.println("user_id cookie found. Forwarding to /UserController");
-                    request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
+                    response.sendRedirect("/MainPageController");     
                 } else {
                     // Otherwise, forward to login.jsp
                     System.out.println("No user_id cookie found. Forwarding to /login.jsp");
@@ -143,7 +143,7 @@ public class LoginController extends HttpServlet {
                     response.addCookie(userCookie);
 
                     System.out.println("Login successful. Redirecting to /UserController");
-                    request.getRequestDispatcher("/indexlogged.jsp").forward(request, response);
+                    response.sendRedirect("/MainPageController");
                 } else {
                     System.out.println("Login failed. Redirecting to /LoginController");
                     response.sendRedirect("/LoginController");
