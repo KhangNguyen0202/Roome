@@ -15,7 +15,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home Page</title>
+         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <title>List Hostel</title>
         <style>
            body {
             font-family: Arial, sans-serif;
@@ -48,7 +49,8 @@
         }
 
         .header img {
-            height: 70px;
+            width: 50px;
+            height: 50px;
             vertical-align: middle;
             margin-left: 20px;
         }
@@ -234,7 +236,7 @@
                 <img src="\img/Roome1.jpg" alt="LOGO">
             </div>
             <nav>
-                <a href="#">Stays</a>
+                <a href="/MainPageController">Home</a>
                 <a href="/HostelController/Create">Create</a>
                 <a href="/HostelController/List">View your hostel</a>
                 <a href="#">Car rentals</a>
@@ -293,6 +295,12 @@
                     <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
                     <p><strong>Phone contact:</strong> <%=rs.getString("phone_contact")%></p>
                     <p><strong>Description:</strong> <%=rs.getString("description")%></p>
+                </div>
+                <div>
+                        <a href="/HostelController/Edit/<%=rs.getString("hostel_id")%>" name="btnEdit" id="btnEdit" class="btn btn-primary mt-3">Edit Your Hostel</a>
+                </div>
+                <div>
+                     <a href="/MainPageController" name="btnDelete" id="btnDelete" class="btn btn-danger mt-3">Delete Your Hostel</a>
                 </div>
             </div>
             <%

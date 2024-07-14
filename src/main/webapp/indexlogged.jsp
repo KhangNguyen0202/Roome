@@ -48,7 +48,8 @@
         }
 
         .header img {
-            height: 70px;
+            width: 50px;
+            height: 50px;
             vertical-align: middle;
             margin-left: 20px;
         }
@@ -233,7 +234,7 @@
                 <img src="\img/Roome1.jpg" alt="LOGO">
             </div>
             <nav>
-               <a href="/MainPageController/Login=true">Home</a>
+               <a href="/MainPageController">Home</a>
                 <a href="/HostelController/Create">Create</a>
                 <a href="/HostelController/List">View your hostel</a>
                 <a href="#">Car rentals</a>
@@ -248,7 +249,7 @@
             <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
             <div class="sidebar-header">
                 <img src="\img\<%=user.getUser_image()%>" alt="User Avatar">
-                <span class="username">Hung mat lon</span>
+                <span class="username"><%=user.getUsercall_name()%></span>
             </div>
             <a href="/UserController">Profile</a>
             <a href="#">Bookings</a>

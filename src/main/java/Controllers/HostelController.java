@@ -67,6 +67,22 @@ public class HostelController extends HttpServlet {
                     request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
                 }
 
+            }else if (path.startsWith("/HostelController/Edit/")) {
+                String[] s = path.split("/");
+                String loc = s[s.length - 1];
+                 int hosel_id = Integer.parseInt(loc);
+                HostelDAO dao = new HostelDAO();
+                Hostel obj = dao.getHostelByID(hosel_id);
+                System.out.println("hosel_id:" + hosel_id);
+                System.out.println("obj:" +obj);
+                if (obj == null) {
+                    response.sendRedirect("/MainPageController");
+                } else {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("ehs", obj);
+                    request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
+                }
+
             }else if (path.equals("/HostelController/List")) {
                  HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute("user_id");
