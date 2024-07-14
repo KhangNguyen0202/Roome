@@ -44,24 +44,14 @@ public class ReviewController extends HttpServlet {
             
 
             // Lưu hostelID vào session
-            HttpSession session = request.getSession();
-            session.setAttribute("hostelID", hostelID);
+           
 
             // Fetch reviews from the database
             ReviewDAO reviewDAO = new ReviewDAO();
             List<Reviews> reviews = reviewDAO.getReviewsByHostelID(hostelID);
 
             // Debugging: Print reviews to the console
-            if (reviews != null) {
-                for (Reviews review : reviews) {
-                    System.out.println("Username: " + review.getUserName());
-                    System.out.println("Star: " + review.getStarRating());
-                    System.out.println("Comment: " + review.getComment());
-                }
-            } else {
-                System.out.println("No reviews found or an error occurred.");
-            }
-
+           
             // Store reviews in the request scope
             request.setAttribute("reviews", reviews);
 
@@ -80,8 +70,7 @@ public class ReviewController extends HttpServlet {
 
             // Lấy hostelID từ session
             HttpSession session = request.getSession();
-            System.out.println("Tao ne:" + session.getAttribute("hostelID"));
-            Integer hostelID = (Integer) session.getAttribute("hostelID");
+            Integer hostelID = (Integer) session.getAttribute("hostelclick");
             System.out.println("hostelID: " + hostelID);
             System.out.println("rating: " + ratingParam);
 

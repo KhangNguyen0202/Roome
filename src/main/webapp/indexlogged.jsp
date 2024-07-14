@@ -233,7 +233,7 @@
                 <img src="\img/Roome1.jpg" alt="LOGO">
             </div>
             <nav>
-                <a href="#">Stays</a>
+               <a href="/MainPageController/Login=true">Home</a>
                 <a href="/HostelController/Create">Create</a>
                 <a href="/HostelController/List">View your hostel</a>
                 <a href="#">Car rentals</a>

@@ -10,7 +10,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+   <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hostel Info Page</title>
@@ -95,7 +95,7 @@
             }
 
             .hero {
-                position: relative;            
+                position: relative;
                 background-size: cover;
                 background-position: center;
                 height: 400px;
@@ -132,6 +132,7 @@
 
             .hostel-gallery {
                 display: flex;
+                flex-wrap: nowrap;
                 gap: 10px;
                 overflow-x: auto;
                 padding-bottom: 20px;
@@ -149,13 +150,21 @@
                 padding: 20px;
             }
 
-            .hostel-info h2 {
+            .card {
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+                padding: 20px;
+            }
+
+            .card h2 {
                 margin-top: 0;
                 font-size: 28px;
                 color: #003580;
             }
 
-            .hostel-info p {
+            .card p {
                 margin: 10px 0;
                 font-size: 16px;
             }
@@ -169,7 +178,7 @@
 
             .amenity {
                 background-color: #e9ecef;
-                padding: 10px 20px;
+                padding: 10px;
                 border-radius: 20px;
                 display: flex;
                 align-items: center;
@@ -214,17 +223,18 @@
 
             .star-rating {
                 display: flex;
+                 justify-content: flex-end;
                 font-size: 24px;
-                direction: ltr; /* Ensure stars are displayed from left to right */
+                direction: rtl; /* Ensure stars are displayed from left to right */
             }
-
             .star-rating input {
                 display: none;
             }
 
-            .star-rating label {
+             .star-rating label {
                 cursor: pointer;
                 color: #ccc;
+                direction: ltr;
             }
 
             .star-rating input:checked ~ label {
@@ -264,16 +274,16 @@
 
             /* Modal styles */
             .modal {
-                display: none; 
-                position: fixed; 
-                z-index: 3; 
+                display: none;
+                position: fixed;
+                z-index: 3;
                 left: 0;
                 top: 0;
                 width: 100%;
                 height: 100%;
                 overflow: auto;
-                background-color: rgb(0,0,0); 
-                background-color: rgba(0,0,0,0.9); 
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.9);
             }
 
             .modal-content {
@@ -308,9 +318,9 @@
              RoomTypeDAO RoomTypeDao = new RoomTypeDAO();
             int hostelID = obj.getHostel_id();
             ResultSet rs = RoomTypeDao.getRoomImageByHostelID(hostelID); 
+            session.setAttribute("hostelclick", hostelID);
 
-
-UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = new UserDAO();
             User user = userDAO.getUserByHostelId(hostelID);
 
             RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
@@ -325,9 +335,9 @@ UserDAO userDAO = new UserDAO();
                 <img src="/img/Roome1.jpg" alt="LOGO">
             </div>
             <nav>
-                <a href="#">Stays</a>
-                <a href="#">Flights</a>
-                <a href="#">Flight + Hotel</a>
+                <a href="/MainPageController">Home</a>
+            <a href="/HostelController/Create">Create</a>
+            <a href="/HostelController/List">View your hostel</a>
                 <a href="#">Car rentals</a>
                 <a href="#">Attractions</a>
                 <a href="#">Airport taxis</a>
@@ -344,46 +354,40 @@ UserDAO userDAO = new UserDAO();
             </div>
         </section>
         <section class="hostel-section">          
-             <%
-                try {
-                    while (rs.next()) {
-                 
-                %>
-                 <div class="hostel-gallery">
-                    <img src="/img/<%=rs.getString("room_image")%>" onclick="openModal(this)">
-                   </div>
-                <%
-                    }
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-        %>
+            <div class="hostel-gallery">
+                <% try {
+                        while (rs.next()) {%>
+                <img src="/img/<%=rs.getString("room_image")%>" onclick="openModal(this)">
+                <% }
+                        rs.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }%>
+            </div>
         
           <div class="hostel-info">
-                <h2>About the Hostel</h2>
-                <p>Price per night: $25</p>
-                <p>Owner: <%= user.getUsercall_name() %> <%= user.getUserSurname()%></p>  
-                <p>Description: <%= obj.getDescription()%></p>
-                
-                <h2>About Hostel's Rooms</h2>
-             <%
-                try {
-                    while (roomDetails.next()) {
-            %>
-                <h3>Room Name: <%= roomDetails.getString("room_name") %></h3>
-                <p>Size: <%= roomDetails.getString("room_size") %></p>
-                <p>Price: $<%= roomDetails.getBigDecimal("rent_price") %></p>
-                <p>Available Rooms: <%= roomDetails.getInt("available_rooms") %></p>
-          
-            <%
-                    }
-                    roomDetails.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            %>
-              </div>
+                <div class="card">
+                    <h2>About the Hostel</h2>
+                    <p>Price per night: $25</p>
+                    <p>Owner: <%= user.getUsercall_name()%> <%= user.getUserSurname()%></p>  
+                    <p>Description: <%= obj.getDescription()%></p>
+                </div>
+
+                <div class="card">
+                    <h2>About Hostel's Rooms</h2>
+                    <% try {
+                            while (roomDetails.next()) {%>
+                    <h3>Room Name: <%= roomDetails.getString("room_name")%></h3>
+                    <p>Size: <%= roomDetails.getString("room_size")%></p>
+                    <p>Price: $<%= roomDetails.getBigDecimal("rent_price")%></p>
+                    <p>Available Rooms: <%= roomDetails.getInt("available_rooms")%></p>
+                    <% }
+                            roomDetails.close();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } %>
+                </div>
+            </div>
             <div class="review-form">
                 <h3>Leave a Review</h3>
                 <form action="${pageContext.request.contextPath}/ReviewController" method="post" onsubmit="return validateReviewForm()">

@@ -114,7 +114,10 @@
                     <label for="txtPic" class="form-label">Product Picture</label>
                     <input type="file" class="form-control" id="txtPic" name="txtPic" required>
                 </div>
-                <button type="submit" name="btnNext" id="btnNext" class="btn">Create Hostel</button>
+                   
+                        <button type="submit" name="btnNext" id="btnNext" class="btn">Create Hostel</button>
+                    
+                        <a href="/MainPageController" <button name="btnBack" id="btnBack" style="background-color: gray" class="btn btn-secondary mt-3">Back To Main</button></a>
             </form>
         </div>
     </main>
