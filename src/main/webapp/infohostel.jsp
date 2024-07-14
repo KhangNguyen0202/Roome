@@ -10,7 +10,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-   <head>
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hostel Info Page</title>
@@ -223,7 +223,7 @@
 
             .star-rating {
                 display: flex;
-                 justify-content: flex-end;
+                justify-content: flex-end;
                 font-size: 24px;
                 direction: rtl; /* Ensure stars are displayed from left to right */
             }
@@ -231,7 +231,7 @@
                 display: none;
             }
 
-             .star-rating label {
+            .star-rating label {
                 cursor: pointer;
                 color: #ccc;
                 direction: ltr;
@@ -310,14 +310,141 @@
                 text-decoration: none;
                 cursor: pointer;
             }
+
+            #modal-container {
+                display: none; /* Hide the modal by default */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                align-items: center;
+                justify-content: center;
+                z-index: 1002; /* Make sure it covers the sidebar */
+            }
+
+            #modal {
+                background: white;
+                max-width: 500px;
+                position: relative;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                animation: showModal 0.3s ease;
+            }
+
+            #modal .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            #modal .modal-header h3 {
+                margin: 0;
+            }
+
+            .modal-close-btn {
+                outline: none;
+                border: none;
+                background: none;
+                font-size: 24px;
+                cursor: pointer;
+            }
+
+            #modal .modal-body {
+                padding: 20px;
+            }
+
+            #modal .modal-footer {
+                padding: 10px 20px;
+                border-top: 1px solid #ddd;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            #modal .modal-footer button {
+                padding: 10px 20px;
+                background-color: #0071c2;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            @keyframes showModal {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-left: 20px;
+                cursor: pointer;
+            }
+            .sidebar {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1001;
+                top: 0;
+                right: 0;
+                background-color: #003580;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+                color: white;
+                border-left: 2px solid #ccc; /* Add border */
+            }
+            .sidebar a {
+                padding: 10px 15px;
+                text-decoration: none;
+                font-size: 18px;
+                color: white;
+                display: block;
+                transition: 0.3s;
+            }
+            .sidebar a:hover {
+                background-color: #575757;
+            }
+            .close-btn {
+                position: absolute;
+                top: 20px;
+                right: 25px;
+                font-size: 36px;
+            }
+            .sidebar-header {
+                display: flex;
+                align-items: center;
+                padding: 0 15px;
+                margin-bottom: 20px;
+                border-bottom: 0.5px solid #ddd;
+            }
+            .sidebar-header img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin-right: 15px;
+            }
+            .sidebar-header .username {
+                font-size: 20px;
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>
         <%
             Hostel obj = (Hostel) session.getAttribute("hs");
-             RoomTypeDAO RoomTypeDao = new RoomTypeDAO();
+            RoomTypeDAO RoomTypeDao = new RoomTypeDAO();
             int hostelID = obj.getHostel_id();
-            ResultSet rs = RoomTypeDao.getRoomImageByHostelID(hostelID); 
+            ResultSet rs = RoomTypeDao.getRoomImageByHostelID(hostelID);
             session.setAttribute("hostelclick", hostelID);
 
             UserDAO userDAO = new UserDAO();
@@ -336,20 +463,45 @@
             </div>
             <nav>
                 <a href="/MainPageController">Home</a>
-            <a href="/HostelController/Create">Create</a>
-            <a href="/HostelController/List">View your hostel</a>
+                <a href="/HostelController/Create">Create</a>
+                <a href="/HostelController/List">View your hostel</a>
                 <a href="#">Car rentals</a>
-                <a href="#">Attractions</a>
-                <a href="#">Airport taxis</a>
+
+
             </nav>
+            <% if (session.getAttribute("user_id") == null) {
+
+
+            %>
+
             <div class="header-right">
                 <button>Sign In</button>
                 <button>Sign Up</button>
             </div>
+            <%            } else {
+                User loggedUser = userDAO.getUserByID(Integer.parseInt(session.getAttribute("user_id") + ""));
+            %>
+            <div class="header-right">
+                <img src="\img\<%=loggedUser.getUser_image()%>" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
+            </div>
+            <div id="sidebar" class="sidebar">
+                <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+                <div class="sidebar-header">
+                    <img src="\img\<%=loggedUser.getUser_image()%>" alt="User Avatar">
+                    <span class="username"><%=loggedUser.getUsercall_name()%></span>
+                </div>
+                <a href="/UserController">Profile</a>
+                <a href="#">Bookings</a>
+                <a href="#">Settings</a>
+                <a id="logoutLink" onclick="openModal()">Logout</a>
+            </div>
+            <%
+                }
+            %>
         </header>
-        <section class="hero" style="background-image: url('/img/<%= obj.getHostel_image() %>');">
+        <section class="hero" style="background-image: url('/img/<%= obj.getHostel_image()%>');">
             <div>
-                  <h1><%= obj.getHostel_name() %></h1>
+                <h1><%= obj.getHostel_name()%></h1>
                 <p><%= obj.getAddress_detail()%></p>
             </div>
         </section>
@@ -364,8 +516,8 @@
                         e.printStackTrace();
                     }%>
             </div>
-        
-          <div class="hostel-info">
+
+            <div class="hostel-info">
                 <div class="card">
                     <h2>About the Hostel</h2>
                     <p>Total Rooms:  <%= obj.getTotal_rooms()%></p>
@@ -412,7 +564,7 @@
 
             <%
                 // This logic is typically handled in a servlet, but for debugging, we are doing it here
-                
+
                 // Fetch reviews from the database
                 ReviewDAO reviewDAO = new ReviewDAO();
                 List<Reviews> reviewsList = reviewDAO.getReviewsByHostelID(hostelID);
@@ -453,25 +605,42 @@
                     }
                 %>
             </section>
-        
-        <!-- The Modal -->
-        <div id="myModal" class="modal">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img class="modal-content" id="img01">
-        </div>
-        
-        <script>
-            function openModal(element) {
-                var modal = document.getElementById("myModal");
-                var modalImg = document.getElementById("img01");
-                modal.style.display = "block";
-                modalImg.src = element.src;
-            }
 
-            function closeModal() {
-                var modal = document.getElementById("myModal");
-                modal.style.display = "none";
-            }
-        </script>
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img class="modal-content" id="img01">
+            </div>
+
+            <script>
+                function openModal(element) {
+                    var modal = document.getElementById("myModal");
+                    var modalImg = document.getElementById("img01");
+                    modal.style.display = "block";
+                    modalImg.src = element.src;
+                }
+
+                function closeModal() {
+                    var modal = document.getElementById("myModal");
+                    modal.style.display = "none";
+                }
+                function openSidebar() {
+                    document.getElementById("sidebar").style.width = "250px";
+                }
+
+                function closeSidebar() {
+                    document.getElementById("sidebar").style.width = "0";
+                }
+                function openModal() {
+                    document.getElementById("modal-container").style.display = "flex";
+                }
+
+                function closeModal() {
+                    document.getElementById("modal-container").style.display = "none";
+                }
+
+                // Adding event listener to close button
+                document.querySelector('.modal-close-btn').addEventListener('click', closeModal);
+            </script>
     </body>
 </html>

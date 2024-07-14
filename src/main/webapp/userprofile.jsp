@@ -95,8 +95,12 @@
             }
 
             @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
             }
 
             button {
@@ -166,6 +170,172 @@
             .hostel-info {
                 margin-top: 15px;
             }
+            #modal-container {
+                display: none; /* Hide the modal by default */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                align-items: center;
+                justify-content: center;
+                z-index: 1002; /* Make sure it covers the sidebar */
+            }
+
+            #modal {
+                background: white;
+                max-width: 500px;
+                position: relative;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                animation: showModal 0.3s ease;
+            }
+
+            #modal .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            #modal .modal-header h3 {
+                margin: 0;
+            }
+
+            .modal-close-btn {
+                outline: none;
+                border: none;
+                background: none;
+                font-size: 24px;
+                cursor: pointer;
+            }
+
+            #modal .modal-body {
+                padding: 20px;
+            }
+
+            #modal .modal-footer {
+                padding: 10px 20px;
+                border-top: 1px solid #ddd;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            #modal .modal-footer button {
+                padding: 10px 20px;
+                background-color: #0071c2;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            @keyframes showModal {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .header {
+                background-color: #003580;
+                color: white;
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                
+                width: 100%;
+                top: 0;
+                z-index: 1000;
+            }
+
+            .header nav {
+                flex: 1;
+                text-align: center;
+            }
+            .header nav a {
+                color: white;
+                margin: 0 26px;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            .header img {
+                width: 50px;
+                height: 50px;
+                vertical-align: middle;
+                margin-left: 20px;
+            }
+
+            .header-left {
+                display: flex;
+                align-items: center;
+            }
+
+            .header-right {
+                display: flex;
+                align-items: center;
+                margin-right: 30px;
+            }
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-left: 20px;
+                cursor: pointer;
+            }
+            .sidebar {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1001;
+                top: 0;
+                right: 0;
+                background-color: #003580;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+                color: white;
+                border-left: 2px solid #ccc; /* Add border */
+            }
+            .sidebar a {
+                padding: 10px 15px;
+                text-decoration: none;
+                font-size: 18px;
+                color: white;
+                display: block;
+                transition: 0.3s;
+            }
+            .sidebar a:hover {
+                background-color: #575757;
+            }
+            .close-btn {
+                position: absolute;
+                top: 20px;
+                right: 25px;
+                font-size: 36px;
+            }
+            .sidebar-header {
+                display: flex;
+                align-items: center;
+                padding: 0 15px;
+                margin-bottom: 20px;
+                border-bottom: 0.5px solid #ddd;
+            }
+            .sidebar-header img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin-right: 15px;
+            }
+            .sidebar-header .username {
+                font-size: 20px;
+                font-weight: bold;
+            }
         </style>
     </head>
 
@@ -175,8 +345,37 @@
             int user_id = Integer.parseInt(session.getAttribute("user_id") + "");
             User user = userdao.getUserByID(user_id);
         %>
-        <div class="container rounded bg-white mt-5 mb-5">
+<header class="header">
+                    <div class="header-left">
+                        <img src="\img/Roome1.jpg" alt="LOGO">
+                    </div>
+                    <nav>
+                        <a href="/MainPageController">Home</a>
+                        <a href="/HostelController/Create">Create</a>
+                        <a href="/HostelController/List">View your hostel</a>
+                        <a href="#">Car rentals</a>
+                        <a href="#">Attractions</a>
+                        <a href="#">Airport taxis</a>
+                    </nav>
+                    <div class="header-right">
+                        <img src="\img\<%=user.getUser_image()%>" alt="User Avatar" class="user-avatar" onclick="openSidebar()">
+                    </div>
+                </header>
+                <div id="sidebar" class="sidebar">
+                    <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+                    <div class="sidebar-header">
+                        <img src="\img\<%=user.getUser_image()%>" alt="User Avatar">
+                        <span class="username"><%=user.getUsercall_name()%></span>
+                    </div>
+                    <a href="/UserController">Profile</a>
+                    <a href="#">Bookings</a>
+                    <a href="#">Settings</a>
+                    <a id="logoutLink" onclick="openModal()">Logout</a>
+                </div>
+        <div class="container rounded bg-white mt-2 mb-5">
+            
             <div class="row">
+                
                 <!-- Profile Picture Form -->
                 <div class="col-md-4 border-right">
                     <form method="post" action="/UserController" enctype="multipart/form-data">
@@ -251,7 +450,7 @@
                                     if (rs.getInt("user_id") == user_id) {
                             %>
                             <div class="hostel-card">
-                               <img src="/img/<%=rs.getString("hostel_image")%>" alt="Hostel Image">
+                                <img src="/img/<%=rs.getString("hostel_image")%>" alt="Hostel Image">
                                 <div class="hostel-info">
                                     <h5>Hostel Name: <%=rs.getString("hostel_name")%></h5>
                                     <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
@@ -287,6 +486,23 @@
                     fileLabel.innerText = "Choose an image"; // Reset label text if no file selected
                 }
             }
+            function openSidebar() {
+                document.getElementById("sidebar").style.width = "250px";
+            }
+
+            function closeSidebar() {
+                document.getElementById("sidebar").style.width = "0";
+            }
+            function openModal() {
+                document.getElementById("modal-container").style.display = "flex";
+            }
+
+            function closeModal() {
+                document.getElementById("modal-container").style.display = "none";
+            }
+
+            // Adding event listener to close button
+            document.querySelector('.modal-close-btn').addEventListener('click', closeModal);
         </script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

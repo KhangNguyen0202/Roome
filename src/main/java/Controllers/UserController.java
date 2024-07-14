@@ -172,7 +172,7 @@ public class UserController extends HttpServlet {
             if (updated == 0) {
                 response.sendRedirect("/err" + user_id);
             } else {
-                response.sendRedirect("/MainPageController");
+                response.sendRedirect("/UserController");
             }
 
         }
