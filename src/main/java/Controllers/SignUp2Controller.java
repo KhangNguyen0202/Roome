@@ -91,13 +91,22 @@ public class SignUp2Controller extends HttpServlet {
             user.setPhone_number(request.getParameter("txtPN"));
             user.setEmail(request.getParameter("txtMail"));
             user.setAddress(request.getParameter("txtAddress"));
+//            System.out.println("user  "+user.toString()
+//            +" 1"+user.getUsername()
+//            +" 2"+user.getPassword()
+//            +" 3"+user.getUser_type()
+//            +" 4"+request.getParameter("txtCN")
+//            +" 5"+request.getParameter("txtSN")
+//            +" 6"+request.getParameter("txtPN")
+//            +" 7"+request.getParameter("txtMail")
+//            +" 8"+request.getParameter("txtAddress"));
             int count = userDAO.addUser(user);
             if (count > 0) {
                 request.getSession().setAttribute("newUser",null);
                 response.sendRedirect("/MainPageController");
             } else {
                 System.out.println("Failed to add user signup2");
-                request.getRequestDispatcher("/SignUp2Controller").forward(request, response);
+                response.sendRedirect("/SignUp2Controller");
             }
         } 
     }
