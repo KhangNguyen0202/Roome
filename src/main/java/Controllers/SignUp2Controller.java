@@ -5,7 +5,6 @@
 package Controllers;
 
 import DAOs.UserDAO;
-import DAOs.UserDAO;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,6 +59,11 @@ public class SignUp2Controller extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getRequestURI();
         if (path.equals("/SignUp2Controller")) {
+            UserDAO userDAO = new UserDAO();
+            User user = (User) request.getSession().getAttribute("newUser");
+            if (user == null) {
+                response.sendRedirect("/SignUp1Controller");
+            }else
             request.getRequestDispatcher("/signup2.jsp").forward(request, response);
         }
     }
@@ -72,31 +76,30 @@ public class SignUp2Controller extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private UserDAO userDAO = new UserDAO();
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute("newUser");
-        if (user != null) {
+        if (request.getParameter("btnSignUp2") != null) {
+            UserDAO userDAO = new UserDAO();
+            User user = (User) request.getSession().getAttribute("newUser");
+            if (user == null) {
+                response.sendRedirect("/SignUp1Controller");
+                return;
+            }
             user.setUsercall_name(request.getParameter("txtCN"));
             user.setUserSurname(request.getParameter("txtSN"));
             user.setPhone_number(request.getParameter("txtPN"));
             user.setEmail(request.getParameter("txtMail"));
             user.setAddress(request.getParameter("txtAddress"));
-
-            // Add user to the database
-            userDAO.addUser(user);
-
-            // Clear the user from the session
-            request.getSession().removeAttribute("newUser");
-
-            // Redirect to the success page
-            response.sendRedirect("indexlogged.jsp");
-        } else {
-            response.sendRedirect("/");
-        }
-
+            int count = userDAO.addUser(user);
+            if (count > 0) {
+                request.getSession().setAttribute("newUser",null);
+                response.sendRedirect("/MainPageController");
+            } else {
+                System.out.println("Failed to add user signup2");
+                request.getRequestDispatcher("/SignUp2Controller").forward(request, response);
+            }
+        } 
     }
 
     /**
