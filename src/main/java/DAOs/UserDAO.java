@@ -160,7 +160,7 @@ public class UserDAO {
             ResultSet rs = pst.executeQuery();
             exists = rs.next();
         } catch (SQLException e) {
-            e.printStackTrace();
+
         }
         return exists;
     }
@@ -170,17 +170,17 @@ public class UserDAO {
         int count = 0;
         if (conn != null) {
             try {
-                String sql = "INSERT INTO users (username, password, user_type, usercall_name, usersurname, phone_number, email, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO users (username,usercall_name,usersurname, password,email,phone_number,address,user_type) VALUES (?,?,?,?,?,?,?,?)";
                 PreparedStatement pst = conn.prepareStatement(sql);
                 pst.setString(1, user.getUsername());
-                pst.setString(2, user.getPassword());
-                pst.setString(3, user.getUser_type());
-                pst.setString(4, user.getUsercall_name());
-                pst.setString(5, user.getUserSurname());
+                pst.setString(2, user.getUsercall_name());
+                pst.setString(3, user.getUserSurname());
+                pst.setString(4, user.getPassword());
+                pst.setString(5, user.getEmail());
                 pst.setString(6, user.getPhone_number());
-                pst.setString(7, user.getEmail());
-                pst.setString(8, user.getAddress());
-                pst.executeUpdate();
+                pst.setString(7, user.getAddress());
+                pst.setString(8, user.getUser_type());                
+                count = pst.executeUpdate();
             } catch (SQLException e) {
                 count = 0;
             }
@@ -206,30 +206,5 @@ public class UserDAO {
             obj = null;
         }
         return obj.getUser_id();
-    }
-    
-    public User getUserByHostelId(int hostelId) {
-        User user = null;
-        Connection conn = DBConnection.getConnection();
-        try {
-            String sql = "SELECT u.usercall_name, u.usersurname FROM users u JOIN hostels h ON u.user_id = h.user_id WHERE h.hostel_id = ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setInt(1, hostelId);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                user = new User();
-                user.setUsercall_name(rs.getString("usercall_name"));
-                user.setUserSurname(rs.getString("usersurname"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return user;
     }
 }

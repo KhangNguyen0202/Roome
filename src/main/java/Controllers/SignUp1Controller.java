@@ -5,7 +5,6 @@
 package Controllers;
 
 import DAOs.UserDAO;
-import DAOs.UserDAO;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -72,34 +71,28 @@ public class SignUp1Controller extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private UserDAO userDAO = new UserDAO();
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (request.getParameter("btnSignUp1") != null) {
+            UserDAO userDAO = new UserDAO();
+            String username = request.getParameter("txtUS");
+            String password = request.getParameter("txtPWD");
+            String confirmPassword = request.getParameter("txtCPWD");
+            String user_type = request.getParameter("txtUST");
 
-        String username = request.getParameter("txtUS");
-        String password = request.getParameter("txtPWD");
-        String confirmPassword = request.getParameter("txtCPWD");
-        String user_type = request.getParameter("txtUST");
-
-        if (userDAO.isUsernameTaken(username)) {
-            request.setAttribute("error", "Username already exists!");
-            request.getRequestDispatcher("/SignUp1Controller").forward(request, response);
-        } else if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Passwords do not match!");
-            request.getRequestDispatcher("/SignUp1Controller").forward(request, response);
-        } else {
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setUser_type(user_type);
-
-            // Temporarily store the user in the session
-            request.getSession().setAttribute("newUser", user);
-
-            // Redirect to the second signup page
-            response.sendRedirect("/SignUp2Controller");
+            if (userDAO.isUsernameTaken(username)) {
+                System.out.println("Username is already taken.");
+                response.sendRedirect("/SignUp1Controller");
+            } else if (!password.equals(confirmPassword)) {
+                System.out.println("Passwords do not match.");
+                response.sendRedirect("/SignUp1Controller");
+            } else {
+                // Check if any fields are left blank
+                User obj = new User(username, password, user_type);
+                request.getSession().setAttribute("newUser", obj);
+                response.sendRedirect("/SignUp2Controller");
+            }
         }
     }
 
