@@ -207,4 +207,29 @@ public class UserDAO {
         }
         return obj.getUser_id();
     }
+    
+    public User getUserByHostelId(int hostelId) {
+        User user = null;
+        Connection conn = DBConnection.getConnection();
+        try {
+            String sql = "SELECT u.usercall_name, u.usersurname FROM users u JOIN hostels h ON u.user_id = h.user_id WHERE h.hostel_id = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, hostelId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setUsercall_name(rs.getString("usercall_name"));
+                user.setUserSurname(rs.getString("usersurname"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
 }
