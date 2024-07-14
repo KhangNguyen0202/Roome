@@ -38,10 +38,20 @@ public class HostelController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String path = request.getRequestURI();
-        if (path.equals("/HostelController/Create")) {
-            request.getRequestDispatcher("/createhostel.jsp").forward(request, response);
-        }else if (path.startsWith("/HostelController/View/")) {
+        
+         String path = request.getRequestURI();
+
+    if (path.equals("/HostelController/Create")) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("user_id");
+
+        if (userId == null) {
+            response.sendRedirect("/LoginController");
+            return;
+        }
+
+        request.getRequestDispatcher("/createhostel.jsp").forward(request, response);
+    }else if (path.startsWith("/HostelController/View/")) {
                 String[] s = path.split("/");
                 String loc = s[s.length - 1];
                  int hosel_id = Integer.parseInt(loc);
@@ -50,29 +60,37 @@ public class HostelController extends HttpServlet {
                 System.out.println("hosel_id:" + hosel_id);
                 System.out.println("obj:" +obj);
                 if (obj == null) {
-                    response.sendRedirect("/ProductController");
+                    response.sendRedirect("/MainPageController");
                 } else {
                     HttpSession session = request.getSession();
                     session.setAttribute("hs", obj);
                     request.getRequestDispatcher("/infohostel.jsp").forward(request, response);
                 }
 
-            }
+            }else if (path.equals("/HostelController/List")) {
+                 HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("user_id");
+
+        if (userId == null) {
+            response.sendRedirect("/LoginController");
+            return;
+        }
+            request.getRequestDispatcher("/listhostel.jsp").forward(request, response);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession();
-        // Integer landlordId = (Integer) session.getAttribute("landlord_id");
-        // if (landlordId == null) {
-        //     response.getWriter().write("Please log in first.");
-        //     return;
-        // }
        
-        int user_id = 1;
-        System.out.println("landlordId: " + user_id);
-
+       
+    Integer user_id = (Integer) session.getAttribute("user_id");
+        
+        if (user_id == null) {
+            response.sendRedirect("/LoginController");
+            return;
+        }       
         if (request.getParameter("btnNext") != null) {
             System.out.println("Processing form submission...");
 

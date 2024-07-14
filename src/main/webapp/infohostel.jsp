@@ -1,3 +1,12 @@
+<%@page import="Models.User"%>
+<%@page import="DAOs.UserDAO"%>
+<%@page import="java.sql.SQLException"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="DAOs.RoomTypeDAO"%>
+<%@page import="java.util.List"%>
+<%@page import="DAOs.ReviewDAO"%>
+<%@page import="Models.Reviews"%>
+<%@page import="Models.Hostel"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,8 +95,7 @@
             }
 
             .hero {
-                position: relative;
-                background-image: url('img/hostel1.jpg'); /* Replace with your main hostel image */
+                position: relative;            
                 background-size: cover;
                 background-position: center;
                 height: 400px;
@@ -125,7 +133,7 @@
             .hostel-gallery {
                 display: flex;
                 gap: 10px;
-                overflow-x: scroll;
+                overflow-x: auto;
                 padding-bottom: 20px;
             }
 
@@ -295,12 +303,26 @@
         </style>
     </head>
     <body>
+        <%
+            Hostel obj = (Hostel) session.getAttribute("hs");
+             RoomTypeDAO RoomTypeDao = new RoomTypeDAO();
+            int hostelID = obj.getHostel_id();
+            ResultSet rs = RoomTypeDao.getRoomImageByHostelID(hostelID); 
+
+
+UserDAO userDAO = new UserDAO();
+            User user = userDAO.getUserByHostelId(hostelID);
+
+            RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
+            ResultSet roomDetails = roomTypeDAO.getRoomDetailsByHostelId(hostelID);
+            
+        %>
         <div class="blur-background-container">
             <div class="blur-background"></div>
         </div>
         <header class="header">
             <div class="header-left">
-                <img src="img/Roome1.jpg" alt="LOGO">
+                <img src="/img/Roome1.jpg" alt="LOGO">
             </div>
             <nav>
                 <a href="#">Stays</a>
@@ -315,55 +337,56 @@
                 <button>Sign Up</button>
             </div>
         </header>
-        <section class="hero">
+        <section class="hero" style="background-image: url('/img/<%= obj.getHostel_image() %>');">
             <div>
-                <h1>Hostel Name</h1>
-                <p>123 Hostel Street, City, Country</p>
+                  <h1><%= obj.getHostel_name() %></h1>
+                <p><%= obj.getAddress_detail()%></p>
             </div>
         </section>
-        <section class="hostel-section">
-            <div class="hostel-gallery">
-                <img src="img/hostel1.jpg" alt="Hostel Image 1" onclick="openModal(this)">
-                <img src="img/hostel1.jpg" alt="Hostel Image 2" onclick="openModal(this)">
-                <img src="img/hostel1.jpg" alt="Hostel Image 3" onclick="openModal(this)">
-                <!-- Add more images as needed -->
-            </div>
-            <div class="hostel-info">
+        <section class="hostel-section">          
+             <%
+                try {
+                    while (rs.next()) {
+                 
+                %>
+                 <div class="hostel-gallery">
+                    <img src="/img/<%=rs.getString("room_image")%>" onclick="openModal(this)">
+                   </div>
+                <%
+                    }
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+        %>
+        
+          <div class="hostel-info">
                 <h2>About the Hostel</h2>
                 <p>Price per night: $25</p>
-                <div class="amenities">
-                    <div class="amenity">
-                        <img src="wifi-icon.png" alt="Free Wi-Fi"> Free Wi-Fi
-                    </div>
-                    <div class="amenity">
-                        <img src="breakfast-icon.png" alt="Breakfast included"> Breakfast included
-                    </div>
-                    <div class="amenity">
-                        <img src="kitchen-icon.png" alt="Shared kitchen"> Shared kitchen
-                    </div>
-                    <div class="amenity">
-                        <img src="reception-icon.png" alt="24-hour reception"> 24-hour reception
-                    </div>
-                </div>
-                <p>Description: This is a wonderful hostel located in the heart of the city. It offers comfortable accommodation at an affordable price.</p>
-            </div>
-            <div class="reviews">
-                <h2>Reviews</h2>
-                <div class="review">
-                    <h3>John Doe</h3>
-                    <p>★★★★☆</p>
-                    <p>Great place to stay! Very clean and friendly staff.</p>
-                </div>
-                <div class="review">
-                    <h3>Jane Smith</h3>
-                    <p>★★★★★</p>
-                    <p>Absolutely loved this hostel. The location is perfect and the amenities are top-notch.</p>
-                </div>
-                <!-- Add more reviews as needed -->
-            </div>
+                <p>Owner: <%= user.getUsercall_name() %> <%= user.getUserSurname()%></p>  
+                <p>Description: <%= obj.getDescription()%></p>
+                
+                <h2>About Hostel's Rooms</h2>
+             <%
+                try {
+                    while (roomDetails.next()) {
+            %>
+                <h3>Room Name: <%= roomDetails.getString("room_name") %></h3>
+                <p>Size: <%= roomDetails.getString("room_size") %></p>
+                <p>Price: $<%= roomDetails.getBigDecimal("rent_price") %></p>
+                <p>Available Rooms: <%= roomDetails.getInt("available_rooms") %></p>
+          
+            <%
+                    }
+                    roomDetails.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            %>
+              </div>
             <div class="review-form">
                 <h3>Leave a Review</h3>
-                <form action="${pageContext.request.contextPath}/ReviewController" method="post">
+                <form action="${pageContext.request.contextPath}/ReviewController" method="post" onsubmit="return validateReviewForm()">
                     <div class="star-rating">
                         <input type="radio" id="5-stars" name="rating" value="5" />
                         <label for="5-stars" class="star">&#9733;</label>
@@ -382,7 +405,50 @@
                 </form>
 
             </div>
-        </section>
+
+            <%
+                // This logic is typically handled in a servlet, but for debugging, we are doing it here
+                
+                // Fetch reviews from the database
+                ReviewDAO reviewDAO = new ReviewDAO();
+                List<Reviews> reviewsList = reviewDAO.getReviewsByHostelID(hostelID);
+
+                // Debugging: Print reviews to the console
+                if (reviewsList != null) {
+                    for (Reviews review : reviewsList) {
+                        System.out.println("Hostel ID that are created by a variable: " + hostelID);
+                        System.out.println("Hostel ID after do this and that with the database: " + review.getHostelID());
+                        System.out.println("Username: " + review.getUserName());
+                        System.out.println("Star: " + review.getStarRating());
+                        System.out.println("Comment: " + review.getComment());
+                    }
+                } else {
+                    System.out.println("No reviews found or an error occurred.");
+                }
+            %>
+            <section class="reviews" id="review-section">
+                <h2>Reviews</h2>
+                <%
+                    if (reviewsList != null) {
+                        for (Reviews review : reviewsList) {
+                %>
+                <div class="review">
+                    <h3><%= review.getUserName()%></h3>
+                    <div>
+                        <span class="star">&#9733;</span><span><%= review.getStarRating()%></span>
+                    </div>
+                    <p><%= review.getComment()%></p>
+                    <p><small>Reviewed on: <%= review.getCreatedAt()%></small></p>
+                </div>
+                <%
+                    }
+                } else {
+                %>
+                <p>No reviews found or an error occurred.</p>
+                <%
+                    }
+                %>
+            </section>
         
         <!-- The Modal -->
         <div id="myModal" class="modal">

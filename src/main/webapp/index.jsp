@@ -176,15 +176,15 @@
             <img src="img/Roome1.jpg" alt="LOGO">
         </div>
         <nav>
-            <a href="infohostel.jsp">Info</a>
+            <a href="/MainPageController">Home</a>
             <a href="/HostelController/Create">Create</a>
-            <a href="userprofile.jsp">User</a>
+            <a href="/HostelController/List">View your hostel</a>
             <a href="#">Car rentals</a>
             <a href="#">Attractions</a>
             <a href="#">Airport taxis</a>
         </nav>
         <div class="header-right">
-            <button>Sign In</button>
+            <button> <a href="/LoginController">Sign In</a></button>
             <button>Sign Up</button>
         </div>
     </header>
@@ -218,13 +218,16 @@
             while (rs.next()) {
         %>
         <div class="hostel" data-hostel-id="<%=rs.getString("hostel_id")%>" data-address="<%=rs.getString("address_detail")%>">
-            <img src="\img\<%=rs.getString("hostel_image")%>" alt="Hostel Image">
+
+            <img src="/img/<%=rs.getString("hostel_image")%>" alt="Hostel Image">
+
             <div class="hostel-info">
                 <input type="hidden" value="<%=rs.getString("hostel_name")%>" readonly>
                 <h2>Hostel Name: <%=rs.getString("hostel_name")%></h2>
                 <p><strong>Address:</strong> <%=rs.getString("address_detail")%></p>
                 <p><strong>Phone contact:</strong> <%=rs.getString("phone_contact")%></p>
                 <p><strong>Description:</strong> <%=rs.getString("description")%></p>
+                
             </div>
         </div>
         <%

@@ -128,4 +128,18 @@ public class HostelDAO {
         }
         return obj;
     }
+  public ResultSet getHostelByUserIdRS(int user_id) {
+    Connection conn = DBConnection.getConnection();
+    ResultSet rs = null;
+    try {
+        String sql = "SELECT * FROM hostels WHERE user_id = ?";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setInt(1, user_id);
+        rs = pst.executeQuery();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    return rs;
+}
+
 }

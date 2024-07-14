@@ -131,14 +131,14 @@ public class RoomController extends HttpServlet {
                 uploadDir.mkdirs();
             }
 
-            for (Part part : request.getParts()) {
-                if (part.getName().equals("txtPic")) {
-                    fileName = (String) getFileName(part);
+              Part part = request.getPart("roomImage" + i);
+                if (part != null && part.getSize() > 0) {
+                    fileName = getFileName(part);
                     if (fileName != null && !fileName.isEmpty()) {
                         part.write(uploadPath + File.separator + "img/" + fileName);
                     }
                 }
-            }
+            
 
             String roomImage = fileName;
                 Timestamp createdAt = new Timestamp(System.currentTimeMillis());
@@ -151,7 +151,8 @@ public class RoomController extends HttpServlet {
                 roomDAO.addNew(room);
             }
 
-            response.sendRedirect("/MainPageController");
+
+            response.sendRedirect("/MainPageController/Login=true");
         }
     }
 
